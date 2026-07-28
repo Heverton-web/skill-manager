@@ -1,0 +1,13 @@
+{
+  "skill": "founder-mode",
+  "slug": "founder-mode",
+  "description": "/cs:founder-mode <question> — Auto-routes any founder question to the right C-role advisor or to /cs:boardroom for multi-role topics. The single-command entry point. Use when a founder asks any str...",
+  "categoria": "Finanças & Negócios",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/founder-mode/",
+  "metrics": {
+    "type": "report",
+    "category": "Finanças & Negócios"
+  }
+}

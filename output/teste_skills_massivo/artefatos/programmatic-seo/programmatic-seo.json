@@ -1,0 +1,13 @@
+{
+  "skill": "programmatic-seo",
+  "slug": "programmatic-seo",
+  "description": "When the user wants to create SEO-driven pages at scale using templates and data. Also use when the user mentions \"programmatic SEO,\" \"template pages,\" \"pages at scale,\" \"directory pages,\" \"locatio...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/programmatic-seo/",
+  "metrics": {
+    "type": "html",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

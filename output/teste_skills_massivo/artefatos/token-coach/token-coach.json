@@ -1,0 +1,13 @@
+{
+  "skill": "token-coach",
+  "slug": "token-coach",
+  "description": "|",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/token-coach/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

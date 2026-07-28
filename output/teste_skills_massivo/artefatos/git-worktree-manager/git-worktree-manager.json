@@ -1,0 +1,13 @@
+{
+  "skill": "git-worktree-manager",
+  "slug": "git-worktree-manager",
+  "description": "Run parallel feature work safely with Git worktrees. Standardizes branch isolation, port allocation, environment sync, and cleanup so each worktree behaves like an independent local app. Optimized ...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/git-worktree-manager/",
+  "metrics": {
+    "type": "report",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

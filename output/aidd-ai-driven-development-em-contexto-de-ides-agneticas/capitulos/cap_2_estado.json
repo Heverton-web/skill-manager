@@ -1,0 +1,12 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": { "parte": "I", "capitulo": "2" },
+  "estado_execucao": "aprovado_e_ilustrado",
+  "payload_estrategico": {
+    "pilares": [
+      { "nome": "Taxonomia das ferramentas agênticas", "escopo": "Classificação em 4 arquétipos: CLI, IDEs, Extensões, Cloud Agents", "ancora_visual": "Diagrama de classificação 2x2" },
+      { "nome": "Comparação técnica e trade-offs", "escopo": "Análise em 6 dimensões com tabela e radar", "ancora_visual": "Gráfico radial comparativo" },
+      { "nome": "Critérios de escolha por perfil", "escopo": "Guias de decisão para 4 perfis e contexto", "ancora_visual": "Matriz de decisão visual" }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+# to-spec
+
+**Categoria:** Produto & Estratégia
+**Descrição:** Turn the current conversation into a spec and publish it to the project issue tracker — no interview, just synthesis of what you've already discussed.
+**Tipo:** visual
+
+[Ver artefatos completos](../artefatos/to-spec/)

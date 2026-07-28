@@ -1,0 +1,13 @@
+{
+  "skill": "calcular-gastos-sessao",
+  "slug": "calcular-gastos-sessao",
+  "description": ">",
+  "categoria": "Outros (Geral)",
+  "tipo": "json",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/calcular-gastos-sessao/",
+  "metrics": {
+    "type": "json",
+    "category": "Outros (Geral)"
+  }
+}

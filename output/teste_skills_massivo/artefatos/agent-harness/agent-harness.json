@@ -1,0 +1,13 @@
+{
+  "skill": "agent-harness",
+  "slug": "agent-harness",
+  "description": "Turn any domain folder of skills into a bounded agentic loop: compile a goal into a verifiable task plan, execute tasks with the domain's own tools, verify every task with machine-run checks, retry...",
+  "categoria": "IA & Machine Learning",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/agent-harness/",
+  "metrics": {
+    "type": "report",
+    "category": "IA & Machine Learning"
+  }
+}

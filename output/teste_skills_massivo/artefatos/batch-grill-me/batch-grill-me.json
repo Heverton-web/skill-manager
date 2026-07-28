@@ -1,0 +1,13 @@
+{
+  "skill": "batch-grill-me",
+  "slug": "batch-grill-me",
+  "description": "A relentless interview that asks every frontier question at once, round by round.",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/batch-grill-me/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "rag-architect",
+  "slug": "rag-architect",
+  "description": "Use when the user asks to design a RAG pipeline, choose a chunking strategy or embedding model, pick a vector database, or evaluate retrieval quality (precision@k, recall@k, NDCG). Examples: 'desig...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/rag-architect/",
+  "metrics": {
+    "type": "report",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

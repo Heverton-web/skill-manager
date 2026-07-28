@@ -1,0 +1,13 @@
+{
+  "skill": "executing-plans",
+  "slug": "executing-plans",
+  "description": "Use when you have a written implementation plan to execute in a separate session with review checkpoints",
+  "categoria": "Produto & Estratégia",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/executing-plans/",
+  "metrics": {
+    "type": "report",
+    "category": "Produto & Estratégia"
+  }
+}

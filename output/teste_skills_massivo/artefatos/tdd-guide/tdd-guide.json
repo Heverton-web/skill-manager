@@ -1,0 +1,13 @@
+{
+  "skill": "tdd-guide",
+  "slug": "tdd-guide",
+  "description": "Test-driven development skill for writing unit tests, generating test fixtures and mocks, analyzing coverage gaps, and guiding red-green-refactor workflows across Jest, Pytest, JUnit, Vitest, and M...",
+  "categoria": "Design & Visual",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/tdd-guide/",
+  "metrics": {
+    "type": "report",
+    "category": "Design & Visual"
+  }
+}

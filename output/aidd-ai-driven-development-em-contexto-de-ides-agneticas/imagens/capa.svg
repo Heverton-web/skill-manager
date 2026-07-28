@@ -1,0 +1,24 @@
+<svg viewBox="0 0 1000 1500" width="1000" height="1500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c2a3a"/>
+      <stop offset="100%" stop-color="#0f1720"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1000" height="1500" fill="url(#bgGrad)"/>
+  <rect x="40" y="40" width="920" height="1420" fill="none" stroke="#e8b94a" stroke-width="3"/>
+  <rect x="60" y="60" width="880" height="1380" fill="none" stroke="#3a4a5a" stroke-width="1"/>
+  <text x="500" y="380" font-size="22" font-family="Georgia, serif" font-weight="bold" fill="#e8b94a" text-anchor="middle" letter-spacing="6">AIDD</text>
+  <line x1="500" y1="400" x2="500" y2="420" stroke="#e8b94a" stroke-width="3"/>
+  <line x1="440" y1="460" x2="560" y2="460" stroke="#e8b94a" stroke-width="4"/>
+  <text x="500" y="530" font-size="44" font-family="Georgia, serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">AI-Driven</text>
+  <text x="500" y="590" font-size="44" font-family="Georgia, serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">Development</text>
+  <text x="500" y="660" font-size="26" font-family="Georgia, serif" font-weight="normal" fill="#b9c2cc" text-anchor="middle">em Contexto de IDEs Ag&ecirc;nticas</text>
+  <line x1="440" y1="700" x2="560" y2="700" stroke="#e8b94a" stroke-width="4"/>
+  <text x="500" y="800" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Evolu&ccedil;&atilde;o, Ferramentas, Metodologias</text>
+  <text x="500" y="830" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">e Governan&ccedil;a para o Desenvolvedor do Futuro</text>
+  <line x1="440" y1="870" x2="560" y2="870" stroke="#3a4a5a" stroke-width="1"/>
+  <text x="500" y="960" font-size="16" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Do execution bottleneck ao intent bottleneck</text>
+  <text x="500" y="990" font-size="16" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">4 Partes &middot; 12 Cap&iacute;tulos</text>
+  <text x="500" y="1380" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle" letter-spacing="4">FABRICA AGENTICA DE LIVROS</text>
+</svg>

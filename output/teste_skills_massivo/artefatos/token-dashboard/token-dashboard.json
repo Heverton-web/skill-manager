@@ -1,0 +1,13 @@
+{
+  "skill": "token-dashboard",
+  "slug": "token-dashboard",
+  "description": "Open the Token Optimizer dashboard. Collects latest session data, regenerates the dashboard, and opens it in your browser.",
+  "categoria": "Dados & Analytics",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/token-dashboard/",
+  "metrics": {
+    "type": "html",
+    "category": "Dados & Analytics"
+  }
+}

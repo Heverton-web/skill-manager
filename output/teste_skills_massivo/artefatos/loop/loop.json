@@ -1,0 +1,13 @@
+{
+  "skill": "loop",
+  "slug": "loop",
+  "description": "Start an autonomous experiment loop with user-selected interval (10min, 1h, daily, weekly, monthly). Uses CronCreate for scheduling. Use when the user runs /ar:loop or asks to run an autoresearch e...",
+  "categoria": "Outros (Geral)",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/loop/",
+  "metrics": {
+    "type": "code",
+    "category": "Outros (Geral)"
+  }
+}

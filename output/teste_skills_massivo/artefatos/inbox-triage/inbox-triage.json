@@ -1,0 +1,13 @@
+{
+  "skill": "inbox-triage",
+  "slug": "inbox-triage",
+  "description": "Runs a full inbox triage using the knowledge base created by the 'inbox-setup' skill. Light-intake by design (most invocations skip questions and run with KB-default preferences); asks at most 2 gr...",
+  "categoria": "Produto & Estratégia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/inbox-triage/",
+  "metrics": {
+    "type": "html",
+    "category": "Produto & Estratégia"
+  }
+}

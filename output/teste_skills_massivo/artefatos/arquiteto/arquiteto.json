@@ -1,0 +1,13 @@
+{
+  "skill": "arquiteto",
+  "slug": "arquiteto",
+  "description": "Fase 1 (Nó 0B) da Fábrica Agêntica de Livros — processa o dossiê minerado pelo Skill_Pesquisador e desenha a arquitetura macroscópica da obra (Partes, Capítulos, marcos EITA). Use depois que a pesq...",
+  "categoria": "Design & Visual",
+  "tipo": "json",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/arquiteto/",
+  "metrics": {
+    "type": "json",
+    "category": "Design & Visual"
+  }
+}

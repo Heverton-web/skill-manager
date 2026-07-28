@@ -1,0 +1,13 @@
+{
+  "skill": "codebase-onboarding",
+  "slug": "codebase-onboarding",
+  "description": "Analyze a codebase and generate onboarding documentation for engineers, tech leads, and contractors. Fast fact-gathering and repeatable onboarding outputs. Use when onboarding a new engineer, writi...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "json",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/codebase-onboarding/",
+  "metrics": {
+    "type": "json",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

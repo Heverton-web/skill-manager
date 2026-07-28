@@ -1,0 +1,13 @@
+{
+  "skill": "monitoring-observability",
+  "slug": "monitoring-observability",
+  "description": "Monitoring and observability with OpenTelemetry, Prometheus, Grafana dashboards, and structured logging",
+  "categoria": "Dados & Analytics",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/monitoring-observability/",
+  "metrics": {
+    "type": "code",
+    "category": "Dados & Analytics"
+  }
+}

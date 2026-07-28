@@ -1,0 +1,13 @@
+{
+  "skill": "code-reviewer",
+  "slug": "code-reviewer",
+  "description": "Code review automation for TypeScript, JavaScript, Python, Go, Swift, Kotlin, C#, .NET, Java, C, C++, Rust, Ruby, PHP, and Dart/Flutter. Analyzes PRs for complexity and risk, checks code quality fo...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/code-reviewer/",
+  "metrics": {
+    "type": "report",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

@@ -1,0 +1,23 @@
+<svg viewBox="0 0 1000 1500" width="1000" height="1500" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="1000" height="1500" fill="#0f1720"/>
+  <rect x="40" y="40" width="920" height="1420" fill="none" stroke="#3a4a5a" stroke-width="2"/>
+  <text x="80" y="130" font-size="30" font-family="Georgia, serif" font-weight="bold" fill="#e8b94a">AIDD: AI-Driven Development</text>
+  <text x="80" y="170" font-size="20" font-family="Georgia, serif" fill="#b9c2cc">em Contexto de IDEs Ag&ecirc;nticas</text>
+  <line x1="80" y1="190" x2="920" y2="190" stroke="#3a4a5a" stroke-width="1"/>
+  <text x="80" y="240" font-size="22" font-family="Arial, sans-serif" fill="#f5f2ea">SINOPSE</text>
+  <text x="80" y="290" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc">A engenharia de software est&aacute; passando por sua maior</text>
+  <text x="80" y="318" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc">transforma&ccedil;&atilde;o desde a ado&ccedil;&atilde;o das primeiras IDEs.</text>
+  <text x="80" y="374" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc">Agentes de IA aut&ocirc;nomos assumem a implementa&ccedil;&atilde;o</text>
+  <text x="80" y="402" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc">de c&oacute;digo, e o desenvolvedor humano passa de</text>
+  <text x="80" y="430" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc">construtor manual a arquiteto de inten&ccedil;&atilde;o.</text>
+  <text x="80" y="486" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc">Este livro &eacute; um guia completo sobre o ecossistema</text>
+  <text x="80" y="514" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc">de ferramentas, metodologias e protocolos que</text>
+  <text x="80" y="542" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc">definem o AI-Driven Development em 2026.</text>
+  <text x="80" y="1050" font-size="16" font-family="Arial, sans-serif" font-weight="bold" fill="#b9c2cc" letter-spacing="2">ESPECIFICACOES</text>
+  <text x="80" y="1084" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Formato: 4 Partes, 12 Cap&iacute;tulos</text>
+  <text x="80" y="1112" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Metodologia: Framework EITA (Explica, Ilustra, T&eacute;cnica, Aplica)</text>
+  <text x="80" y="1140" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Protocolo: MCP, SDD, Context Engineering</text>
+  <text x="80" y="1168" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Formato de sa&iacute;da: Markdown + PDF</text>
+  <text x="80" y="1196" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Produ&ccedil;&atilde;o: F&aacute;brica Ag&ecirc;ntica de Livros</text>
+  <text x="80" y="1224" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Data de produ&ccedil;&atilde;o: Julho de 2026</text>
+</svg>

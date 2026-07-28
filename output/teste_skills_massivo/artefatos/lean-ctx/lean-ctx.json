@@ -1,0 +1,13 @@
+{
+  "skill": "lean-ctx",
+  "slug": "lean-ctx",
+  "description": ">",
+  "categoria": "Outros (Geral)",
+  "tipo": "general",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/lean-ctx/",
+  "metrics": {
+    "type": "general",
+    "category": "Outros (Geral)"
+  }
+}

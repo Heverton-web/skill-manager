@@ -1,0 +1,13 @@
+{
+  "skill": "analytics-tracking",
+  "slug": "analytics-tracking",
+  "description": "Set up, audit, and debug analytics tracking implementation — GA4, Google Tag Manager, event taxonomy, conversion tracking, and data quality. Use when building a tracking plan from scratch, auditing...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/analytics-tracking/",
+  "metrics": {
+    "type": "html",
+    "category": "SEO & Marketing Digital"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "hard-call",
+  "slug": "hard-call",
+  "description": "/em:hard-call — Framework for decisions with no good options. Use when every option is painful and a structured 10/10/10 + regret-minimization pass is needed — e.g. choosing between a layoff and a ...",
+  "categoria": "Outros (Geral)",
+  "tipo": "test",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/hard-call/",
+  "metrics": {
+    "type": "test",
+    "category": "Outros (Geral)"
+  }
+}

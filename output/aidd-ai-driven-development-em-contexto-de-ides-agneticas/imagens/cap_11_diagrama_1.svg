@@ -1,0 +1,26 @@
+<svg viewBox="0 0 1000 450" width="1000" height="450" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="1000" height="450" fill="#0f1720"/>
+  <text x="500" y="35" font-size="18" font-family="Georgia, serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">Riscos e Controles no Ecossistema AIDD</text>
+  <rect x="60" y="60" width="260" height="150" rx="10" fill="#1c2a3a" stroke="#e85a5a" stroke-width="2"/>
+  <text x="190" y="90" font-size="14" font-family="Georgia, serif" font-weight="bold" fill="#e85a5a" text-anchor="middle">D&iacute;vida T&eacute;cnica</text>
+  <text x="190" y="115" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">C&oacute;digo caixa-preta</text>
+  <text x="190" y="135" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Falta de resili&ecirc;ncia</text>
+  <text x="190" y="155" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Degrada&ccedil;&atilde;o arquitetural</text>
+  <text x="190" y="185" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Controle: Revis&atilde;o adversarial</text>
+  <rect x="370" y="60" width="260" height="150" rx="10" fill="#1c2a3a" stroke="#e85a5a" stroke-width="2"/>
+  <text x="500" y="90" font-size="14" font-family="Georgia, serif" font-weight="bold" fill="#e85a5a" text-anchor="middle">Vi&eacute;s de Automa&ccedil;&atilde;o</text>
+  <text x="500" y="115" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Aprova&ccedil;&atilde;o sem leitura</text>
+  <text x="500" y="135" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Falsa confian&ccedil;a no agente</text>
+  <text x="500" y="155" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Atrofia de julgamento</text>
+  <text x="500" y="185" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Controle: Revis&atilde;o para reprovar</text>
+  <rect x="680" y="60" width="260" height="150" rx="10" fill="#1c2a3a" stroke="#e85a5a" stroke-width="2"/>
+  <text x="810" y="90" font-size="14" font-family="Georgia, serif" font-weight="bold" fill="#e85a5a" text-anchor="middle">Seguran&ccedil;a &amp; Compliance</text>
+  <text x="810" y="115" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Inje&ccedil;&atilde;o indireta de prompt</text>
+  <text x="810" y="135" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Vazamento de credenciais</text>
+  <text x="810" y="155" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">C&oacute;digo vulner&aacute;vel (OWASP)</text>
+  <text x="810" y="185" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Controle: MCPs internos + HITL</text>
+  <text x="500" y="260" font-size="14" font-family="Georgia, serif" fill="#e8b94a" text-anchor="middle">Princ&iacute;pio: N&atilde;o terceirize o julgamento &mdash; terceirize apenas a implementa&ccedil;&atilde;o</text>
+  <text x="500" y="290" font-size="12" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">O desenvolvedor que n&atilde;o consegue identificar por que o c&oacute;digo do agente est&aacute; errado</text>
+  <text x="500" y="315" font-size="12" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">j&aacute; perdeu o direito de usar o agente sem supervis&atilde;o.</text>
+  <text x="500" y="355" font-size="11" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">EU AI Act: sistemas de risco alto exigem documenta&ccedil;&atilde;o, supervis&atilde;o humana, transpar&ecirc;ncia e robustez</text>
+</svg>

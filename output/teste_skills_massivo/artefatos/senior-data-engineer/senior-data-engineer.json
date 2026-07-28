@@ -1,0 +1,13 @@
+{
+  "skill": "senior-data-engineer",
+  "slug": "senior-data-engineer",
+  "description": "Data engineering skill for building scalable data pipelines, ETL/ELT systems, and data infrastructure. Expertise in Python, SQL, Spark, Airflow, dbt, Kafka, and modern data stack. Includes data mod...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/senior-data-engineer/",
+  "metrics": {
+    "type": "code",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

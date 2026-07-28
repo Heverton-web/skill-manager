@@ -1,0 +1,13 @@
+{
+  "skill": "claude-api",
+  "slug": "claude-api",
+  "description": "|-",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/claude-api/",
+  "metrics": {
+    "type": "visual",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

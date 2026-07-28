@@ -1,0 +1,13 @@
+{
+  "skill": "gdpr-audit-prep",
+  "slug": "gdpr-audit-prep",
+  "description": "/cs:gdpr-audit-prep <scope> — GDPR audit 6-question Article-cited forcing interrogation. Use before annual internal GDPR review, post-breach internal audit, DPA investigation readiness, or acquisit...",
+  "categoria": "Segurança & Compliance",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/gdpr-audit-prep/",
+  "metrics": {
+    "type": "report",
+    "category": "Segurança & Compliance"
+  }
+}

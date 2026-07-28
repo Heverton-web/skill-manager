@@ -1,0 +1,13 @@
+{
+  "skill": "review",
+  "slug": "review",
+  "description": ">-",
+  "categoria": "Outros (Geral)",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/review/",
+  "metrics": {
+    "type": "html",
+    "category": "Outros (Geral)"
+  }
+}

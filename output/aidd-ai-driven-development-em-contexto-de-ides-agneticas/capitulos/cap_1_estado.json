@@ -1,0 +1,12 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": { "parte": "I", "capitulo": "1" },
+  "estado_execucao": "aprovado_e_ilustrado",
+  "payload_estrategico": {
+    "pilares": [
+      { "nome": "A evolução do desenvolvimento de software", "escopo": "Linha do tempo mainframes → IDEs → assistentes → agentes", "ancora_visual": "Diagrama de linha do tempo evolutiva" },
+      { "nome": "Do execution bottleneck ao intent bottleneck", "escopo": "Inversão fundamental com dados do AI-DLC da AWS", "ancora_visual": "Diagrama de pirâmide invertida" },
+      { "nome": "A pirâmide invertida", "escopo": "Redistribuição do trabalho intelectual e crítica do vibe coding", "ancora_visual": "Diagrama de fluxo contrastando ciclos tradicional e AIDD" }
+    ]
+  }
+}

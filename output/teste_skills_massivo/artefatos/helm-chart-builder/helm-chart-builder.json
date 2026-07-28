@@ -1,0 +1,13 @@
+{
+  "skill": "helm-chart-builder",
+  "slug": "helm-chart-builder",
+  "description": "Helm chart development agent skill and plugin for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw — chart scaffolding, values design, template patterns, dependency management, security hardening, ...",
+  "categoria": "Design & Visual",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/helm-chart-builder/",
+  "metrics": {
+    "type": "report",
+    "category": "Design & Visual"
+  }
+}

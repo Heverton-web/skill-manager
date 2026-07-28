@@ -1,0 +1,13 @@
+{
+  "skill": "rust-systems",
+  "slug": "rust-systems",
+  "description": "Rust systems programming patterns including ownership, traits, async runtime, error handling, and unsafe guidelines",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "general",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/rust-systems/",
+  "metrics": {
+    "type": "general",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

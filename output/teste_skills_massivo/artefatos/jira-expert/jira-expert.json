@@ -1,0 +1,13 @@
+{
+  "skill": "jira-expert",
+  "slug": "jira-expert",
+  "description": "Atlassian Jira expert for creating and managing projects, planning, product discovery, JQL queries, workflows, custom fields, automation, reporting, and all Jira features. Use when setting up or co...",
+  "categoria": "Colaboração & Projetos",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/jira-expert/",
+  "metrics": {
+    "type": "html",
+    "category": "Colaboração & Projetos"
+  }
+}

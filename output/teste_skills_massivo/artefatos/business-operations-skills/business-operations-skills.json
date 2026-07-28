@@ -1,0 +1,13 @@
+{
+  "skill": "business-operations-skills",
+  "slug": "business-operations-skills",
+  "description": "Use when running, diagnosing, or designing internal business operations — process documentation, vendor SLAs, capacity planning, internal comms, SOP/runbook authoring, procurement spend. Triggers o...",
+  "categoria": "Produto & Estratégia",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/business-operations-skills/",
+  "metrics": {
+    "type": "report",
+    "category": "Produto & Estratégia"
+  }
+}

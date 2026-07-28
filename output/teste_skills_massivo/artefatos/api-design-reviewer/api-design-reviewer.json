@@ -1,0 +1,13 @@
+{
+  "skill": "api-design-reviewer",
+  "slug": "api-design-reviewer",
+  "description": "Comprehensive REST API design review with automated linting, breaking-change detection, and design scorecards. Catches inconsistent conventions, missing versioning, and design smells before APIs sh...",
+  "categoria": "Design & Visual",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/api-design-reviewer/",
+  "metrics": {
+    "type": "report",
+    "category": "Design & Visual"
+  }
+}

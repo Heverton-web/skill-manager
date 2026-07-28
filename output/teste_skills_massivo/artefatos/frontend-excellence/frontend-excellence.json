@@ -1,0 +1,13 @@
+{
+  "skill": "frontend-excellence",
+  "slug": "frontend-excellence",
+  "description": "Modern frontend patterns for React Server Components, performance optimization, and Core Web Vitals",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/frontend-excellence/",
+  "metrics": {
+    "type": "html",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

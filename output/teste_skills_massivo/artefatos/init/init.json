@@ -1,0 +1,13 @@
+{
+  "skill": "init",
+  "slug": "init",
+  "description": ">-",
+  "categoria": "Produto & Estratégia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/init/",
+  "metrics": {
+    "type": "html",
+    "category": "Produto & Estratégia"
+  }
+}

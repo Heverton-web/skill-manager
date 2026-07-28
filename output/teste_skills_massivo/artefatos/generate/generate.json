@@ -1,0 +1,13 @@
+{
+  "skill": "generate",
+  "slug": "generate",
+  "description": ">-",
+  "categoria": "Outros (Geral)",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/generate/",
+  "metrics": {
+    "type": "html",
+    "category": "Outros (Geral)"
+  }
+}

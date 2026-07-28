@@ -1,0 +1,13 @@
+{
+  "skill": "md-review",
+  "slug": "md-review",
+  "description": "Converts a markdown PR writeup or code review (one with ```diff fenced blocks and severity-tagged > [!BLOCKER]/[!MAJOR]/[!MINOR]/[!NIT] callouts) into a single-file 2-column HTML review — unified-d...",
+  "categoria": "Documentação & Comunicação",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/md-review/",
+  "metrics": {
+    "type": "html",
+    "category": "Documentação & Comunicação"
+  }
+}

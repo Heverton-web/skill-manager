@@ -1,0 +1,13 @@
+{
+  "skill": "code-to-prd",
+  "slug": "code-to-prd",
+  "description": "Reverse-engineer any codebase into a complete Product Requirements Document (PRD). Analyzes routes, components, state management, API integrations, and user interactions to produce business-readabl...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/code-to-prd/",
+  "metrics": {
+    "type": "html",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

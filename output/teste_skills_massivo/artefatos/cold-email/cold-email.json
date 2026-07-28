@@ -1,0 +1,13 @@
+{
+  "skill": "cold-email",
+  "slug": "cold-email",
+  "description": "When the user wants to write, improve, or build a sequence of B2B cold outreach emails to prospects who haven't asked to hear from them. Use when the user mentions 'cold email,' 'cold outreach,' 'p...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/cold-email/",
+  "metrics": {
+    "type": "html",
+    "category": "SEO & Marketing Digital"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "claude-coach",
+  "slug": "claude-coach",
+  "description": "Personal coach that teaches users to become Claude power users. Use this skill the FIRST time a user asks to \"learn Claude\", \"be a power user\", \"coach me\", \"teach me Claude tricks\", \"what can Claud...",
+  "categoria": "IA & Machine Learning",
+  "tipo": "general",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/claude-coach/",
+  "metrics": {
+    "type": "general",
+    "category": "IA & Machine Learning"
+  }
+}

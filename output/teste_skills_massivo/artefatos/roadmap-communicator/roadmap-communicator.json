@@ -1,0 +1,13 @@
+{
+  "skill": "roadmap-communicator",
+  "slug": "roadmap-communicator",
+  "description": "Use when preparing roadmap narratives, release notes, changelogs, or stakeholder updates tailored for executives, engineering teams, and customers.",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "general",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/roadmap-communicator/",
+  "metrics": {
+    "type": "general",
+    "category": "SEO & Marketing Digital"
+  }
+}

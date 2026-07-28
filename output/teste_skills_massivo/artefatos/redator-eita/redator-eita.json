@@ -1,0 +1,13 @@
+{
+  "skill": "redator-eita",
+  "slug": "redator-eita",
+  "description": "Fase 2 (Nó 4) da Fábrica Agêntica de Livros — expande o draft estratégico de um capítulo em texto final, aplicando rigorosamente o framework EITA (Explica, Ilustra, Técnica, Aplica) para cada pilar...",
+  "categoria": "Outros (Geral)",
+  "tipo": "json",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/redator-eita/",
+  "metrics": {
+    "type": "json",
+    "category": "Outros (Geral)"
+  }
+}

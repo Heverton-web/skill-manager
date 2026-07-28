@@ -1,0 +1,13 @@
+{
+  "skill": "estrategista",
+  "slug": "estrategista",
+  "description": "Fase 2 (Nós 1-2) da Fábrica Agêntica de Livros — decompõe o tema de um capítulo aprovado no sumário macro em três pilares lógicos de ensino, travando a execução para evitar desvios conceituais. Use...",
+  "categoria": "Outros (Geral)",
+  "tipo": "json",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/estrategista/",
+  "metrics": {
+    "type": "json",
+    "category": "Outros (Geral)"
+  }
+}

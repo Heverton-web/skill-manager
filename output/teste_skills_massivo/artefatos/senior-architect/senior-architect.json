@@ -1,0 +1,13 @@
+{
+  "skill": "senior-architect",
+  "slug": "senior-architect",
+  "description": "This skill should be used when the user asks to \"design system architecture\", \"evaluate microservices vs monolith\", \"create architecture diagrams\", \"analyze dependencies\", \"choose a database\", \"pla...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/senior-architect/",
+  "metrics": {
+    "type": "html",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIDD — AI-Driven Development</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&family=Inter:wght@300;400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #eaeaea; overflow-x: hidden; }
+  .slide { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 4em 6em; border-bottom: 1px solid #222; }
+  .slide.capa { background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%); text-align: center; }
+  .slide.capa h1 { font-family: Georgia, serif; font-size: 3.5em; color: #d4af37; margin-bottom: 0.3em; line-height: 1.2; }
+  .slide.capa .sub { font-size: 1.2em; color: #888; font-style: italic; letter-spacing: 2px; }
+  .slide.capa .linha { width: 80px; height: 2px; background: #d4af37; margin: 1.5em auto; }
+  .slide h2 { font-family: Georgia, serif; font-size: 2.2em; color: #d4af37; margin-bottom: 0.6em; }
+  .slide p { font-size: 1.1em; line-height: 1.8; color: #aaa; max-width: 800px; }
+  .slide ul { list-style: none; padding: 0; }
+  .slide li { padding: 0.5em 0; font-size: 1.05em; color: #ccc; border-bottom: 1px solid #1a1a1a; }
+  .slide li::before { content: "▸ "; color: #d4af37; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2em; margin-top: 2em; }
+  .card { background: #111; border: 1px solid #222; border-radius: 12px; padding: 2em; }
+  .card h3 { color: #d4af37; font-size: 1.1em; margin-bottom: 0.5em; }
+  .card p { font-size: 0.9em; color: #888; }
+  .contra-capa { text-align: center; background: #050505; }
+  .contra-capa p { max-width: 600px; margin: 0 auto; }
+  @media (max-width: 768px) {
+    .slide { padding: 2em 1.5em; }
+    .slide.capa h1 { font-size: 2em; }
+    .grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<section class="slide capa">
+  <h1>AIDD</h1>
+  <p class="sub">AI-Driven Development</p>
+  <div class="linha"></div>
+  <p style="color:#666;font-size:0.9em;letter-spacing:3px;text-transform:uppercase">em Contexto de IDEs Agênticas</p>
+  <p style="color:#555;font-size:0.8em;margin-top:3em">Fábrica Agêntica de Livros • 2026</p>
+</section>
+
+<section class="slide">
+  <h2>O que é AIDD?</h2>
+  <p>AI-Driven Development é a evolução paradigmática do desenvolvimento de software onde agentes de IA atuam como colegas de equipe — não apenas como ferramentas de autocomplete.</p>
+  <div class="grid-3">
+    <div class="card"><h3>🤖 Coding Agents</h3><p>Claude Code, Cursor, Cline, Devin — agentes que escrevem, revisam e refatoram código autonomamente.</p></div>
+    <div class="card"><h3>📐 Context Engineering</h3><p>CLAUDE.md, AGENTS.md — especificações executáveis que guiam o comportamento do agente.</p></div>
+    <div class="card"><h3>🔌 MCP Protocol</h3><p>Model Context Protocol — ponte universal entre agentes e ferramentas externas.</p></div>
+  </div>
+</section>
+
+<section class="slide">
+  <h2>Os 4 Pilares</h2>
+  <ul>
+    <li><strong>Parte I — Fundamentos:</strong> Evolução do desenvolvimento, coding agents, SWE-bench, perception gap</li>
+    <li><strong>Parte II — Context & SDD:</strong> Context Engineering, Spec-Driven Development, multi-IDE</li>
+    <li><strong>Parte III — Protocolos:</strong> MCP, orquestração multi-agente, Fable Method</li>
+    <li><strong>Parte IV — Mundo Real:</strong> Adoção corporativa, dívida técnica, AI Agent Owner, engenheiro de intenção</li>
+  </ul>
+</section>
+
+<section class="slide">
+  <h2>Impacto no Desenvolvimento</h2>
+  <div class="grid-3">
+    <div class="card"><h3>↑ 40-60%</h3><p>Redução no tempo de codificação com coding agents bem configurados</p></div>
+    <div class="card"><h3>↑ 88%</h3><p>Dos pilotos corporativos falham — falta de Context Engineering e SDD</p></div>
+    <div class="card"><h3>↑ Novo Perfil</h3><p>Engenheiro de Intenção — orquestra agentes em vez de escrever código linha a linha</p></div>
+  </div>
+</section>
+
+<section class="slide contra-capa">
+  <h2>Fábrica Agêntica de Livros</h2>
+  <div style="width:60px;height:2px;background:#d4af37;margin:1em auto"></div>
+  <p>Produzido autonomamente por 18 skills + 4 servidores MCP</p>
+  <p style="font-size:0.8em;color:#555;margin-top:3em">Claude Code • CloudConvert • p5.js • SVG • Archify</p>
+</section>
+
+</body></html>

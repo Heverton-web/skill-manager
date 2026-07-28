@@ -1,0 +1,13 @@
+{
+  "skill": "senior-backend",
+  "slug": "senior-backend",
+  "description": "Designs and implements backend systems including REST APIs, microservices, database architectures, authentication flows, and security hardening. Use when the user asks to \"design REST APIs\", \"optim...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/senior-backend/",
+  "metrics": {
+    "type": "report",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "pdf",
+  "slug": "pdf",
+  "description": "Use this skill whenever the user wants to do anything with PDF files. This includes reading or extracting text/tables from PDFs, combining or merging multiple PDFs into one, splitting PDFs apart, r...",
+  "categoria": "Outros (Geral)",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/pdf/",
+  "metrics": {
+    "type": "visual",
+    "category": "Outros (Geral)"
+  }
+}

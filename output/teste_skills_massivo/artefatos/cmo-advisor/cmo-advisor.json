@@ -1,0 +1,13 @@
+{
+  "skill": "cmo-advisor",
+  "slug": "cmo-advisor",
+  "description": "Marketing leadership for scaling companies. Brand positioning, growth model design, marketing budget allocation, and marketing org design. Use when designing brand strategy, selecting growth models...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/cmo-advisor/",
+  "metrics": {
+    "type": "report",
+    "category": "SEO & Marketing Digital"
+  }
+}

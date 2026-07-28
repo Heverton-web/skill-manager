@@ -1,0 +1,13 @@
+{
+  "skill": "vpe-advisor",
+  "slug": "vpe-advisor",
+  "description": "VP of Engineering advisory for startups: delivery throughput (DORA 4 metrics + bottleneck identification), engineering hiring funnel (sourcing → screen → onsite → offer conversion + time-to-fill + ...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/vpe-advisor/",
+  "metrics": {
+    "type": "report",
+    "category": "SEO & Marketing Digital"
+  }
+}

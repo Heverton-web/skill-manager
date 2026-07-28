@@ -1,0 +1,24 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": { "parte": "I", "capitulo": "1" },
+  "estado_execucao": "draft_pronto_para_redacao",
+  "payload_estrategico": {
+    "pilares": [
+      {
+        "nome": "Specification-Driven Development: Especificações como Executáveis",
+        "escopo": "Cobre o conceito de SDD, onde especificações em Markdown/CLAUDE.md são a fonte da verdade que agentes consomem para planejar e executar tarefas. Não cobre ferramentas específicas de ORM ou frameworks web.",
+        "ancora_visual": "Diagrama mostrando o fluxo 'Especificação → Plano → Código → Validação'"
+      },
+      {
+        "nome": "Ciclos de Auto-Correção: Build, Erro, Análise, Patch, Re-Teste",
+        "escopo": "Explica o loop autônomo de correção de erros que diferencia AIDD de ferramentas de autocomplete. Não cobre técnicas avançadas de debugging humano.",
+        "ancora_visual": "Fluxograma do ciclo de auto-correção com setas de feedback"
+      },
+      {
+        "nome": "O Desenvolvedor como Arquiteto e Orquestrador de Agentes",
+        "escopo": "Mostra a transição do papel do desenvolvedor de escritor de código para arquiteto de sistemas, especificador e auditor. Não cobre gestão de equipes ou processos ágeis tradicionais.",
+        "ancora_visual": "Comparação visual entre fluxo de desenvolvimento tradicional e AIDD"
+      }
+    ]
+  }
+}

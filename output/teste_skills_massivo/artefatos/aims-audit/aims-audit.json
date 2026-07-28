@@ -1,0 +1,13 @@
+{
+  "skill": "aims-audit",
+  "slug": "aims-audit",
+  "description": "/cs:aims-audit <scope> — ISO/IEC 42001 AIMS internal-audit 6-question forcing interrogation. Use before certification stage 1, before annual internal audit cycles, or when onboarding a new AI syste...",
+  "categoria": "IA & Machine Learning",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/aims-audit/",
+  "metrics": {
+    "type": "report",
+    "category": "IA & Machine Learning"
+  }
+}

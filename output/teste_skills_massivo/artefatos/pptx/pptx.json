@@ -1,0 +1,13 @@
+{
+  "skill": "pptx",
+  "slug": "pptx",
+  "description": "Use this skill any time a .pptx or .potx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting...",
+  "categoria": "Outros (Geral)",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/pptx/",
+  "metrics": {
+    "type": "visual",
+    "category": "Outros (Geral)"
+  }
+}

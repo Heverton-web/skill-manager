@@ -1,0 +1,13 @@
+{
+  "skill": "security-pen-testing",
+  "slug": "security-pen-testing",
+  "description": "Use when the user asks to perform security audits, penetration testing, vulnerability scanning, OWASP Top 10 checks, or offensive security assessments. Covers static analysis, dependency scanning, ...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/security-pen-testing/",
+  "metrics": {
+    "type": "visual",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

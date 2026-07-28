@@ -1,0 +1,13 @@
+{
+  "skill": "grill-me",
+  "slug": "grill-me",
+  "description": "Interview the user relentlessly about a plan or design until reaching shared understanding, resolving each branch of the decision tree. Use when user wants to stress-test a plan, get grilled on the...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/grill-me/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

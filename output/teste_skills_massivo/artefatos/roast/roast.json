@@ -1,0 +1,13 @@
+{
+  "skill": "roast",
+  "slug": "roast",
+  "description": "Use when someone asks to roast an idea, pressure-test or stress-test an idea, validate a business idea, \"convene the panel\", get a brutal second opinion before building something, or says \"/roast\"....",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/roast/",
+  "metrics": {
+    "type": "html",
+    "category": "SEO & Marketing Digital"
+  }
+}

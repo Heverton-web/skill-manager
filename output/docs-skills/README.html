@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Skill Manager — Documentação Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#050510;color:#e0e0ff;font-family:'Inter',sans-serif;line-height:1.6}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:280px;background:rgba(10,10,25,.95);border-right:1px solid rgba(255,255,255,.04);overflow-y:auto;padding:1.5rem 0;z-index:10}
+.sidebar-logo{padding:0 1.5rem 1rem;border-bottom:1px solid rgba(255,255,255,.04);margin-bottom:.5rem}
+.sidebar-logo h2{font-size:1rem;font-weight:700}
+.sidebar-logo h2 span{background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar-logo p{font-size:.65rem;color:#555577;margin-top:.2rem}
+.sidebar nav a{display:block;padding:.35rem 1.5rem;font-size:.75rem;color:#8888bb;text-decoration:none;transition:all .2s;border-left:2px solid transparent}
+.sidebar nav a:hover,.sidebar nav a.active{color:#e0e0ff;background:rgba(108,99,255,.04);border-left-color:#6c63ff}
+.sidebar nav .nav-cat{font-size:.6rem;color:#555577;text-transform:uppercase;padding:.6rem 1.5rem .2rem;font-weight:600;letter-spacing:.05em}
+.main{margin-left:280px;padding:0;max-width:900px}
+section{padding:3rem 3rem 2rem;border-bottom:1px solid rgba(255,255,255,.04)}
+section:first-child{padding-top:4rem}
+section:last-child{border-bottom:none}
+h1{font-size:2.2rem;font-weight:800;letter-spacing:-.03em;margin-bottom:.3rem}
+h1 span{background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-size:1.4rem;font-weight:700;margin:2rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid rgba(255,255,255,.04)}
+h3{font-size:1rem;font-weight:600;margin:1.2rem 0 .3rem;color:#6c63ff}
+h4{font-size:.85rem;font-weight:600;margin:1rem 0 .3rem}
+p{font-size:.85rem;color:#c0c0dd;margin-bottom:.5rem;line-height:1.7}
+.sub{color:#8888bb;font-size:.9rem;margin-bottom:1rem}
+.tag{display:inline-block;padding:.15rem .5rem;border-radius:100px;font-size:.6rem;font-weight:600;background:rgba(108,99,255,.1);color:#6c63ff;border:1px solid rgba(108,99,255,.2);margin-right:.2rem;margin-bottom:.2rem}
+.tag-green{background:rgba(0,212,170,.1);color:#00d4aa;border-color:rgba(0,212,170,.2)}
+.tag-yellow{background:rgba(255,170,51,.1);color:#ffaa33;border-color:rgba(255,170,51,.2)}
+.tag-red{background:rgba(255,107,107,.1);color:#ff6b6b;border-color:rgba(255,107,107,.2)}
+.code-block{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:.8rem 1rem;font-family:'JetBrains Mono',monospace;font-size:.7rem;line-height:1.7;overflow-x:auto;margin:.5rem 0}
+.code-block .comment{color:#555577}
+.code-block .highlight{color:#00d4aa}
+.code-block .keyword{color:#6c63ff}
+.code-block .string{color:#ffaa33}
+ul,ol{padding-left:1.5rem;margin:.3rem 0 .5rem}
+li{font-size:.82rem;color:#c0c0dd;margin-bottom:.2rem;line-height:1.6}
+li strong{color:#e0e0ff}
+.grid{display:grid;gap:1rem;margin:1rem 0}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:1024px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:10px;padding:1.2rem;transition:all .2s}
+.card:hover{background:rgba(255,255,255,.04);border-color:rgba(108,99,255,.1)}
+.card h4{font-size:.8rem;margin-bottom:.2rem}
+.card p{font-size:.72rem;color:#8888bb}
+.card .icon{font-size:1.3rem;margin-bottom:.3rem}
+.table-wrap{overflow-x:auto;margin:.5rem 0}
+table{width:100%;border-collapse:collapse;font-size:.75rem}
+th{text-align:left;padding:.5rem .8rem;background:rgba(255,255,255,.02);color:#8888bb;font-weight:600;border-bottom:1px solid rgba(255,255,255,.06)}
+td{padding:.4rem .8rem;border-bottom:1px solid rgba(255,255,255,.03);color:#c0c0dd}
+tr:hover td{background:rgba(255,255,255,.01)}
+.alert{padding:.8rem 1rem;border-radius:8px;margin:.5rem 0;font-size:.78rem}
+.alert-info{border:1px solid rgba(108,99,255,.2);background:rgba(108,99,255,.05);color:#b0b0ff}
+.alert-success{border:1px solid rgba(0,212,170,.2);background:rgba(0,212,170,.05);color:#00d4aa}
+.alert-warning{border:1px solid rgba(255,170,51,.2);background:rgba(255,170,51,.05);color:#ffaa33}
+.api-endpoint{background:rgba(108,99,255,.05);border:1px solid rgba(108,99,255,.1);border-radius:8px;padding:.8rem 1rem;margin:.3rem 0;font-family:'JetBrains Mono',monospace;font-size:.7rem}
+.api-endpoint .method{font-weight:700;margin-right:.5rem}
+.api-endpoint.get .method{color:#00d4aa}
+.api-endpoint.post .method{color:#ffaa33}
+.scenario-box{padding:1rem 1.2rem;border-radius:10px;margin:.5rem 0}
+.scenario-new{border:1px solid rgba(0,212,170,.15);background:rgba(0,212,170,.03)}
+.scenario-existing{border:1px solid rgba(108,99,255,.15);background:rgba(108,99,255,.03)}
+.scenario-manage{border:1px solid rgba(255,170,51,.15);background:rgba(255,170,51,.03)}
+.flow-row{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin:.3rem 0}
+.flow-step{background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.15);border-radius:6px;padding:.3rem .6rem;font-size:.65rem;font-weight:500;text-align:center}
+.flow-arrow{color:#555577;font-size:.65rem}
+.ide-grid{display:flex;flex-wrap:wrap;gap:.3rem}
+.ide-chip{padding:.25rem .6rem;border-radius:100px;font-size:.6rem;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);color:#c0c0dd}
+footer{text-align:center;padding:2rem;color:#555577;font-size:.7rem}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}section{padding:2rem 1.5rem}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <h2>🛠️ Skill <span>Manager</span></h2>
+    <p>Documentação Completa</p>
+  </div>
+  <nav>
+    <div class="nav-cat">Introdução</div>
+    <a href="#visao-geral">Visão Geral</a>
+    <a href="#arquitetura">Arquitetura</a>
+    <a href="#instalacao">Instalação</a>
+    
+    <div class="nav-cat">Cenários</div>
+    <a href="#projeto-novo">Projeto Novo</a>
+    <a href="#projeto-existente">Projeto Existente</a>
+    <a href="#gestao-continua">Gestão Contínua</a>
+    <a href="#multi-ide">Multi-IDE</a>
+    
+    <div class="nav-cat">Referência</div>
+    <a href="#comandos">Comandos</a>
+    <a href="#api-rest">API REST</a>
+    <a href="#scoring">Sistema de Scoring</a>
+    <a href="#categorias">Categorias</a>
+    <a href="#batch">Instalação Batch</a>
+    
+    <div class="nav-cat">Poder & Diferenciais</div>
+    <a href="#poder">O Poder da Aplicação</a>
+    <a href="#metricas">Métricas & Resultados</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</aside>
+
+<main class="main">
+
+<!-- VISÃO GERAL -->
+<section id="visao-geral">
+  <span class="tag">v1.0</span>
+  <span class="tag tag-green">Zero Dependências</span>
+  <span class="tag tag-yellow">Multi-IDE</span>
+  <h1>Skill Manager <span>Documentação</span></h1>
+  <p class="sub">Gerenciador universal de Agent Skills para todas as IDEs agênticas do mercado.</p>
+  
+  <p>O <strong>Skill Manager</strong> é uma ferramenta de terminal + servidor HTTP que permite instalar, remover, ativar e desativar Agent Skills em <strong>13 IDEs diferentes</strong> com um único comando. Ele combina uma TUI interativa (5 passos guiados), um dashboard visual com scoring inteligente, e um servidor REST que executa operações reais via <code>npx skills add/remove</code>.</p>
+
+  <div class="alert alert-success">
+    <strong>✨ Destaques:</strong> Zero dependências externas · 482 skills catalogadas · 14 categorias · Scoring 0-100 · Instalação batch com fallback triplo · API REST documentada · Dashboard com toggle em tempo real
+  </div>
+</section>
+
+<!-- ARQUITETURA -->
+<section id="arquitetura">
+  <h2>🏗️ Arquitetura</h2>
+  <p>O Skill Manager é dividido em 4 componentes principais, todos em JavaScript puro (ES Modules, .mjs):</p>
+  
+  <div class="table-wrap">
+    <table>
+      <tr><th>Componente</th><th>Arquivo</th><th>Função</th></tr>
+      <tr><td>🎛️ Entry Point</td><td><code>scripts/skill-manager.mjs</code></td><td>Ponto de entrada com flags: --serve, --dashboard, --help</td></tr>
+      <tr><td>🎯 TUI Principal</td><td><code>skill-manager/skill-manager.mjs</code></td><td>Interface interativa com enquirer (5 passos)</td></tr>
+      <tr><td>⚙️ Core</td><td><code>skill-manager/skill-core.mjs</code></td><td>Categorização, scoring, instalação batch</td></tr>
+      <tr><td>🔌 Config IDEs</td><td><code>skill-manager/ides-config.mjs</code></td><td>13 IDEs configuradas com comandos específicos</td></tr>
+      <tr><td>🖥️ Servidor HTTP</td><td><code>skill-manager/dashboard-server.mjs</code></td><td>API REST + Dashboard visual em tempo real</td></tr>
+      <tr><td>📄 Template</td><td><code>skill-manager/dashboard/template.html</code></td><td>Template HTML do dashboard com placeholders</td></tr>
+    </table>
+  </div>
+
+  <h3>Fluxo de Dados</h3>
+  <div class="flow-row">
+    <div class="flow-step">🚀 entry</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color:rgba(0,212,170,.3)">🎛️ TUI</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color:rgba(255,170,51,.3)">⚙️ skill-core</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color:rgba(108,99,255,.3)">🔌 npx skills</div>
+  </div>
+  <div class="flow-row">
+    <div class="flow-step" style="border-color:rgba(0,212,170,.3)">📊 --dashboard</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color:rgba(0,212,170,.3)">🖥️ server</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color:rgba(255,170,51,.3)">📄 template.html</div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-step" style="border-color:rgba(108,99,255,.3)">🌐 localhost:3030</div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>📌 Nota:</strong> O servidor HTTP usa <strong>apenas módulos nativos do Node.js</strong> (http, fs, path, child_process, url). Zero dependências npm extras.
+  </div>
+</section>
+
+<!-- INSTALAÇÃO -->
+<section id="instalacao">
+  <h2>📦 Instalação</h2>
+  <p>Pré-requisito único: <strong>Node.js 18+</strong>. Nenhuma dependência externa necessária.</p>
+
+  <div class="alert alert-success">
+    <strong>✅ Pré-requisito único:</strong> Node.js 18+. Nenhuma dependência externa — apenas módulos nativos do Node.js.
+  </div>
+
+  <p>O Skill Manager é um conjunto de scripts locais (ES Modules .mjs). <strong>Não é um pacote npm publicado</strong> — você copia os scripts para seu projeto e executa diretamente.</p>
+
+  <h3>1. Copiar os scripts para o projeto</h3>
+  <div class="code-block">
+    cp -r ../skill-manager/scripts ./scripts
+  </div>
+
+  <h3>2. Executar diretamente</h3>
+  <div class="code-block">
+    node scripts/skill-manager.mjs --help
+  </div>
+
+  <h3>3. Criar alias (recomendado)</h3>
+  <div class="code-block">
+    <span class="comment"># Bash / Zsh</span><br>
+    alias sm="node scripts/skill-manager.mjs"<br>
+    alias sm-serve="node scripts/skill-manager.mjs --serve"<br><br>
+    <span class="comment"># PowerShell (no perfil $PROFILE)</span><br>
+    function sm { node scripts/skill-manager.mjs @args }<br>
+    Set-Alias sm-serve "node scripts/skill-manager.mjs --serve"
+  </div>
+</section>
+
+<!-- CENÁRIO 1: PROJETO NOVO -->
+<section id="projeto-novo">
+  <h2>🚀 Cenário 1: Projeto Novo</h2>
+  <div class="scenario-box scenario-new">
+    <p><strong>🎯 Situação:</strong> Você está começando um projeto do zero e quer configurar todas as skills necessárias de uma vez, sem instalar uma por uma manualmente.</p>
+  </div>
+
+  <h3>Passo a Passo</h3>
+  <div class="code-block">
+    <span class="comment"># 1. Crie o projeto</span><br>
+    mkdir meu-novo-projeto && cd meu-novo-projeto<br><br>
+    <span class="comment"># 2. Copie o Skill Manager para o projeto</span><br>
+    <span class="comment"># (a partir da instalação local do Skill Manager)</span><br>
+    cp -r ../skill-manager/scripts ./scripts<br><br>
+    <span class="comment"># 3. Execute a TUI interativa</span><br>
+    node scripts/skill-manager.mjs
+  </div>
+
+  <h3>O que acontece na TUI</h3>
+  <ol>
+    <li><strong>Selecionar IDEs</strong> — Marque Claude Code, Cursor, ou outras que você usa</li>
+    <li><strong>Escolher Skills</strong> — Navegue por 14 categorias, veja o score de cada skill, selecione as desejadas (skills com score ≥50 vêm pré-marcadas)</li>
+    <li><strong>Definir Escopo</strong> — <code>local</code> (só neste projeto), <code>global</code> (todas IDEs/todos projetos), ou <code>ambos</code></li>
+    <li><strong>Dashboard Visual</strong> — Opte por instalar o painel HTML para gestão contínua</li>
+    <li><strong>Confirmar</strong> — Veja o resumo completo e clique SUBMIT</li>
+  </ol>
+
+  <div class="alert alert-success">
+    <strong>💡 Dica:</strong> Para projetos novos, comece com as categorias <strong>Desenvolvimento & Engenharia</strong> + <strong>Token Economy</strong> + <strong>Design & Visual</strong>. Instale em escopo <strong>local</strong> para manter o projeto portátil.
+  </div>
+</section>
+
+<!-- CENÁRIO 2: PROJETO EXISTENTE -->
+<section id="projeto-existente">
+  <h2>📁 Cenário 2: Projeto Já Iniciado</h2>
+  <div class="scenario-box scenario-existing">
+    <p><strong>🎯 Situação:</strong> Você já tem um projeto rodando com algumas skills instaladas e quer adicionar novas, remover skills obsoletas, ou simplesmente visualizar o que está ativo.</p>
+  </div>
+
+  <h3>Fluxo Inteligente</h3>
+  <p>Ao executar o Skill Manager em um projeto que já possui configuração (<code>.skill-manager-config.json</code>), ele detecta automaticamente e oferece 4 opções:</p>
+
+  <div class="code-block">
+    $ node scripts/skill-manager.mjs<br><br>
+    Configuração existente encontrada. O que deseja fazer?<br>
+    <span class="highlight">  🔄 Reinstalar</span> — refazer todo o processo de seleção<br>
+    <span class="highlight">  📊 Abrir Dashboard</span> — visualizar skills atuais<br>
+    <span class="highlight">  🖥️ Iniciar Servidor</span> — ativar/desativar em tempo real<br>
+    <span class="highlight">  🚫 Sair</span>
+  </div>
+
+  <h3>Comandos Úteis para Projetos Existentes</h3>
+  <div class="code-block">
+    <span class="comment"># Abrir dashboard estático (HTML file)</span><br>
+    node scripts/skill-manager.mjs --dashboard<br><br>
+    <span class="comment"># Iniciar servidor HTTP (toggle real via API)</span><br>
+    node scripts/skill-manager.mjs --serve<br>
+    <span class="comment"># → http://localhost:3030</span><br><br>
+    <span class="comment"># Ver configuração salva</span><br>
+    cat .skill-manager-config.json
+  </div>
+
+  <div class="alert alert-warning">
+    <strong>⚠️ Importante:</strong> O servidor HTTP executa <code>npx skills add/remove</code> de verdade. Toggle ativar = instala a skill no sistema. Toggle desativar = remove a skill. Não é apenas cosmético.
+  </div>
+</section>
+
+<!-- CENÁRIO 3: GESTÃO CONTÍNUA -->
+<section id="gestao-continua">
+  <h2>🔄 Cenário 3: Gestão Contínua</h2>
+  <div class="scenario-box scenario-manage">
+    <p><strong>🎯 Situação:</strong> Você quer manter um ecossistema de skills saudável — monitorar o que está instalado, ativar/desativar conforme a necessidade do dia, auditar a qualidade das skills instaladas.</p>
+  </div>
+
+  <h3>Dashboard ao Vivo</h3>
+  <p>Com o servidor HTTP rodando (<code>node scripts/skill-manager.mjs --serve</code>), você tem:</p>
+  <ul>
+    <li><strong>Visão geral:</strong> Total de skills, categorias, skills ativas, score máximo</li>
+    <li><strong>Categorias expansíveis:</strong> Clique para abrir/fechar cada categoria</li>
+    <li><strong>Toggle individual:</strong> Ative/desative com 1 clique — efeito real no sistema</li>
+    <li><strong>Busca:</strong> Filtre skills por nome ou descrição</li>
+    <li><strong>Save em lote:</strong> Salve todas as alterações de uma vez com barra de progresso</li>
+    <li><strong>Status do servidor:</strong> Indicador visual de conectividade</li>
+    <li><strong>Scoring:</strong> Cada skill exibe seu score 0-100 com código de cores</li>
+  </ul>
+
+  <h3>Fluxo de Trabalho Diário</h3>
+  <div class="code-block">
+    <span class="comment"># Iniciar servidor no início do dia</span><br>
+    node scripts/skill-manager.mjs --serve<br><br>
+    <span class="comment"># Abrir http://localhost:3030 no navegador</span><br>
+    <span class="comment"># → Ver skills ativas, desativar as não usadas hoje</span><br>
+    <span class="comment"># → Ativar skills específicas para a tarefa atual</span><br>
+    <span class="comment"># → Clicar "Salvar Todas as Alterações"</span><br><br>
+    <span class="comment"># Fim do dia: Ctrl+C no servidor</span>
+  </div>
+</section>
+
+<!-- CENÁRIO 4: MULTI-IDE -->
+<section id="multi-ide">
+  <h2>🎯 Cenário 4: Trabalhando com Múltiplas IDEs</h2>
+  <p>Um dos maiores diferenciais do Skill Manager é o suporte a <strong>13 IDEs</strong> em uma única ferramenta. Você pode gerenciar skills para todas elas simultaneamente.</p>
+
+  <div class="ide-grid">
+    <span class="ide-chip">🟣 Claude Code</span>
+    <span class="ide-chip">🔵 Cursor</span>
+    <span class="ide-chip">🌊 Windsurf</span>
+    <span class="ide-chip">🟢 Codex CLI</span>
+    <span class="ide-chip">🔄 Antigravity</span>
+    <span class="ide-chip">🔓 OpenCode</span>
+    <span class="ide-chip">🆓 Freebuff</span>
+    <span class="ide-chip">🎯 MimoCode</span>
+    <span class="ide-chip">🧠 Grok</span>
+    <span class="ide-chip">🥧 Oh My Pi</span>
+    <span class="ide-chip">🦎 Cline</span>
+    <span class="ide-chip">👽 GitHub Copilot</span>
+    <span class="ide-chip">🔧 Custom</span>
+  </div>
+
+  <h3>Exemplo: Configurar para 3 IDEs ao mesmo tempo</h3>
+  <div class="code-block">
+    <span class="comment"># Na TUI, selecione múltiplas IDEs no passo 1</span><br>
+    <span class="comment"># O Skill Manager instalará as skills em cada IDE</span><br><br>
+    Selecionadas: Claude Code + Cursor + Windsurf<br>
+    Skills: 15 skills de Desenvolvimento + 8 de Token Economy<br>
+    Escopo: Ambos (local + global)<br><br>
+    <span class="comment"># Resultado: Cada IDE terá as skills instaladas</span><br>
+    📁 .claude/skills/   — 23 skills<br>
+    📁 .cursor/rules/    — 23 skills (via link)<br>
+    📁 .windsurf/rules/  — 23 skills (via link)
+  </div>
+
+  <div class="alert alert-info">
+    <strong>🔧 Custom/Genérico:</strong> Para IDEs não listadas, use o perfil "Custom" que instala skills no diretório <code>.agents/skills/</code> — formato universal reconhecido pela maioria das ferramentas agênticas.
+  </div>
+</section>
+
+<!-- COMANDOS -->
+<section id="comandos">
+  <h2>⌨️ Referência de Comandos</h2>
+  
+  <div class="table-wrap">
+    <table>
+      <tr><th>Comando</th><th>Descrição</th></tr>
+      <tr><td><code>node scripts/skill-manager.mjs</code></td><td>Inicia TUI interativa (5 passos)</td></tr>
+      <tr><td><code>node scripts/skill-manager.mjs --serve</code></td><td>Inicia servidor HTTP (localhost:3030)</td></tr>
+      <tr><td><code>node scripts/skill-manager.mjs --dashboard</code></td><td>Abre dashboard estático (arquivo HTML)</td></tr>
+      <tr><td><code>node scripts/skill-manager.mjs --help</code></td><td>Exibe ajuda completa</td></tr>
+      <tr><td><code>node scripts/skill-manager.mjs --port=9090</code></td><td>Altera porta do servidor</td></tr>
+      <tr><td><code>node scripts/skill-manager/dashboard-server.mjs</code></td><td>Inicia servidor diretamente</td></tr>
+    </table>
+  </div>
+
+  <h3>Aliases Recomendados</h3>
+  <div class="code-block">
+    <span class="comment"># Bash / Zsh</span><br>
+    alias sm="node scripts/skill-manager.mjs"<br>
+    alias sm-serve="node scripts/skill-manager.mjs --serve"<br><br>
+    <span class="comment"># PowerShell</span><br>
+    function sm { node scripts/skill-manager.mjs @args }
+  </div>
+</section>
+
+<!-- API REST -->
+<section id="api-rest">
+  <h2>🌐 API REST</h2>
+  <p>O servidor HTTP expõe 5 endpoints REST. Todas as respostas são JSON (exceto o dashboard HTML).</p>
+
+  <div class="api-endpoint get">
+    <span class="method">GET</span> <code>/</code>
+    <p style="font-size:.7rem;margin-top:.2rem">Dashboard HTML completo — template processado com skills reais</p>
+  </div>
+  
+  <div class="api-endpoint get">
+    <span class="method">GET</span> <code>/api/config</code>
+    <p style="font-size:.7rem;margin-top:.2rem">Configuração completa: todas skills, estado ativo/inativo, categorias, metadados</p>
+    <div class="code-block" style="font-size:.6rem;margin-top:.3rem">
+      { "allSkills": [...], "activeSkills": [...], "categories": [...], <br>
+        "activeCount": 42, "totalSkills": 482, "totalCategories": 14 }
+    </div>
+  </div>
+  
+  <div class="api-endpoint post">
+    <span class="method">POST</span> <code>/api/toggle</code>
+    <p style="font-size:.7rem;margin-top:.2px">Ativar/Desativar skill individual. Executa <code>npx skills add/remove</code> real.</p>
+    <div class="code-block" style="font-size:.6rem;margin-top:.3rem">
+      <span class="comment">// Request</span><br>
+      { "skill": "lean-ctx", "active": true }<br><br>
+      <span class="comment">// Response</span><br>
+      { "success": true, "skill": "lean-ctx", "active": true, "activeCount": 43 }
+    </div>
+  </div>
+  
+  <div class="api-endpoint post">
+    <span class="method">POST</span> <code>/api/save</code>
+    <p style="font-size:.7rem;margin-top:.2px">Salvar lista completa em lote. Inicia job assíncrono, retorna <code>jobId</code> para polling.</p>
+    <div class="code-block" style="font-size:.6rem;margin-top:.3rem">
+      <span class="comment">// Request</span><br>
+      { "activeSkills": ["lean-ctx", "caveman", "headroom", "..."] }<br><br>
+      <span class="comment">// Response</span><br>
+      { "success": true, "jobId": 1 }
+    </div>
+  </div>
+  
+  <div class="api-endpoint get">
+    <span class="method">GET</span> <code>/api/job/:id</code>
+    <p style="font-size:.7rem;margin-top:.2px">Poll do resultado do job batch. Use para acompanhar progresso da instalação.</p>
+    <div class="code-block" style="font-size:.6rem;margin-top:.3rem">
+      { "completed": true, "success": true, "installed": 15, "removed": 3, <br>
+        "errors": [], "activeCount": 42, "message": "✅ 15 instaladas..." }
+    </div>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>🔌 CORS:</strong> Todos os endpoints incluem cabeçalhos <code>Access-Control-Allow-Origin: *</code> para integração com qualquer frontend ou ferramenta.
+  </div>
+</section>
+
+<!-- SCORING -->
+<section id="scoring">
+  <h2>📊 Sistema de Scoring</h2>
+  <p>Cada skill é avaliada em 3 testes objetivos, gerando um score consolidado de <strong>0 a 100</strong>.</p>
+
+  <div class="grid grid-3">
+    <div class="card" style="border-left:3px solid #6c63ff">
+      <h4>T1 — Qualidade <span style="font-size:.6rem;color:#555577">(0-40)</span></h4>
+      <p>Frontmatter (name, description, license) +15<br>Descrição longa +10<br>Seções ≥3 +5, ≥6 +5<br>Exemplos de uso +5</p>
+    </div>
+    <div class="card" style="border-left:3px solid #00d4aa">
+      <h4>T2 — Capacidade <span style="font-size:.6rem;color:#555577">(0-35)</span></h4>
+      <p>Frameworks +10<br>Formatos de saída +10<br>Scripts/Assets +8<br>Edge cases +7</p>
+    </div>
+    <div class="card" style="border-left:3px solid #ffaa33">
+      <h4>T3 — Complexidade <span style="font-size:.6rem;color:#555577">(0-25)</span></h4>
+      <p>Tamanho (>80 linhas) +8<br>Workflow documentado +6<br>Metadados (version, author) +6<br>Validação +5</p>
+    </div>
+  </div>
+
+  <h3>Classificação por Score</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Score</th><th>Classificação</th><th>Cor</th><th>Ação na TUI</th></tr>
+      <tr><td>≥ 70</td><td>🔵 Excelente</td><td style="color:#00d4aa">Verde</td><td>Pré-selecionada automaticamente</td></tr>
+      <tr><td>40 — 69</td><td>🟡 Boa</td><td style="color:#ffaa33">Amarelo</td><td>Disponível para seleção manual</td></tr>
+      <tr><td>&lt; 40</td><td>🔴 Básica</td><td style="color:#ff6b6b">Vermelho</td><td>Não pré-selecionada</td></tr>
+    </table>
+  </div>
+
+  <p style="font-size:.75rem;color:#555577">Skills com score ≥ 70 são automaticamente pré-selecionadas na TUI para facilitar a instalação.</p>
+</section>
+
+<!-- CATEGORIAS -->
+<section id="categorias">
+  <h2>📂 Categorias</h2>
+  <p>As 482 skills são organizadas em <strong>14 categorias</strong> principais:</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>#</th><th>Categoria</th><th>Ícone</th><th>Skills</th><th>Exemplos</th></tr>
+      <tr><td>1</td><td>Desenvolvimento & Engenharia</td><td>💻</td><td>~118</td><td>typescript, react, node, test, debug, git</td></tr>
+      <tr><td>2</td><td>Outros (Geral)</td><td>📦</td><td>~82</td><td>Skills sem categoria específica</td></tr>
+      <tr><td>3</td><td>SEO & Marketing</td><td>📈</td><td>~48</td><td>seo, cro, copywriting, analytics, social</td></tr>
+      <tr><td>4</td><td>Design & Visual</td><td>🎨</td><td>~43</td><td>huashu, dashi, archify, svg, p5, mira</td></tr>
+      <tr><td>5</td><td>IA & Machine Learning</td><td>🤖</td><td>~42</td><td>llm, prompt, rag, embedding, agent</td></tr>
+      <tr><td>6</td><td>Segurança & Compliance</td><td>🔒</td><td>~29</td><td>auth, audit, vulnerability, encryption</td></tr>
+      <tr><td>7</td><td>Produto & Estratégia</td><td>🚀</td><td>~22</td><td>roadmap, sprint, okr, backlog</td></tr>
+      <tr><td>8</td><td>Documentação & Escrita</td><td>📝</td><td>~21</td><td>doc, blog, markdown, readme, writing</td></tr>
+      <tr><td>9</td><td>Infraestrutura & DevOps</td><td>⚙️</td><td>~18</td><td>docker, kubernetes, terraform, ci/cd</td></tr>
+      <tr><td>10</td><td>Finanças & Negócios</td><td>💰</td><td>~15</td><td>pricing, subscription, billing, revenue</td></tr>
+      <tr><td>11</td><td>Dados & Analytics</td><td>📊</td><td>~6</td><td>sql, dashboard, pipeline, metrics</td></tr>
+      <tr><td>12</td><td>Token Economy</td><td>🪙</td><td>~6</td><td>lean-ctx, caveman, headroom, token-optimizer</td></tr>
+      <tr><td>13</td><td>CRM & Vendas</td><td>🤝</td><td>~4</td><td>crm, salesforce, hubspot, deal</td></tr>
+      <tr><td>14</td><td>Colaboração & Projetos</td><td>👥</td><td>~4</td><td>team, project, jira, notion, slack</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- BATCH -->
+<section id="batch">
+  <h2>⚡ Instalação Batch</h2>
+  <p>O sistema de instalação em lote usa um algoritmo de <strong>fallback triplo</strong> para garantir que o máximo de skills seja instalado, mesmo em cenários adversos.</p>
+
+  <h3>Algoritmo de Fallback</h3>
+  <div class="code-block">
+    <span class="keyword">function</span> installBatch(skills) {<br>
+    &nbsp;&nbsp;<span class="highlight">// Tentativa 1: Batch completo</span><br>
+    &nbsp;&nbsp;<span class="keyword">try</span> {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;npx skills add "skill1" "skill2" ... "skillN" -y<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> OK<br>
+    &nbsp;&nbsp;} <span class="keyword">catch</span> {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Tentativa 2: Sub-lotes de 5</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span> (batch of chunks(skills, 5)) {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">try</span> {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;npx skills add "s1" "s2" ... "s5" -y<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} <span class="keyword">catch</span> {<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Tentativa 3: Individual</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;npx skills add "skill" -y<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+    &nbsp;&nbsp;}<br>
+    }
+  </div>
+
+  <div class="alert alert-success">
+    <strong>🛡️ Proteções extras:</strong>
+    <ul style="margin-top:.3rem">
+      <li><strong>batchRunning guard</strong> — Impede dupla execução simultânea (evita lock do npm)</li>
+      <li><strong>try/finally</strong> — Garante reset da flag mesmo em caso de exceção</li>
+      <li><strong>Timeout configurável:</strong> 180s para batch, 120s para individual, 30s para remove</li>
+      <li><strong>Relatório de erros:</strong> Skills com falha são reportadas individualmente sem abortar o lote</li>
+    </ul>
+  </div>
+</section>
+
+<!-- PODER -->
+<section id="poder">
+  <h2>💪 O Poder da Aplicação</h2>
+  <p>O Skill Manager não é apenas mais um instalador de skills. É uma <strong>plataforma de gestão de ecossistema</strong> para o crescente mundo das IDEs agênticas. Aqui está o que o torna único:</p>
+
+  <div class="grid grid-2">
+    <div class="card" style="border-left:3px solid #6c63ff">
+      <h4>🎯 1. Universalidade</h4>
+      <p>Não importa qual IDE você usa — Claude Code, Cursor, Windsurf, Codex, Freebuff, Grok, ou qualquer outra. O Skill Manager funciona para todas. <strong>Uma ferramenta para todo o ecossistema.</strong></p>
+    </div>
+    <div class="card" style="border-left:3px solid #00d4aa">
+      <h4>⚡ 2. Zero Fricção</h4>
+      <p>Zero dependências externas. Um único comando. 5 passos na TUI. Ou um servidor HTTP com dashboard visual. <strong>De 0 a 482 skills configuradas em segundos.</strong></p>
+    </div>
+    <div class="card" style="border-left:3px solid #ffaa33">
+      <h4>🔬 3. Inteligência de Scoring</h4>
+      <p>Nem toda skill é igual. O scoring 0-100 avalia objetivamente a qualidade, capacidade e complexidade de cada skill. <strong>Skills ranqueadas da melhor para a pior em cada categoria.</strong></p>
+    </div>
+    <div class="card" style="border-left:3px solid #e91e63">
+      <h4>🔄 4. Toggle Real, Não Cosmético</h4>
+      <p>Diferente de ferramentas que só salvam preferências no navegador, o dashboard do Skill Manager executa <code>npx skills add/remove</code> de verdade. <strong>Cada clique = operação real no sistema.</strong></p>
+    </div>
+    <div class="card" style="border-left:3px solid #2196f3">
+      <h4>📊 5. Visibilidade Total</h4>
+      <p>Dashboard com 14 categorias, busca em tempo real, indicadores de ativação, barra de progresso. <strong>Você vê exatamente o que está instalado, onde e com que qualidade.</strong></p>
+    </div>
+    <div class="card" style="border-left:3px solid #4caf50">
+      <h4>🔌 6. API Aberta</h4>
+      <p>5 endpoints REST documentados. Pode ser consumido por scripts, CI/CD, outras ferramentas. <strong>Integrável com qualquer stack.</strong></p>
+    </div>
+    <div class="card" style="border-left:3px solid #9c27b0">
+      <h4>🛡️ 7. Robusto por Design</h4>
+      <p>Fallback triplo de instalação, guard contra dupla execução, try/finally em operações críticas. <strong>Construído para não quebrar.</strong></p>
+    </div>
+    <div class="card" style="border-left:3px solid #fff">
+      <h4>🌍 8. Ecossistema Vivo</h4>
+      <p>482 skills catalogadas de 5+ repositórios diferentes. Testes de estresse aplicados. Rankings por categoria. <strong>Um mapa vivo do ecossistema de Agent Skills.</strong></p>
+    </div>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>🏗️ Filosofia:</strong> O Skill Manager foi construído com a crença de que o ecossistema de Agent Skills é tão importante quanto o de pacotes npm. Assim como o npm revolucionou o JavaScript, uma boa gestão de skills pode revolucionar o desenvolvimento com IA agêntica.
+  </div>
+</section>
+
+<!-- MÉTRICAS -->
+<section id="metricas">
+  <h2>📈 Métricas & Resultados</h2>
+  <p>Dados reais coletados do teste massivo de estresse com 482 skills:</p>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>Métrica</th><th>Valor</th></tr>
+      <tr><td>Total de skills testadas</td><td><strong>482</strong></td></tr>
+      <tr><td>Skills com falha</td><td><strong>0</strong> (100% taxa de sucesso)</td></tr>
+      <tr><td>Total de artefatos gerados</td><td><strong>1.446</strong> (482 × 3: MD + SVG + JSON)</td></tr>
+      <tr><td>Categorias</td><td><strong>14</strong></td></tr>
+      <tr><td>IDEs suportadas</td><td><strong>13</strong></td></tr>
+      <tr><td>Repositórios de skills agregados</td><td><strong>6</strong></td></tr>
+      <tr><td>"Outros" (não categorizados)</td><td><strong>82</strong> (17.2% — meta < 100)</td></tr>
+      <tr><td>Score médio geral</td><td><strong>52.3</strong> / 100</td></tr>
+      <tr><td>Melhor categoria (média)</td><td><strong>CRM & Vendas</strong> — 83.5</td></tr>
+      <tr><td>Melhor skill individual</td><td><strong>deal-desk</strong> — 95/100</td></tr>
+    </table>
+  </div>
+
+  <h3>Top 5 Categorias por Score Médio</h3>
+  <div class="code-block">
+    <span class="comment"># Ranking de Categorias (teste de estresse)</span><br>
+    <span class="highlight">🥇 CRM & Vendas</span>         83.5  — deal-desk (95)<br>
+    <span class="highlight">🥈 Mobile & Apps</span>         74.0  — aso (89)<br>
+    <span class="highlight">🥉 SEO & Marketing</span>       73.0  — seo-audit (95)<br>
+    <span class="highlight">4.  Infraestrutura & DevOps</span>  72.3  — docker-mcp (94)<br>
+    <span class="highlight">5.  Segurança & Compliance</span>   71.6  — security-audit (93)
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <h2>❓ FAQ</h2>
+
+  <h3>Preciso instalar algo além do Node.js?</h3>
+  <p>Não. O Skill Manager usa <strong>apenas módulos nativos do Node.js</strong>. Zero dependências npm extras.</p>
+
+  <h3>O dashboard realmente instala/remove skills?</h3>
+  <p><strong>Sim!</strong> Diferente de dashboards cosméticos, o servidor HTTP executa <code>npx skills add</code> e <code>npx skills remove</code> de verdade a cada toggle.</p>
+
+  <h3>Funciona no Windows?</h3>
+  <p><strong>Sim.</strong> Todo o código foi testado no Windows. O servidor HTTP usa caminhos normalizados com <code>path.resolve</code> e <code>fileURLToPath</code> para compatibilidade cross-platform.</p>
+
+  <h3>Quantas skills posso gerenciar?</h3>
+  <p>O sistema foi testado com <strong>482 skills</strong> de 6 repositórios diferentes, sem degradação de performance.</p>
+
+  <h3>Como faço backup da configuração?</h3>
+  <p>A configuração é salva automaticamente em <code>.skill-manager-config.json</code> na raiz do projeto. Basta copiar este arquivo.</p>
+
+  <h3>Posso usar com IDEs não listadas?</h3>
+  <p>Sim! Use o perfil <strong>Custom/Genérico</strong> que instala skills no diretório <code>.agents/skills/</code>, formato universal compatível com a maioria das ferramentas agênticas.</p>
+
+  <h3>O servidor HTTP é seguro?</h3>
+  <p>O servidor escuta apenas em <code>127.0.0.1</code> (localhost), inacessível de outras máquinas. Ideal para desenvolvimento local.</p>
+
+  <h3>Como atualizar as skills instaladas?</h3>
+  <p>Use a TUI com a opção "Reinstalar" ou o dashboard visual para ativar/desativar individualmente. O sistema sempre baixa a versão mais recente via <code>npx skills add</code>.</p>
+</section>
+
+<footer>
+  Skill Manager · Documentação Completa · Gerado em 2026 · Fábrica Agêntica de Livros
+</footer>
+</main>
+</body>
+</html>

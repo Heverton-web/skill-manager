@@ -1,0 +1,13 @@
+{
+  "skill": "prototype",
+  "slug": "prototype",
+  "description": "Build a throwaway prototype to answer a design question. Use when the user wants to sanity-check whether a state model or logic feels right, or explore what a UI should look like.",
+  "categoria": "Outros (Geral)",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/prototype/",
+  "metrics": {
+    "type": "html",
+    "category": "Outros (Geral)"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "deep-dive",
+  "slug": "deep-dive",
+  "description": "Claude-native deep research using DAG-based query planning, parallel subagent execution, and gap-driven iteration. No external API needed.",
+  "categoria": "IA & Machine Learning",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/deep-dive/",
+  "metrics": {
+    "type": "report",
+    "category": "IA & Machine Learning"
+  }
+}

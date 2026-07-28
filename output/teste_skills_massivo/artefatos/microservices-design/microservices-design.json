@@ -1,0 +1,13 @@
+{
+  "skill": "microservices-design",
+  "slug": "microservices-design",
+  "description": "Microservices design patterns including service mesh, event-driven architecture, saga pattern, and API gateway",
+  "categoria": "Design & Visual",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/microservices-design/",
+  "metrics": {
+    "type": "report",
+    "category": "Design & Visual"
+  }
+}

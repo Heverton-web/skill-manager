@@ -1,0 +1,13 @@
+{
+  "skill": "ask-matt",
+  "slug": "ask-matt",
+  "description": "Ask which skill or flow fits your situation. A router over the skills in this repo.",
+  "categoria": "Outros (Geral)",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/ask-matt/",
+  "metrics": {
+    "type": "visual",
+    "category": "Outros (Geral)"
+  }
+}

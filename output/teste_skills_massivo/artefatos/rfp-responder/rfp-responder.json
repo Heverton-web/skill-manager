@@ -1,0 +1,13 @@
+{
+  "skill": "rfp-responder",
+  "slug": "rfp-responder",
+  "description": "Use when an RFP, RFI, RFQ, security questionnaire, vendor questionnaire, or proposal request arrives and the team needs a structured response — parsing multi-section buyer-dictated requirements (MA...",
+  "categoria": "Finanças & Negócios",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/rfp-responder/",
+  "metrics": {
+    "type": "report",
+    "category": "Finanças & Negócios"
+  }
+}

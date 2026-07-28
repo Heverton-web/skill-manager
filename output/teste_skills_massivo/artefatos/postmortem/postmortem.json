@@ -1,0 +1,13 @@
+{
+  "skill": "postmortem",
+  "slug": "postmortem",
+  "description": "/em:postmortem — Honest analysis of what went wrong. Use after a failed launch, missed quarter, or bad hire to run a blameless 5-Whys retrospective with a change register — e.g. dissecting why the ...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/postmortem/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "self-improving-agent",
+  "slug": "self-improving-agent",
+  "description": "Curate Claude Code's auto-memory into durable project knowledge. Analyze MEMORY.md for patterns, promote proven learnings to CLAUDE.md and .claude/rules/, extract recurring solutions into reusable ...",
+  "categoria": "IA & Machine Learning",
+  "tipo": "test",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/self-improving-agent/",
+  "metrics": {
+    "type": "test",
+    "category": "IA & Machine Learning"
+  }
+}

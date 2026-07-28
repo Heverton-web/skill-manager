@@ -1,0 +1,13 @@
+{
+  "skill": "migration-architect",
+  "slug": "migration-architect",
+  "description": "Zero-downtime migration planning, compatibility validation, and rollback strategy generation. Tools for system, database, and infrastructure migrations with minimal business impact. Use when planni...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/migration-architect/",
+  "metrics": {
+    "type": "report",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

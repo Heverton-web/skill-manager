@@ -1,0 +1,13 @@
+{
+  "skill": "eu-ai-act-specialist",
+  "slug": "eu-ai-act-specialist",
+  "description": "EU AI Act (Regulation (EU) 2024/1689) operational compliance for compliance teams. Three Article-level decisions: (1) What's the risk tier of this AI system — prohibited (Art. 5), high-risk (Art. 6...",
+  "categoria": "IA & Machine Learning",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/eu-ai-act-specialist/",
+  "metrics": {
+    "type": "visual",
+    "category": "IA & Machine Learning"
+  }
+}

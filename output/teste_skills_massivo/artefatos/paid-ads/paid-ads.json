@@ -1,0 +1,13 @@
+{
+  "skill": "paid-ads",
+  "slug": "paid-ads",
+  "description": "When the user wants help with paid advertising campaigns on Google Ads, Meta (Facebook/Instagram), LinkedIn, Twitter/X, or other ad platforms. Also use when the user mentions 'PPC,' 'paid media,' '...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/paid-ads/",
+  "metrics": {
+    "type": "html",
+    "category": "SEO & Marketing Digital"
+  }
+}

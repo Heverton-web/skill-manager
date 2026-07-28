@@ -1,0 +1,13 @@
+{
+  "skill": "grilling",
+  "slug": "grilling",
+  "description": "Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases.",
+  "categoria": "Outros (Geral)",
+  "tipo": "test",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/grilling/",
+  "metrics": {
+    "type": "test",
+    "category": "Outros (Geral)"
+  }
+}

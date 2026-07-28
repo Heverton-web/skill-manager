@@ -1,0 +1,22 @@
+<svg viewBox="0 0 1000 350" width="1000" height="350" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="1000" height="350" fill="#0f1720"/>
+  <text x="500" y="35" font-size="18" font-family="Georgia, serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">Perguntas do fable-judge na Verificação Adversarial</text>
+  <rect x="60" y="65" width="420" height="60" rx="8" fill="#1c2a3a" stroke="#b9c2cc" stroke-width="1"/>
+  <text x="270" y="90" font-size="13" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">1. "Os testes originais ainda passam?"</text>
+  <text x="270" y="110" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">N&atilde;o apenas os que o agente escreveu</text>
+  <rect x="520" y="65" width="420" height="60" rx="8" fill="#1c2a3a" stroke="#b9c2cc" stroke-width="1"/>
+  <text x="730" y="90" font-size="13" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">2. "O diff cont&eacute;m mudan&ccedil;as n&atilde;o declaradas?"</text>
+  <text x="730" y="110" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Feature creep ou altera&ccedil;&otilde;es colaterais</text>
+  <rect x="60" y="145" width="420" height="60" rx="8" fill="#1c2a3a" stroke="#e85a5a" stroke-width="1"/>
+  <text x="270" y="170" font-size="13" font-family="Arial, sans-serif" fill="#e85a5a" text-anchor="middle">3. "Os testes foram enfraquecidos?"</text>
+  <text x="270" y="190" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Asser&ccedil;&otilde;es removidas? Toler&acirc;ncias aumentadas?</text>
+  <rect x="520" y="145" width="420" height="60" rx="8" fill="#1c2a3a" stroke="#b9c2cc" stroke-width="1"/>
+  <text x="730" y="170" font-size="13" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">4. "Casos de borda cobertos?"</text>
+  <text x="730" y="190" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Arrays vazios? Valores null? Concorr&ecirc;ncia?</text>
+  <rect x="60" y="225" width="420" height="60" rx="8" fill="#1c2a3a" stroke="#b9c2cc" stroke-width="1"/>
+  <text x="270" y="250" font-size="13" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">5. "Padr&otilde;es do projeto seguidos?"</text>
+  <text x="270" y="270" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Estilo, nomenclatura, estrutura de diretórios</text>
+  <rect x="520" y="225" width="420" height="60" rx="8" fill="#4a8a4a"/>
+  <text x="730" y="250" font-size="14" font-family="Arial, sans-serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">Veredito Final</text>
+  <text x="730" y="272" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">VERIFIED / CAVEATS / REFUTED</text>
+</svg>

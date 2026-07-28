@@ -1,0 +1,13 @@
+{
+  "skill": "vpe-review",
+  "slug": "vpe-review",
+  "description": "/cs:vpe-review <plan> — Throughput-first VP of Engineering interrogation of any plan that touches delivery, eng hiring, team structure, or production discipline. Use when cycle time balloons, DORA ...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/vpe-review/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "churn-prevention",
+  "slug": "churn-prevention",
+  "description": "Reduce voluntary and involuntary churn through cancel flow design, save offers, exit surveys, and dunning sequences. Use when designing or optimizing a cancel flow, building save offers, setting up...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/churn-prevention/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

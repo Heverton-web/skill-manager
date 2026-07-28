@@ -1,0 +1,13 @@
+{
+  "skill": "database-schema-designer",
+  "slug": "database-schema-designer",
+  "description": "Use when the user asks to create ERD diagrams, normalize database schemas, design table relationships, or plan schema migrations.",
+  "categoria": "Design & Visual",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/database-schema-designer/",
+  "metrics": {
+    "type": "report",
+    "category": "Design & Visual"
+  }
+}

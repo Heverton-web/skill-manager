@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" font-family="sans-serif"><rect width="400" height="200" fill="#0a0a14" rx="8"/>
+<style>@keyframes move{0%{transform:translate(40px,30px)}25%{transform:translate(340px,30px)}50%{transform:translate(340px,150px)}75%{transform:translate(40px,150px)}100%{transform:translate(40px,30px)}}
+.dot{width:16px;height:16px;border-radius:50%;background:#00d4aa;position:absolute;animation:move 4s ease-in-out infinite}
+@keyframes f{to{opacity:1}}</style>
+<rect x="30" y="20" width="340" height="150" fill="none" stroke="#555577" stroke-width="1" stroke-dasharray="4,4" rx="8"/>
+<foreignObject x="0" y="0" width="400" height="200"><div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;position:relative"><div class="dot"></div></div></foreignObject>
+<text x="200" y="190" text-anchor="middle" fill="#8888bb" font-size="10">Motion Path · CSS animation</text>
+</svg>

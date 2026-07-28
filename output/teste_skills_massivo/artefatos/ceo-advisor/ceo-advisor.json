@@ -1,0 +1,13 @@
+{
+  "skill": "ceo-advisor",
+  "slug": "ceo-advisor",
+  "description": "Executive leadership guidance for strategic decision-making, organizational development, and stakeholder management. Use when planning strategy, preparing board presentations, managing investors, d...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/ceo-advisor/",
+  "metrics": {
+    "type": "report",
+    "category": "SEO & Marketing Digital"
+  }
+}

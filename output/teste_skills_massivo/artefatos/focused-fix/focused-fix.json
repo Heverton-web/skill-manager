@@ -1,0 +1,13 @@
+{
+  "skill": "focused-fix",
+  "slug": "focused-fix",
+  "description": "Use when the user asks to fix, debug, or make a specific feature/module/area work end-to-end. Triggers: 'make X work', 'fix the Y feature', 'the Z module is broken', 'focus on [area]'. Not for quic...",
+  "categoria": "Outros (Geral)",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/focused-fix/",
+  "metrics": {
+    "type": "html",
+    "category": "Outros (Geral)"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "full-page-screenshot",
+  "slug": "full-page-screenshot",
+  "description": "Use when the user asks to capture a full-page screenshot, long screenshot, or complete page capture of a web page. Handles SPA scroll containers, lazy-loaded images, and very tall pages via Chrome ...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/full-page-screenshot/",
+  "metrics": {
+    "type": "html",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

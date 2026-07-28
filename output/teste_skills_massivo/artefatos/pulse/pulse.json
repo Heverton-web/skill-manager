@@ -1,0 +1,13 @@
+{
+  "skill": "pulse",
+  "slug": "pulse",
+  "description": "Multi-source recency research skill that takes the pulse of any topic across Reddit, Hacker News, the open web, and optionally X/Twitter within a configurable recent window (default 30 days). Forci...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/pulse/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

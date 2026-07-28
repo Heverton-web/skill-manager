@@ -1,0 +1,24 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": { "parte": "I", "capitulo": "2" },
+  "estado_execucao": "draft_pronto_para_redacao",
+  "payload_estrategico": {
+    "pilares": [
+      {
+        "nome": "Claude Code, Cursor, Windsurf: Arquiteturas e Diferenciais",
+        "escopo": "Analisa as três principais plataformas agênticas, suas arquiteturas de agente, modelos de execução e casos de uso ideais. Não cobre comparações de preço ou performance de modelos.",
+        "ancora_visual": "Tabela comparativa das três plataformas com colunas de funcionalidades"
+      },
+      {
+        "nome": "Model Context Protocol: O 'USB-C para IA' e seus Servidores",
+        "escopo": "Explica o MCP como padrão aberto de integração entre agentes e ferramentas, seus tipos de transporte e o ecossistema de servidores. Não cobre implementação detalhada de servidores MCP customizados.",
+        "ancora_visual": "Diagrama de arquitetura cliente-servidor do MCP"
+      },
+      {
+        "nome": "Extensões Open-Source: Cline, Roo Code e o Ecossistema BYOK",
+        "escopo": "Mostra o ecossistema de extensões que permitem trazer agentes para qualquer IDE, com Bring Your Own Key. Não cobre tutorial de instalação passo a passo.",
+        "ancora_visual": "Mapa do ecossistema de ferramentas AIDD open-source"
+      }
+    ]
+  }
+}

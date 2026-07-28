@@ -1,0 +1,13 @@
+{
+  "skill": "ma-playbook",
+  "slug": "ma-playbook",
+  "description": "M&A strategy for acquiring companies or being acquired. Due diligence, valuation, integration, and deal structure. Use when evaluating acquisitions, preparing for acquisition, M&A due diligence, in...",
+  "categoria": "Outros (Geral)",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/ma-playbook/",
+  "metrics": {
+    "type": "visual",
+    "category": "Outros (Geral)"
+  }
+}

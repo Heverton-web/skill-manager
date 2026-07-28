@@ -1,0 +1,13 @@
+{
+  "skill": "schema-markup",
+  "slug": "schema-markup",
+  "description": "When the user wants to implement, audit, or validate structured data (schema markup) on their website. Use when the user mentions 'structured data,' 'schema.org,' 'JSON-LD,' 'rich results,' 'rich s...",
+  "categoria": "Outros (Geral)",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/schema-markup/",
+  "metrics": {
+    "type": "html",
+    "category": "Outros (Geral)"
+  }
+}

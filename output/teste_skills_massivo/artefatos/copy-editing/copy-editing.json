@@ -1,0 +1,13 @@
+{
+  "skill": "copy-editing",
+  "slug": "copy-editing",
+  "description": "When the user wants to edit, review, or improve existing marketing copy. Also use when the user mentions 'edit this copy,' 'review my copy,' 'copy feedback,' 'proofread,' 'polish this,' 'make this ...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/copy-editing/",
+  "metrics": {
+    "type": "report",
+    "category": "SEO & Marketing Digital"
+  }
+}

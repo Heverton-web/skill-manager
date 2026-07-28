@@ -1,0 +1,13 @@
+{
+  "skill": "migrate-to-shoehorn",
+  "slug": "migrate-to-shoehorn",
+  "description": "Migrate test files from `as` type assertions to @total-typescript/shoehorn. Use when user mentions shoehorn, wants to replace `as` in tests, or needs partial test data.",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/migrate-to-shoehorn/",
+  "metrics": {
+    "type": "code",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

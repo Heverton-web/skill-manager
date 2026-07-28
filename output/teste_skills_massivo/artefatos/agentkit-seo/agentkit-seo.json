@@ -1,0 +1,13 @@
+{
+  "skill": "agentkit-seo",
+  "slug": "agentkit-seo",
+  "description": "Route broad or ambiguous AgentKit SEO work to the right module while keeping context scoped. Use when a request spans multiple surfaces, asks for overall digital-presence strategy, involves provide...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/agentkit-seo/",
+  "metrics": {
+    "type": "code",
+    "category": "SEO & Marketing Digital"
+  }
+}

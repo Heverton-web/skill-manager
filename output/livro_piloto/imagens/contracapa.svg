@@ -1,0 +1,17 @@
+<svg viewBox="0 0 1000 1500" width="1000" height="1500" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="1000" height="1500" fill="#0f1720"/>
+  <rect x="40" y="40" width="920" height="1420" fill="none" stroke="#3a4a5a" stroke-width="2"/>
+  <text x="80" y="130" font-size="30" font-family="Georgia, serif" font-weight="bold" fill="#e8b94a">Arquitetura de Agentes: Model Context Protocol na Pratica</text>
+  <line x1="80" y1="150" x2="920" y2="150" stroke="#3a4a5a" stroke-width="1"/>
+  <text x="80" y="200" font-size="22" font-family="Arial, sans-serif" font-weight="normal" fill="#f5f2ea" text-anchor="start">Um guia tecnico sobre como agentes de IA descobrem e</text>
+<text x="80" y="229.7" font-size="22" font-family="Arial, sans-serif" font-weight="normal" fill="#f5f2ea" text-anchor="start">acionam ferramentas externas atraves de um protocolo</text>
+<text x="80" y="259.4" font-size="22" font-family="Arial, sans-serif" font-weight="normal" fill="#f5f2ea" text-anchor="start">aberto e comum, cobrindo transporte, ciclo de vida de</text>
+<text x="80" y="289.1" font-size="22" font-family="Arial, sans-serif" font-weight="normal" fill="#f5f2ea" text-anchor="start">ferramentas e os riscos de confianca que a adocao em</text>
+<text x="80" y="318.8" font-size="22" font-family="Arial, sans-serif" font-weight="normal" fill="#f5f2ea" text-anchor="start">escala introduz.</text>
+  <text x="80" y="1240" font-size="16" font-family="Arial, sans-serif" font-weight="bold" fill="#b9c2cc" letter-spacing="2">ESPECIFICACOES</text>
+  <text x="80" y="1274" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Protocolo: JSON-RPC 2.0</text>
+<text x="80" y="1302" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Transportes: stdio e Streamable HTTP</text>
+<text x="80" y="1330" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Formato: Markdown + SVG</text>
+<text x="80" y="1358" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Capitulo piloto: 1 de 1</text>
+<text x="80" y="1386" font-size="17" font-family="Arial, sans-serif" fill="#f5f2ea">&#8226; Producao: Fabrica Agentica de Livros</text>
+</svg>

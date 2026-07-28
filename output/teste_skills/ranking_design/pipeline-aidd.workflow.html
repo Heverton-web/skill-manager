@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8">
+<title>Pipeline Editorial AIDD</title>
+<style>
+body{background:#0a0a14;color:#eaeaea;font-family:system-ui;padding:2em}
+svg{max-width:100%;background:#111;border-radius:8px}
+.node rect{fill:#1a1a3a;stroke:#d4af37;stroke-width:2;rx:8}
+.node text{fill:#eaeaea;font-size:12px}
+.edge path{stroke:#d4af37;stroke-width:1.5;fill:none}
+.edge text{fill:#888;font-size:9px}
+</style></head><body>
+<h1 style="color:#d4af37">Pipeline Editorial AIDD</h1>
+<p>Produzido via archify skill — fallback manual</p>
+<pre style="color:#888">{
+  "$schema": "../schemas/workflow.schema.json",
+  "meta": {
+    "title": "Pipeline Editorial AIDD",
+    "description": "Fluxo completo da Fábrica Agêntica de Livros: do tema ao PDF",
+    "quality_profile": "showcase",
+    "animation": "trace"
+  },
+  "start": "tema",
+  "states": [
+    {
+      "id": "tema",
+      "label": "Tema do Operador",
+      "type": "start"
+    },
+    {
+      "id": "pesquisa",
+      "label": "Pesquisa Web",
+      "type": "process"
+    },
+    {
+      "id": "sumario",
+      "label": "Sumário Macro",
+      "type": "process"
+    },
+    {
+      "id": "redacao_caps",
+      "label": "Redação dos Capítulos",
+      "type": "process"
+    },
+    {
+      "id": "ilustracao",
+      "label": "Ilustração Técnica",
+      "type": "process"
+    },
+    {
+      "id": "arte_final",
+      "label": "Arte Final (Capa+Contracapa)",
+      "type": "process"
+    },
+    {
+      "id": "compilacao",
+      "label": "Compilação ABNT + Merge",
+      "type": "process"
+    },
+    {
+      "id": "pdf",
+      "label": "Exportação PDF",
+      "type": "process"
+    },
+    {
+      "id": "entrega",
+      "label": "Livro Finalizado",
+      "type": "end"
+    }
+  ],
+  "transitions": [
+    {
+      "from": "tema",
+      "to": "pesquisa",
+      "label": "Pesquisador"
+    },
+    {
+      "from": "pesquisa",
+      "to": "sumario",
+      "label": "Arquiteto"
+    },
+    {
+      "from": "sumario",
+      "to": "redacao_caps",
+      "label": "Estrategista + Redator EITA"
+    },
+    {
+      "from": "redacao_caps",
+      "to": "ilustracao",
+      "label": "Diretor de Arte"
+    },
+    {
+      "from": "ilustracao",
+      "to": "arte_final",
+      "label": "Subagente Arte Final"
+    },
+    {
+      "from": "arte_final",
+      "to": "compilacao",
+      "label": "Compilador ABNT"
+    },
+    {
+      "from": "compilacao",
+      "to": "pdf",
+      "label": "PDF Gen (CloudConvert)"
+    },
+    {
+      "from": "pdf",
+      "to": "entrega",
+      "label": "✅ Livro Pronto"
+    }
+  ]
+}...</pre>
+</body></html>

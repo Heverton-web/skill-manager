@@ -1,0 +1,13 @@
+{
+  "skill": "agile-product-owner",
+  "slug": "agile-product-owner",
+  "description": "Agile product ownership for backlog management and sprint execution. Covers user story writing, acceptance criteria, sprint planning, and velocity tracking. Use when writing user stories, creating ...",
+  "categoria": "Produto & Estratégia",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/agile-product-owner/",
+  "metrics": {
+    "type": "code",
+    "category": "Produto & Estratégia"
+  }
+}

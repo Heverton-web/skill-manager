@@ -1,0 +1,13 @@
+{
+  "skill": "headroom",
+  "slug": "headroom",
+  "description": ">",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "general",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/headroom/",
+  "metrics": {
+    "type": "general",
+    "category": "SEO & Marketing Digital"
+  }
+}

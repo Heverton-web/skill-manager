@@ -1,0 +1,13 @@
+{
+  "skill": "ai-security",
+  "slug": "ai-security",
+  "description": "Use when assessing AI/ML systems for prompt injection, jailbreak vulnerabilities, model inversion risk, data poisoning exposure, or agent tool abuse. Covers MITRE ATLAS technique mapping, injection...",
+  "categoria": "IA & Machine Learning",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/ai-security/",
+  "metrics": {
+    "type": "report",
+    "category": "IA & Machine Learning"
+  }
+}

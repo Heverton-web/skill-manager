@@ -1,0 +1,13 @@
+{
+  "skill": "brainstorming",
+  "slug": "brainstorming",
+  "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.",
+  "categoria": "IA & Machine Learning",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/brainstorming/",
+  "metrics": {
+    "type": "html",
+    "category": "IA & Machine Learning"
+  }
+}

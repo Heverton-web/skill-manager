@@ -1,0 +1,59 @@
+{
+  "titulo_obra": "AIDD: AI-Driven Development em Contexto de IDEs Agênticas",
+  "introducao": "Situar o leitor no momento histórico da engenharia de software, onde a IA transita de ferramenta passiva de autocomplete para agente ativo e executor no ciclo de vida de desenvolvimento, e apresentar AIDD como o paradigma emergente que redefine o papel do desenvolvedor.",
+  "partes": [
+    {
+      "parte": "I",
+      "titulo_parte": "Fundamentos do Desenvolvimento Orientado por IA",
+      "capitulos": [
+        {
+          "capitulo": "1",
+          "titulo": "O Paradigma AIDD: Especificação, Autonomia e Ciclos de Auto-Correção",
+          "objetivo": "Capacitar o leitor a compreender os princípios fundamentais do AIDD — Specification-Driven Development, ciclos autônomos de feedback e a transição do desenvolvedor de escritor de código para arquiteto de sistemas.",
+          "pilares_previstos": [
+            "Specification-Driven Development: especificações como executáveis",
+            "Ciclos de auto-correção: build, erro, análise, patch, re-teste",
+            "O desenvolvedor como arquiteto e orquestrador de agentes"
+          ]
+        },
+        {
+          "capitulo": "2",
+          "titulo": "Ecossistema de IDEs Agênticas: Claude Code, Cursor, Windsurf e o MCP",
+          "objetivo": "Mapear o cenário atual de ferramentas agênticas — CLI agents, IDEs nativas e extensões — e analisar como o Model Context Protocol padroniza a integração entre agentes e ferramentas externas.",
+          "pilares_previstos": [
+            "Claude Code, Cursor, Windsurf: arquiteturas e diferenciais",
+            "Model Context Protocol: o 'USB-C para IA' e seus servidores",
+            "Extensões open-source: Cline, Roo Code e o ecossistema BYOK"
+          ]
+        }
+      ]
+    },
+    {
+      "parte": "II",
+      "titulo_parte": "Fluxos, Ferramentas e Práticas de AIDD",
+      "capitulos": [
+        {
+          "capitulo": "3",
+          "titulo": "Spec-to-Code e Sub-Agentes Paralelos: Orquestração de Pipelines de Desenvolvimento",
+          "objetivo": "Ensinar o leitor a estruturar pipelines de desenvolvimento onde agentes consomem especificações, delegam subtarefas a sub-agentes paralelos e iteram até a validação completa.",
+          "pilares_previstos": [
+            "Spec-to-Code: da especificação Markdown ao código executável",
+            "Delegação paralela: sub-agentes para schema, testes e documentação",
+            "Validação em loop fechado e revisão humana de diff"
+          ]
+        },
+        {
+          "capitulo": "4",
+          "titulo": "Desafios, Limitações e o Futuro do Desenvolvimento com Agentes",
+          "objetivo": "Analisar criticamente as limitações atuais do AIDD — alucinação de contexto, custos de API, segurança e fadiga de revisão — e projetar os próximos passos da disciplina.",
+          "pilares_previstos": [
+            "Alucinação de contexto e deriva arquitetural em codebases grandes",
+            "Segurança: permissões de terminal, sandboxing e confused deputy",
+            "Futuro: agentes especialistas, MCP como padrão industrial e a evolução do papel do desenvolvedor"
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusao": "Consolidar AIDD como a nova disciplina de engenharia de software do século XXI, onde o valor do desenvolvedor reside na capacidade de especificar, orquestrar e auditar sistemas multi-agente — e não mais na escrita manual de cada linha de código."
+}

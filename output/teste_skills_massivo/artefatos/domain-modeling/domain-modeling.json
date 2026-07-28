@@ -1,0 +1,13 @@
+{
+  "skill": "domain-modeling",
+  "slug": "domain-modeling",
+  "description": "Build and sharpen a project's domain model. Use when the user wants to pin down domain terminology or a ubiquitous language, record an architectural decision, or when another skill needs to maintai...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "test",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/domain-modeling/",
+  "metrics": {
+    "type": "test",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

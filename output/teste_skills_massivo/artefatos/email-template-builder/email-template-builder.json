@@ -1,0 +1,13 @@
+{
+  "skill": "email-template-builder",
+  "slug": "email-template-builder",
+  "description": "Build complete transactional email systems: React Email templates, provider integration (Resend, Postmark, SendGrid, AWS SES), preview server, i18n support, dark mode, spam optimization, analytics ...",
+  "categoria": "Design & Visual",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/email-template-builder/",
+  "metrics": {
+    "type": "html",
+    "category": "Design & Visual"
+  }
+}

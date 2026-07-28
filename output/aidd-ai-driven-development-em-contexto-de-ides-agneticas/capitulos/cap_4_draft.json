@@ -1,0 +1,24 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": { "parte": "II", "capitulo": "4" },
+  "estado_execucao": "draft_pronto_para_redacao",
+  "payload_estrategico": {
+    "pilares": [
+      {
+        "nome": "A evolução: do Prompt Engineering ao Context Engineering",
+        "escopo": "Explicar a diferença fundamental: Prompt Engineering foca no micro-nível (mensagem única, instrução isolada); Context Engineering foca no macro-nível (janela de contexto inteira da sessão do agente, incluindo arquivos de regras, histórico compactado, RAG, memória episódica, ferramentas disponíveis). Erros de contexto no início de sessões longas degradam drasticamente o resultado final. Não incluir detalhes de implementação de MCP (Capítulo 7).",
+        "ancora_visual": "Diagrama comparativo: Prompt Engineering (micro) vs. Context Engineering (macro)"
+      },
+      {
+        "nome": "As 6 camadas da arquitetura de Context Engineering",
+        "escopo": "Detalhar cada camada: (1) System Prompt Architecture - definição de papéis, restrições explícitas, formatos de saída; (2) RAG de Código - chunking estrutural, hybrid search, dependency hydration; (3) Tool Selection - expor ferramentas certas para cada fase; (4) Memory Systems - memória episódica e resumos estruturados; (5) Context Compression - rolling windows, sumarização progressiva; (6) Information Ordering - combate ao efeito Lost in the Middle com técnica de bookending. Incluir exemplo prático de sistema de contexto bem construído vs. mal construído.",
+        "ancora_visual": "Diagrama de pilha em 6 camadas com exemplos de cada nível"
+      },
+      {
+        "nome": "Anti-patterns e boas práticas",
+        "escopo": "Os 3 anti-patterns mais comuns: (1) Duplicação de regras entre CLAUDE.md, .cursorrules e custom - usar symlinks/AGENTS.md como fonte única; (2) Wishlists abstratas - 'escreva código limpo' não funciona, preferir especificações executáveis como 'sempre rode lint antes de concluir'; (3) Poluição de tokens - evitar documentações inteiras inline, preferir Skills sob demanda ou MCP. Incluir guia de tamanho ideal de arquivos de regras (500-2000 tokens).",
+        "ancora_visual": "Diagrama 'não faça vs. faça' para cada anti-pattern"
+      }
+    ]
+  }
+}

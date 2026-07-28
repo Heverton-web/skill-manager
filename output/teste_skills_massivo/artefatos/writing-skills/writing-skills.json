@@ -1,0 +1,13 @@
+{
+  "skill": "writing-skills",
+  "slug": "writing-skills",
+  "description": "Use when creating new skills, editing existing skills, or verifying skills work before deployment",
+  "categoria": "Documentação & Comunicação",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/writing-skills/",
+  "metrics": {
+    "type": "visual",
+    "category": "Documentação & Comunicação"
+  }
+}

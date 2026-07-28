@@ -1,0 +1,13 @@
+{
+  "skill": "docker-best-practices",
+  "slug": "docker-best-practices",
+  "description": "Docker best practices including multi-stage builds, compose patterns, image optimization, and security",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/docker-best-practices/",
+  "metrics": {
+    "type": "report",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

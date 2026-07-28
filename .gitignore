@@ -1,0 +1,4 @@
+node_modules/
+.env
+.claude/mcp-servers/pdf-gen-server/.env
+.claude/mcp-servers/image-gen-server/.env

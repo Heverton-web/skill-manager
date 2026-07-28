@@ -1,0 +1,13 @@
+{
+  "skill": "product-analytics",
+  "slug": "product-analytics",
+  "description": "Use when defining product KPIs, building metric dashboards, running cohort or retention analysis, or interpreting feature adoption trends across product stages.",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/product-analytics/",
+  "metrics": {
+    "type": "report",
+    "category": "SEO & Marketing Digital"
+  }
+}

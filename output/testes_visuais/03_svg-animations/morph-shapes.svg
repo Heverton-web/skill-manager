@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" font-family="sans-serif"><rect width="400" height="200" fill="#0a0a14" rx="8"/>
+<style>@keyframes m{0%{d:path('M100,40 L180,40 L180,120 L100,120 Z')}50%{d:path('M100,80 C130,20 150,20 180,80 C150,140 130,140 100,80 Z')}100%{d:path('M140,30 C160,60 160,100 140,130 C100,150 60,150 40,100 C60,60 100,40 140,30 Z')}}
+.m{animation:m 4s ease-in-out infinite;fill:#ff6b9d;fill-opacity:0.4;stroke:#ff6b9d;stroke-width:1.5}</style>
+<path class="m" d="M100,40 L180,40 L180,120 L100,120 Z"/>
+<text x="200" y="185" text-anchor="middle" fill="#8888bb" font-size="10">Shape Morphing · CSS keyframes</text>
+</svg>

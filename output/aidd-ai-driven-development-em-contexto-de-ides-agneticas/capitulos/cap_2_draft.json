@@ -1,0 +1,24 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": { "parte": "I", "capitulo": "2" },
+  "estado_execucao": "draft_pronto_para_redacao",
+  "payload_estrategico": {
+    "pilares": [
+      {
+        "nome": "Taxonomia das ferramentas agênticas: 4 arquétipos",
+        "escopo": "Classificar coding agents em 4 categorias arquiteturais: (1) Agentes CLI - Claude Code, Aider, Codex CLI (autonomia total no terminal, loop editar-testar-corrigir); (2) IDEs especializadas - Cursor, Windsurf/Devin Desktop (experiência visual, edição multi-arquivo coordenada); (3) Extensões de IDE - Cline (antigo Claude Dev), GitHub Copilot Agent (funciona dentro do ecossistema do editor anfitrião); (4) Cloud Agents assíncronos - Devin, Copilot Workspace, Jules (delegação de issues com resultados em PRs). Incluir contexto de MCP (Model Context Protocol) como fator transversal. Não aprofundar em métricas de benchmark (serão cobertas no Capítulo 3).",
+        "ancora_visual": "Diagrama de classificação 2x2 (autonomia x integração) posicionando cada ferramenta"
+      },
+      {
+        "nome": "Comparação técnica e trade-offs entre plataformas",
+        "escopo": "Análise comparativa detalhada: qualidade de raciocínio (Claude Code lidera em tarefas complexas), UX/fluência de edição (Cursor lidera em experiência visual), flexibilidade de modelos (Cline/AGENTS.md permitem BYOM e agnosticismo), integração corporativa (Copilot lidera em adoção enterprise). Incluir dados sobre janela de contexto, eficiência de tokens (agentes consomem 50-100x mais que chat) e modelos de precificação (créditos vs. assinatura). Não incluir análise de benchmark quantitativo (Capítulo 3).",
+        "ancora_visual": "Tabela comparativa radial com pontuações relativas por dimensão"
+      },
+      {
+        "nome": "Critérios de escolha por perfil e contexto",
+        "escopo": "Guias de decisão baseados em perfil: (1) Desenvolvedor solo/productivity-focused → Cursor ou Claude Code; (2) Equipe enterprise com compliance → Copilot + Cline com MCPs internos; (3) Máximo controle/privacidade (modelos locais) → Cline com Ollama; (4) Automação de PRs/revisão assíncrona → Devin/Copilot Workspace. Incluir o conceito de portable instruction files (AGENTS.md, CLAUDE.md) como fator de portabilidade multi-ferramenta. Não defender uma ferramenta como superior — apresentar trade-offs.",
+        "ancora_visual": "Matriz de decisão visual (perfil → ferramenta recomendada) com setas condicionais"
+      }
+    ]
+  }
+}

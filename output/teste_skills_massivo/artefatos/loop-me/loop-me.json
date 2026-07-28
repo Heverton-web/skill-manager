@@ -1,0 +1,13 @@
+{
+  "skill": "loop-me",
+  "slug": "loop-me",
+  "description": "Grill me about specs for the workflows I want to build, within this workspace.",
+  "categoria": "Outros (Geral)",
+  "tipo": "general",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/loop-me/",
+  "metrics": {
+    "type": "general",
+    "category": "Outros (Geral)"
+  }
+}

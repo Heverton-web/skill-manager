@@ -1,0 +1,13 @@
+{
+  "skill": "git-advanced",
+  "slug": "git-advanced",
+  "description": "Advanced git workflows including worktrees, bisect, interactive rebase, hooks, and recovery techniques",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "test",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/git-advanced/",
+  "metrics": {
+    "type": "test",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

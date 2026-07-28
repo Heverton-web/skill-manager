@@ -1,0 +1,24 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": { "parte": "I", "capitulo": "3" },
+  "estado_execucao": "draft_pronto_para_redacao",
+  "payload_estrategico": {
+    "pilares": [
+      {
+        "nome": "SWE-bench e o panorama de benchmarks de coding agents",
+        "escopo": "Explicar o que é SWE-bench (conjunto de issues reais do GitHub), a evolução para SWE-bench Verified (500 instâncias filtradas por humanos) e SWE-bench Pro (1.865 problemas, tarefas long-horizon enterprise). Scores dos modelos frontier em 2026: Claude Opus 5 (96% Verified), Claude Mythos 5 (95.5% Verified, 80.3% Pro). Limitações dos benchmarks: data contamination, broken test tasks, directional indicators apenas. Não incluir comparação detalhada de ferramentas (Capítulo 2).",
+        "ancora_visual": "Gráfico de barras mostrando evolução dos scores SWE-bench ao longo do tempo (2024-2026)"
+      },
+      {
+        "nome": "O paradoxo da produtividade: atividade vs. entrega",
+        "escopo": "Analisar o fenômeno onde coding agents aumentam volume de PRs (~100% mais PRs por dev) mas também ampliam o gargalo de revisão (tempo de review cresce até 90%). Dados DORA: throughput sobe, mas estabilidade cai sem portões de teste rigorosos. O risco do 'review bottleneck': código gerado mais rápido do que se consegue revisar. Dados de Faros AI e DORA 2024-2025. Incluir ganhos reais onde existem: 25-50% em tarefas rotineiras, 7-9h/semana economizadas. Não aprofundar em ferramentas específicas (Capítulo 2).",
+        "ancora_visual": "Diagrama de 'funil invertido' mostrando o descompasso entre geração e revisão de código"
+      },
+      {
+        "nome": "O perception gap e métricas que importam",
+        "escopo": "Apresentar o estudo METR: desenvolvedores usando coding agents em codebases legadas levaram 19% mais tempo em tarefas complexas, mas acreditavam estar 20% mais rápidos — lacuna de ~40 pontos percentuais entre percepção e realidade. Implicações: métricas de atividade (PRs abertos, LOC) não são métricas de entrega (throughput real, estabilidade). A importância de evals automatizadas para medir impacto real. Não incluir discussão de governança corporativa (Capítulo 10).",
+        "ancora_visual": "Gráfico de dispersão contrastando percepção vs. realidade de ganho de produtividade"
+      }
+    ]
+  }
+}

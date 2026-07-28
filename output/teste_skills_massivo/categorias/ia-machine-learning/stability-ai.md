@@ -1,0 +1,7 @@
+# stability-ai
+
+**Categoria:** IA & Machine Learning
+**Descrição:** Geracao de imagens via Stability AI (SD3.5, Ultra, Core). Text-to-image, img2img, inpainting, upscale, remove-bg, search-replace. 15 estilos artisticos.
+**Tipo:** visual
+
+[Ver artefatos completos](../artefatos/stability-ai/)

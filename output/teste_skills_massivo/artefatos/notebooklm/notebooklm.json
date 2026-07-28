@@ -1,0 +1,13 @@
+{
+  "skill": "notebooklm",
+  "slug": "notebooklm",
+  "description": "Browser automation skill for controlling Google's NotebookLM. Use when the user wants anything done in NotebookLM (e.g., 'open NotebookLM', 'check my [name] notebook', 'ask my notebook about X', 'a...",
+  "categoria": "IA & Machine Learning",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/notebooklm/",
+  "metrics": {
+    "type": "html",
+    "category": "IA & Machine Learning"
+  }
+}

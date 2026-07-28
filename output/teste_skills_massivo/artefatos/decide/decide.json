@@ -1,0 +1,13 @@
+{
+  "skill": "decide",
+  "slug": "decide",
+  "description": "/cs:decide <memo> — Log a decision to two-layer memory via decision-logger. Approved memo becomes durable; raw transcripts kept for reference. Use when the founder has approved a boardroom memo and...",
+  "categoria": "Infraestrutura & DevOps",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/decide/",
+  "metrics": {
+    "type": "report",
+    "category": "Infraestrutura & DevOps"
+  }
+}

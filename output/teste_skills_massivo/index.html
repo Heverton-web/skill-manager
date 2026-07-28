@@ -1,0 +1,144 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Teste Massivo V3 — 482 Skills</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+  *{margin:0;padding:0;box-sizing:border-box}body{background:#050510;color:#e0e0ff;font-family:'Inter',sans-serif;min-height:100vh}
+  .hero{text-align:center;padding:4rem 2rem 3rem;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(108,99,255,0.06),transparent 70%)}
+  .hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.5rem}
+  .hero h1 span{background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hero p{color:#8888bb;max-width:700px;margin:0 auto;font-size:.95rem;line-height:1.5}
+  .badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.2);padding:.3rem 1rem;border-radius:100px;font-size:.75rem;color:#6c63ff;margin-bottom:1.5rem}
+  .grid{max-width:1100px;margin:0 auto;padding:1rem 2rem 3rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem}
+  .card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:1.5rem;transition:all .3s;position:relative;overflow:hidden}
+  .card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.12)}
+  .card .glow{position:absolute;top:-40px;right:-40px;width:100px;height:100px;border-radius:50%;opacity:0.08}
+  .card:hover .glow{opacity:0.2}
+  .card .count{font-size:2rem;font-weight:800;margin-bottom:.2rem}
+  .card h2{font-size:1rem;font-weight:600;margin-bottom:.3rem}
+  .card p{font-size:.8rem;color:#8888bb;line-height:1.4}
+  .card .pct{font-size:.7rem;color:#555577;margin-bottom:.3rem}
+  .card a{display:inline-block;margin-top:.6rem;padding:.3rem .8rem;border-radius:8px;font-size:.75rem;color:#e0e0ff;text-decoration:none;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.2);transition:all .2s}
+  .card a:hover{background:rgba(108,99,255,.25)}
+  .stats{text-align:center;padding:2rem;color:#555577;font-size:.9rem;line-height:1.8}
+  .stats span{color:#6c63ff;font-weight:600}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);max-width:600px;margin:1rem auto;gap:.5rem}
+  .stat-box{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:.8rem}
+  .stat-box .num{font-size:1.5rem;font-weight:800;color:#6c63ff}
+  .stat-box .label{font-size:.65rem;color:#8888bb;text-transform:uppercase;letter-spacing:.02em}
+  .err-note{text-align:center;padding:0 2rem 1rem;color:#ff6b6b;font-size:.8rem}
+  footer{text-align:center;padding:2rem;color:#555577;font-size:.75rem}
+  </style></head><body>
+  <section class="hero"><div class="badge">&#9889; Teste Massivo V3</div>
+  <h1><span>482 Skills</span> — 16 Categorias</h1>
+  <p><strong>Teste real com leitura de SKILL.md:</strong> 482 parseadas, 0 falhas. Categorização expandida com 40+ domínios. Detecção de tipo com word boundary. Suporte a \r\n Windows.</p></section>
+  
+  <div class="stats">
+    <div class="stats-grid">
+      <div class="stat-box"><div class="num">482</div><div class="label">Skills</div></div>
+      <div class="stat-box"><div class="num">482</div><div class="label">Parseadas</div></div>
+      <div class="stat-box"><div class="num">1446</div><div class="label">Artefatos</div></div>
+      <div class="stat-box"><div class="num">16</div><div class="label">Categorias</div></div>
+    </div>
+  </div>
+  <div class="grid">
+  <div class="card"><div class="glow" style="background:#6c63ff"></div>
+    <div class="count" style="color:#6c63ff">118</div>
+    <h2>Desenvolvimento & Engenharia</h2>
+    <div class="pct">24.5% do total</div>
+    <p>a11y-audit, ab-test-setup, accessibility-wcag...</p>
+    <a href="categorias/desenvolvimento-engenharia/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#00d4aa"></div>
+    <div class="count" style="color:#00d4aa">83</div>
+    <h2>Outros (Geral)</h2>
+    <div class="pct">17.2% do total</div>
+    <p>andreessen, ask-matt, batch-grill-me...</p>
+    <a href="categorias/outros-geral-/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#ff6b9d"></div>
+    <div class="count" style="color:#ff6b9d">69</div>
+    <h2>SEO & Marketing Digital</h2>
+    <div class="pct">14.3% do total</div>
+    <p>adversarial-reviewer, aeo, agentkit-seo...</p>
+    <a href="categorias/seo-marketing-digital/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#ffaa33"></div>
+    <div class="count" style="color:#ffaa33">53</div>
+    <h2>Design & Visual</h2>
+    <div class="pct">11.0% do total</div>
+    <p>ad-creative, agent-designer, agent-workflow-designer...</p>
+    <a href="categorias/design-visual/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#e91e63"></div>
+    <div class="count" style="color:#e91e63">30</div>
+    <h2>Produto & Estratégia</h2>
+    <div class="pct">6.2% do total</div>
+    <p>agile-product-owner, board, board-meeting...</p>
+    <a href="categorias/produto-estratégia/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#2196f3"></div>
+    <div class="count" style="color:#2196f3">29</div>
+    <h2>Segurança & Compliance</h2>
+    <div class="pct">6.0% do total</div>
+    <p>authentication-patterns, ciso-review, cloud-security...</p>
+    <a href="categorias/segurança-compliance/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#4caf50"></div>
+    <div class="count" style="color:#4caf50">28</div>
+    <h2>IA & Machine Learning</h2>
+    <div class="pct">5.8% do total</div>
+    <p>agent-decision-receipts, agent-harness, agent-protocol...</p>
+    <a href="categorias/ia-machine-learning/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#9c27b0"></div>
+    <div class="count" style="color:#9c27b0">25</div>
+    <h2>Documentação & Comunicação</h2>
+    <div class="pct">5.2% do total</div>
+    <p>brief, capture, content-creator...</p>
+    <a href="categorias/documentação-comunicação/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#ff5722"></div>
+    <div class="count" style="color:#ff5722">14</div>
+    <h2>Infraestrutura & DevOps</h2>
+    <div class="pct">2.9% do total</div>
+    <p>aws-cloud-patterns, cdo-review, commercial-forecaster...</p>
+    <a href="categorias/infraestrutura-devops/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#00bcd4"></div>
+    <div class="count" style="color:#00bcd4">13</div>
+    <h2>Finanças & Negócios</h2>
+    <div class="pct">2.7% do total</div>
+    <p>cco-review, cfo-review, chief-of-staff...</p>
+    <a href="categorias/finanças-negócios/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#cddc39"></div>
+    <div class="count" style="color:#cddc39">7</div>
+    <h2>Colaboração & Projetos</h2>
+    <div class="pct">1.5% do total</div>
+    <p>atlassian-templates, confluence-expert, jira-expert...</p>
+    <a href="categorias/colaboração-projetos/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#ff9800"></div>
+    <div class="count" style="color:#ff9800">6</div>
+    <h2>Dados & Analytics</h2>
+    <div class="pct">1.2% do total</div>
+    <p>ci-cd-pipelines, data-quality-auditor, monitoring-observability...</p>
+    <a href="categorias/dados-analytics/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#6c63ff"></div>
+    <div class="count" style="color:#6c63ff">2</div>
+    <h2>Mobile & Apps</h2>
+    <div class="pct">0.4% do total</div>
+    <p>apple-hig-expert, process-mapper...</p>
+    <a href="categorias/mobile-apps/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#00d4aa"></div>
+    <div class="count" style="color:#00d4aa">2</div>
+    <h2>CRM & Vendas</h2>
+    <div class="pct">0.4% do total</div>
+    <p>customer-success-manager, deal-desk...</p>
+    <a href="categorias/crm-vendas/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#ff6b9d"></div>
+    <div class="count" style="color:#ff6b9d">2</div>
+    <h2>Suporte & Customer Success</h2>
+    <div class="pct">0.4% do total</div>
+    <p>slack-gif-creator, to-tickets...</p>
+    <a href="categorias/suporte-customer-success/index.html">Ver &#8594;</a></div>
+  <div class="card"><div class="glow" style="background:#ffaa33"></div>
+    <div class="count" style="color:#ffaa33">1</div>
+    <h2>RH & Talentos</h2>
+    <div class="pct">0.2% do total</div>
+    <p>resume...</p>
+    <a href="categorias/rh-talentos/index.html">Ver &#8594;</a></div>
+  </div>
+  <footer>Fabrica Agentica de Livros · Teste Massivo V3 · 2026-07-28</footer>
+  </body></html>

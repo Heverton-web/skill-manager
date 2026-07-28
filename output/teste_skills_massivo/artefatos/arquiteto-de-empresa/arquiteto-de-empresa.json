@@ -1,0 +1,13 @@
+{
+  "skill": "arquiteto-de-empresa",
+  "slug": "arquiteto-de-empresa",
+  "description": "Company Architect: builds a business from scratch as an OKF (Open Knowledge Format) bundle — a tree of version-controllable .md files with frontmatter type, links forming a graph, and reserved inde...",
+  "categoria": "Design & Visual",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/arquiteto-de-empresa/",
+  "metrics": {
+    "type": "code",
+    "category": "Design & Visual"
+  }
+}

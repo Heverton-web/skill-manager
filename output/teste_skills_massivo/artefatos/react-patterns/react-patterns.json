@@ -1,0 +1,13 @@
+{
+  "skill": "react-patterns",
+  "slug": "react-patterns",
+  "description": "React 19 patterns including Server Components, Actions, Suspense, hooks, and component composition",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/react-patterns/",
+  "metrics": {
+    "type": "html",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

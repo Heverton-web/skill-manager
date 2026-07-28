@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 350" font-family="system-ui, sans-serif">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a0a1a"/><stop offset="100%" stop-color="#1a1a2a"/></linearGradient></defs>
+  <rect width="700" height="350" fill="url(#bg)" rx="12"/>
+  <text x="350" y="35" text-anchor="middle" fill="#e0e0ff" font-size="16" font-weight="bold">Fluxo de Validação com Gate de Revisão Humana</text>
+  <rect x="30" y="90" width="160" height="60" rx="8" fill="#2a2a5a" stroke="#6c63ff" stroke-width="2"/>
+  <text x="110" y="120" text-anchor="middle" fill="#e0e0ff" font-size="12" font-weight="bold">Testes Automatizados</text>
+  <text x="110" y="138" text-anchor="middle" fill="#8888bb" font-size="10">Unit + Integração + E2E</text>
+  <rect x="270" y="90" width="160" height="60" rx="8" fill="#2a2a5a" stroke="#00d4aa" stroke-width="2"/>
+  <text x="350" y="120" text-anchor="middle" fill="#e0e0ff" font-size="12" font-weight="bold">Verificação</text>
+  <text x="350" y="138" text-anchor="middle" fill="#8888bb" font-size="10">Lint + Types + Format</text>
+  <rect x="510" y="90" width="160" height="60" rx="8" fill="#2a2a5a" stroke="#ffaa33" stroke-width="2"/>
+  <text x="590" y="120" text-anchor="middle" fill="#e0e0ff" font-size="12" font-weight="bold">Diff Consolidado</text>
+  <text x="590" y="138" text-anchor="middle" fill="#8888bb" font-size="10">Revisão Humana</text>
+  <rect x="270" y="210" width="160" height="60" rx="8" fill="#3a2a1a" stroke="#ff6b9d" stroke-width="2" stroke-dasharray="5,3"/>
+  <text x="350" y="240" text-anchor="middle" fill="#e0e0ff" font-size="12" font-weight="bold">Aprovado?</text>
+  <text x="350" y="258" text-anchor="middle" fill="#8888bb" font-size="10">Gate de Decisão</text>
+  <text x="110" y="280" fill="#00d4aa" font-size="11" text-anchor="middle">✓ Aprova → Merge</text>
+  <text x="590" y="280" fill="#ff6b9d" font-size="11" text-anchor="middle">✗ Rejeita → Loop</text>
+  <text x="350" y="335" text-anchor="middle" fill="#555577" font-size="11">Validação com gate de revisão humana</text>
+</svg>

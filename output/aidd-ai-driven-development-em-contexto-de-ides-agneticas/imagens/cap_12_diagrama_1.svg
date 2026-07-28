@@ -1,0 +1,33 @@
+<svg viewBox="0 0 1000 450" width="1000" height="450" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="1000" height="450" fill="#0f1720"/>
+  <text x="500" y="35" font-size="20" font-family="Georgia, serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">Evolução dos Perfis na Engenharia de Software</text>
+  <rect x="60" y="70" width="420" height="160" rx="10" fill="#1c2a3a" stroke="#3a4a5a" stroke-width="2"/>
+  <text x="270" y="95" font-size="16" font-family="Georgia, serif" font-weight="bold" fill="#b9c2cc" text-anchor="middle">Engenheiro de Implementação</text>
+  <text x="270" y="120" font-size="12" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">(antes)</text>
+  <text x="270" y="150" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Escreve c&oacute;digo manualmente</text>
+  <text x="270" y="170" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Debugging linha a linha</text>
+  <text x="270" y="190" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Memoriza APIs e frameworks</text>
+  <rect x="520" y="70" width="420" height="160" rx="10" fill="#1c2a3a" stroke="#e8b94a" stroke-width="2"/>
+  <text x="730" y="95" font-size="16" font-family="Georgia, serif" font-weight="bold" fill="#e8b94a" text-anchor="middle">Engenheiro de Intenção</text>
+  <text x="730" y="120" font-size="12" font-family="Arial, sans-serif" fill="#e8b94a" text-anchor="middle">(agora)</text>
+  <text x="730" y="150" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Especifica e verifica</text>
+  <text x="730" y="170" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Debugging estrat&eacute;gico</text>
+  <text x="730" y="190" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Projeta evals para agentes</text>
+
+  <text x="500" y="275" font-size="14" font-family="Georgia, serif" fill="#e8b94a" text-anchor="middle">Cenários para 2028-2030</text>
+  <rect x="60" y="300" width="280" height="110" rx="8" fill="#1c2a3a" stroke="#4a8a4a" stroke-width="1"/>
+  <text x="200" y="325" font-size="13" font-family="Georgia, serif" font-weight="bold" fill="#4a8a4a" text-anchor="middle">Cenário 1: Aumento</text>
+  <text x="200" y="350" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Equipes -30-50%</text>
+  <text x="200" y="370" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Eng. intenção dominante</text>
+  <text x="200" y="390" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Mais provável</text>
+  <rect x="360" y="300" width="280" height="110" rx="8" fill="#1c2a3a" stroke="#e8b94a" stroke-width="1"/>
+  <text x="500" y="325" font-size="13" font-family="Georgia, serif" font-weight="bold" fill="#e8b94a" text-anchor="middle">Cenário 2: Substituição</text>
+  <text x="500" y="350" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Jrs substituídos</text>
+  <text x="500" y="370" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Pirâmide achatada</text>
+  <text x="500" y="390" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Possível</text>
+  <rect x="660" y="300" width="280" height="110" rx="8" fill="#1c2a3a" stroke="#e85a5a" stroke-width="1"/>
+  <text x="800" y="325" font-size="13" font-family="Georgia, serif" font-weight="bold" fill="#e85a5a" text-anchor="middle">Cenário 3: Estagnação</text>
+  <text x="800" y="350" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Bolha estoura</text>
+  <text x="800" y="370" font-size="11" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Dívida > valor</text>
+  <text x="800" y="390" font-size="10" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Improvável</text>
+</svg>

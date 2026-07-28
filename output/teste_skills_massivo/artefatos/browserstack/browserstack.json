@@ -1,0 +1,13 @@
+{
+  "skill": "browserstack",
+  "slug": "browserstack",
+  "description": ">-",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/browserstack/",
+  "metrics": {
+    "type": "report",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

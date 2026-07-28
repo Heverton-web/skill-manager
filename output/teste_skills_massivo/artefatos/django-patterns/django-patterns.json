@@ -1,0 +1,13 @@
+{
+  "skill": "django-patterns",
+  "slug": "django-patterns",
+  "description": "Django architecture patterns including DRF, ORM optimization, signals, middleware, and project structure",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/django-patterns/",
+  "metrics": {
+    "type": "code",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

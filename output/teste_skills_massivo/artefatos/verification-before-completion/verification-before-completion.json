@@ -1,0 +1,13 @@
+{
+  "skill": "verification-before-completion",
+  "slug": "verification-before-completion",
+  "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evide...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/verification-before-completion/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "setup-matt-pocock-skills",
+  "slug": "setup-matt-pocock-skills",
+  "description": "Configure this repo for the engineering skills — set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "json",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/setup-matt-pocock-skills/",
+  "metrics": {
+    "type": "json",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

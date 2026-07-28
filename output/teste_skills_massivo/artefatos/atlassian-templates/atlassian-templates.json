@@ -1,0 +1,13 @@
+{
+  "skill": "atlassian-templates",
+  "slug": "atlassian-templates",
+  "description": "Atlassian Template and Files Creator/Modifier expert for creating, modifying, and managing Jira and Confluence templates, blueprints, custom layouts, reusable components, and standardized content s...",
+  "categoria": "Colaboração & Projetos",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/atlassian-templates/",
+  "metrics": {
+    "type": "html",
+    "category": "Colaboração & Projetos"
+  }
+}

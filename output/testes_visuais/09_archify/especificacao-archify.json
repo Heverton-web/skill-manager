@@ -1,0 +1,32 @@
+{
+  "nome": "Archify — Diagramas de Arquitetura",
+  "versao": "4 tipos",
+  "tipos": [
+    {
+      "nome": "Workflow",
+      "descricao": "Pipeline de processos com estados e transições",
+      "exemplo": "Spec-to-Code pipeline"
+    },
+    {
+      "nome": "Sequência",
+      "descricao": "Chamadas entre componentes ao longo do tempo",
+      "exemplo": "Agente → MCP Client → MCP Server"
+    },
+    {
+      "nome": "Dataflow",
+      "descricao": "Fluxo de dados entre componentes do sistema",
+      "exemplo": "Ecossistema AIDD arquitetura"
+    },
+    {
+      "nome": "Lifecycle",
+      "descricao": "Ciclo de vida de execução de um agente",
+      "exemplo": "Input → Ação → Erro → Correção → Output"
+    }
+  ],
+  "formatos_saida": [
+    "SVG puro (ideal para PDF)",
+    "HTML interativo standalone",
+    "JSON para processamento"
+  ],
+  "compatibilidade": "✅ PDF (SVG) · ✅ Web (HTML) · ✅ Editor (JSON)"
+}

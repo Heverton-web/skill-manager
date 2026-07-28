@@ -1,0 +1,13 @@
+{
+  "skill": "customer-success-manager",
+  "slug": "customer-success-manager",
+  "description": "Monitors customer health, predicts churn risk, and identifies expansion opportunities using weighted scoring models for SaaS customer success. Use when analyzing customer accounts, reviewing retent...",
+  "categoria": "CRM & Vendas",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/customer-success-manager/",
+  "metrics": {
+    "type": "report",
+    "category": "CRM & Vendas"
+  }
+}

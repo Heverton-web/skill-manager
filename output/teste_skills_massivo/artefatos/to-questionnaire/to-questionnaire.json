@@ -1,0 +1,13 @@
+{
+  "skill": "to-questionnaire",
+  "slug": "to-questionnaire",
+  "description": "Turn a decision you can't fully answer into a questionnaire for someone else to fill in.",
+  "categoria": "IA & Machine Learning",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/to-questionnaire/",
+  "metrics": {
+    "type": "report",
+    "category": "IA & Machine Learning"
+  }
+}

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Skill Manager — Painel de Controle</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050510;color:#e0e0ff;font-family:'Inter',sans-serif;min-height:100vh}
+.hero{text-align:center;padding:3rem 2rem 2rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(108,99,255,0.06),transparent 70%)}
+.hero h1{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:.3rem}
+.hero h1 span{background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:#8888bb;font-size:.85rem}
+.hero .stats{display:flex;justify-content:center;gap:2rem;margin-top:1.5rem;font-size:.8rem}
+.hero .stats div{text-align:center}
+.hero .stats .num{font-size:1.2rem;font-weight:700;color:#6c63ff}
+.hero .stats .lab{color:#555577;font-size:.7rem;text-transform:uppercase}
+.hero .server-status{font-size:.7rem;margin-top:.5rem;padding:.25rem 1rem;display:inline-block;border-radius:100px}
+.server-online{background:rgba(0,212,170,.1);color:#00d4aa;border:1px solid rgba(0,212,170,.2)}
+.server-offline{background:rgba(255,107,107,.1);color:#ff6b6b;border:1px solid rgba(255,107,107,.2)}
+.controls{text-align:center;padding:0 2rem 1rem;display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap}
+.controls input{padding:.5rem 1rem;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);color:#e0e0ff;font-size:.8rem;width:250px;font-family:'Inter',sans-serif}
+.controls input::placeholder{color:#555577}
+.controls button{padding:.5rem 1rem;border-radius:8px;border:1px solid rgba(108,99,255,.3);background:rgba(108,99,255,.1);color:#6c63ff;cursor:pointer;font-size:.8rem;transition:all .2s}
+.controls button:hover{background:rgba(108,99,255,.2)}.controls button:disabled{opacity:.4;cursor:not-allowed}
+.container{max-width:1100px;margin:0 auto;padding:1rem 2rem 3rem}
+.category{margin-bottom:2rem}
+.category-header{display:flex;align-items:center;gap:.5rem;padding:.5rem 0;margin-bottom:.5rem;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;user-select:none}
+.category-header .arrow{font-size:.7rem;color:#555577;transition:transform .2s;display:inline-block}
+.category-header .arrow.open{transform:rotate(90deg)}
+.category-header h2{font-size:1rem;font-weight:600}
+.category-header .count{font-size:.7rem;color:#555577;background:rgba(255,255,255,.04);padding:.1rem .5rem;border-radius:100px}
+.category-header .active-count{font-size:.7rem;color:#00d4aa}
+.skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.5rem}
+.skill-card{display:flex;align-items:center;gap:.6rem;padding:.6rem .8rem;border-radius:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);transition:all .2s}
+.skill-card:hover{background:rgba(255,255,255,.04)}
+.skill-card.active{border-color:rgba(0,212,170,.2);background:rgba(0,212,170,.04)}
+.skill-card .switch{position:relative;width:36px;height:20px;flex-shrink:0}
+.skill-card .switch input{opacity:0;width:0;height:0}
+.skill-card .switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,.08);transition:.3s;border-radius:10px}
+.skill-card .switch .slider:before{content:"";position:absolute;height:16px;width:16px;left:2px;bottom:2px;background:#555577;transition:.3s;border-radius:50%}
+.skill-card .switch input:checked+.slider{background:rgba(0,212,170,.3)}
+.skill-card .switch input:checked+.slider:before{transform:translateX(16px);background:#00d4aa}
+.skill-card .switch input:disabled+.slider{cursor:not-allowed;opacity:.5}
+.skill-card .switch .spinner{display:none;position:absolute;top:2px;left:8px;width:16px;height:16px;border:2px solid rgba(255,255,255,.1);border-top-color:#6c63ff;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.skill-card .switch.loading .slider{opacity:.3}
+.skill-card .switch.loading .spinner{display:block}
+.skill-card .info{flex:1;min-width:0}
+.skill-card .info .name{font-size:.8rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.skill-card .info .desc{font-size:.65rem;color:#8888bb;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.skill-card .score{font-size:.7rem;font-weight:600;padding:.15rem .4rem;border-radius:4px;flex-shrink:0}
+.score-high{color:#00d4aa;background:rgba(0,212,170,.1)}
+.score-med{color:#ffaa33;background:rgba(255,170,51,.1)}
+.score-low{color:#ff6b6b;background:rgba(255,107,107,.1)}
+.toast{position:fixed;bottom:2rem;right:2rem;padding:.75rem 1.25rem;border-radius:10px;background:#1a1a2e;border:1px solid rgba(255,255,255,.08);color:#e0e0ff;font-size:.8rem;opacity:0;transform:translateY(20px);transition:all .3s;z-index:1000;max-width:400px;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{border-color:rgba(0,212,170,.3)}
+.toast.error{border-color:rgba(255,107,107,.3)}
+.toast.warning{border-color:rgba(255,170,51,.3)}
+.actions{text-align:center;padding:1rem 2rem 2rem;display:flex;justify-content:center;gap:.5rem;flex-wrap:wrap}
+.actions button{padding:.6rem 1.5rem;border-radius:10px;border:none;font-weight:600;cursor:pointer;font-size:.85rem;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,#6c63ff,#00d4aa);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(108,99,255,.3)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-secondary{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)!important;color:#e0e0ff}
+.btn-secondary:hover{background:rgba(255,255,255,.08)}
+.btn-danger{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.2)!important;color:#ff6b6b}
+.btn-danger:hover{background:rgba(255,107,107,.2)}
+footer{text-align:center;padding:2rem;color:#555577;font-size:.7rem}
+.hidden{display:none!important}
+.progress-bar{height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin:.5rem 0}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,#6c63ff,#00d4aa);width:0;transition:width .3s}
+.last-sync{text-align:center;font-size:.65rem;color:#555577;padding:.25rem}
+.batch-progress{text-align:center;font-size:.7rem;color:#8888bb;display:none}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<section class="hero">
+  <h1>Skill Manager <span>Dashboard</span></h1>
+  <p>Gerencie suas skills por categoria · Ative/Desative com efeito real via servidor HTTP</p>
+  <div class="stats" id="stats">
+    <div><div class="num">{{TOTAL_SKILLS}}</div><div class="lab">Skills</div></div>
+    <div><div class="num">{{TOTAL_CATEGORIES}}</div><div class="lab">Categorias</div></div>
+    <div><div class="num" id="activeCount">{{ACTIVE_SKILLS}}</div><div class="lab">Ativas</div></div>
+    <div><div class="num">{{SCORE_MAX}}</div><div class="lab">Score Máx</div></div>
+  </div>
+  <div class="server-status {{SERVER_STATUS_CLASS}}" id="serverStatus">{{SERVER_STATUS_TEXT}}</div>
+  <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+  <div class="batch-progress" id="batchProgress"></div>
+</section>
+<div class="controls">
+  <input type="text" id="search" placeholder="🔍 Buscar skills..." oninput="filterSkills(this.value)">
+  <button onclick="toggleAll()">Toggle Todos</button>
+  <button onclick="expandAll()">Expandir Todos</button>
+  <button onclick="collapseAll()">Recolher Todos</button>
+  <button onclick="refreshFromServer()">🔄 Recarregar</button>
+</div>
+<div class="container" id="container">{{CATEGORIES_HTML}}</div>
+<div class="last-sync" id="lastSync">Última sincronização: {{LAST_SYNC}}</div>
+<div class="actions">
+  <button class="btn-primary" id="btnSave" onclick="saveAllChanges()">💾 Salvar Todas as Alterações</button>
+  <button class="btn-secondary" onclick="expandAll();filterSkills('')">📋 Expandir Tudo</button>
+  <button class="btn-secondary" onclick="window.open('/', '_blank')">📁 Abrir Projeto</button>
+</div>
+<footer>Skill Manager Dashboard · Servidor HTTP ativo · Fábrica Agêntica de Livros</footer>
+
+<script>
+const API_BASE = window.location.origin;
+const pendingChanges = {}; // { skillName: true|false }
+
+// ─── INICIALIZAÇÃO ──────────────────────────────────────────────────────────
+async function init() {
+  await refreshFromServer();
+  try {
+    const saved = JSON.parse(localStorage.getItem('skill-manager-sync') || '{}');
+    if (saved.timestamp) {
+      document.getElementById('lastSync').textContent = 'Última sincronização: ' + new Date(saved.timestamp).toLocaleString('pt-BR');
+    }
+  } catch(e) {}
+}
+init();
+
+// ─── SERVER API ─────────────────────────────────────────────────────────────
+async function refreshFromServer() {
+  try {
+    const res = await fetch(`${API_BASE}/api/config`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    applyConfig(data);
+    updateServerStatus(true);
+    showToast('✅ Configuração carregada do servidor', 'success');
+  } catch(e) {
+    updateServerStatus(false);
+    showToast('⚠️ Servidor offline — usando modo leitura', 'warning');
+  }
+}
+
+function applyConfig(data) {
+  // Atualizar contagem
+  document.getElementById('activeCount').textContent = data.activeCount || '0';
+
+  // Aplicar estado ativo/inativo das skills
+  document.querySelectorAll('.skill-card').forEach(card => {
+    const name = card.dataset.skill;
+    const isActive = (data.activeSkills || []).includes(name);
+    const cb = card.querySelector('input[type="checkbox"]');
+    if (cb) {
+      cb.checked = isActive;
+      card.classList.toggle('active', isActive);
+    }
+  });
+}
+
+async function toggleSkillOnServer(skillName, active) {
+  const switchEl = document.querySelector(`.skill-card[data-skill="${skillName}"] .switch`);
+  if (switchEl) switchEl.classList.add('loading');
+
+  try {
+    const res = await fetch(`${API_BASE}/api/toggle`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ skill: skillName, active })
+    });
+    const result = await res.json();
+    if (result.success) {
+      showToast(`${active ? '✅ Ativada' : '⛔ Desativada'}: ${skillName}`, 'success');
+      delete pendingChanges[skillName];
+      document.getElementById('activeCount').textContent = result.activeCount || '0';
+    } else {
+      showToast(`❌ Erro: ${result.error || 'desconhecido'}`, 'error');
+      // Reverter toggle
+      const card = document.querySelector(`.skill-card[data-skill="${skillName}"]`);
+      const cb = card?.querySelector('input');
+      if (cb) {
+        cb.checked = !active;
+        card?.classList.toggle('active', !active);
+      }
+    }
+  } catch(e) {
+    showToast(`❌ Servidor indisponível: ${e.message}`, 'error');
+    // Reverter
+    const card = document.querySelector(`.skill-card[data-skill="${skillName}"]`);
+    const cb = card?.querySelector('input');
+    if (cb) {
+      cb.checked = !active;
+      card?.classList.toggle('active', !active);
+    }
+  } finally {
+    if (switchEl) switchEl.classList.remove('loading');
+  }
+}
+
+async function saveAllChanges() {
+  const allSkills = [];
+  document.querySelectorAll('.skill-card.active').forEach(card => {
+    allSkills.push(card.dataset.skill);
+  });
+
+  const btn = document.getElementById('btnSave');
+  const origText = btn.textContent;
+  btn.textContent = '⏳ Salvando...';
+  btn.disabled = true;
+
+  // Mostrar barra de progresso
+  const progressFill = document.getElementById('progressFill');
+  const batchProgress = document.getElementById('batchProgress');
+  batchProgress.style.display = 'block';
+
+  try {
+    // Enviar lista completa de skills ativas
+    const res = await fetch(`${API_BASE}/api/save`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ activeSkills: allSkills })
+    });
+    const result = await res.json();
+
+    if (result.success) {
+      // Atualizar progresso durante instalação
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 5;
+        progressFill.style.width = Math.min(progress, 90) + '%';
+        if (progress >= 90) clearInterval(interval);
+      }, 200);
+
+      // Poll do resultado
+      const pollResult = await pollInstallResult(result.jobId);
+      clearInterval(interval);
+      progressFill.style.width = '100%';
+
+      setTimeout(() => { progressFill.style.width = '0'; }, 2000);
+
+      if (pollResult.success) {
+        showToast(`✅ ${pollResult.installed} instaladas, ${pollResult.removed} removidas`, 'success');
+        document.getElementById('activeCount').textContent = pollResult.activeCount || allSkills.length;
+        localStorage.setItem('skill-manager-sync', JSON.stringify({ timestamp: Date.now() }));
+        document.getElementById('lastSync').textContent = 'Última sincronização: ' + new Date().toLocaleString('pt-BR');
+        Object.keys(pendingChanges).forEach(k => delete pendingChanges[k]);
+      } else {
+        showToast(`❌ Erro: ${pollResult.error}`, 'error');
+      }
+    } else {
+      showToast(`❌ Erro no servidor: ${result.error}`, 'error');
+    }
+  } catch(e) {
+    showToast(`❌ Falha na comunicação: ${e.message}`, 'error');
+  } finally {
+    btn.textContent = origText;
+    btn.disabled = false;
+    setTimeout(() => { batchProgress.style.display = 'none'; }, 3000);
+  }
+}
+
+async function pollInstallResult(jobId, maxAttempts = 60) {
+  for (let i = 0; i < maxAttempts; i++) {
+    await new Promise(r => setTimeout(r, 1000));
+    try {
+      const res = await fetch(`${API_BASE}/api/job/${jobId}`);
+      const data = await res.json();
+      const progressEl = document.getElementById('batchProgress');
+      if (data.message) progressEl.textContent = data.message;
+      if (data.completed) return data;
+    } catch(e) {
+      // Continua tentando
+    }
+  }
+  return { success: false, error: 'timeout após 60s' };
+}
+
+// ─── UI HELPERS ─────────────────────────────────────────────────────────────
+function toggleCategory(header) {
+  const arrow = header.querySelector('.arrow');
+  const skills = header.nextElementSibling;
+  arrow.classList.toggle('open');
+  skills.classList.toggle('hidden');
+}
+
+function toggleSkill(checkbox, skillName) {
+  const card = checkbox.closest('.skill-card');
+  card.classList.toggle('active', checkbox.checked);
+  // Efeito visual imediato + chamada server real
+  toggleSkillOnServer(skillName, checkbox.checked);
+  updateCounts();
+}
+
+function updateCounts() {
+  document.querySelectorAll('.category').forEach(cat => {
+    const skills = cat.querySelector('.skills');
+    const active = skills.querySelectorAll('.skill-card.active').length;
+    const total = skills.querySelectorAll('.skill-card').length;
+    cat.querySelector('.active-count').textContent = active + ' ativas';
+  });
+}
+
+function filterSkills(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('.skill-card').forEach(card => {
+    const name = card.dataset.skill.toLowerCase();
+    const desc = (card.querySelector('.desc')?.textContent || '').toLowerCase();
+    card.style.display = name.includes(q) || desc.includes(q) ? 'flex' : 'none';
+  });
+  document.querySelectorAll('.category').forEach(cat => {
+    const visible = cat.querySelectorAll('.skill-card[style*="display: flex"], .skill-card:not([style])').length;
+    cat.style.display = visible > 0 ? 'block' : 'none';
+  });
+}
+
+function toggleAll() {
+  const activeCards = document.querySelectorAll('.skill-card.active');
+  const allCards = document.querySelectorAll('.skill-card');
+  const turnOn = activeCards.length < allCards.length / 2;
+  allCards.forEach(card => {
+    const cb = card.querySelector('input');
+    if (cb.checked !== turnOn) {
+      cb.checked = turnOn;
+      card.classList.toggle('active', turnOn);
+      toggleSkillOnServer(card.dataset.skill, turnOn);
+    }
+  });
+  updateCounts();
+}
+
+function expandAll() {
+  document.querySelectorAll('.skills').forEach(s => s.classList.remove('hidden'));
+  document.querySelectorAll('.arrow').forEach(t => t.classList.add('open'));
+}
+
+function collapseAll() {
+  document.querySelectorAll('.skills').forEach(s => s.classList.add('hidden'));
+  document.querySelectorAll('.arrow').forEach(t => t.classList.remove('open'));
+}
+
+function updateServerStatus(online) {
+  const el = document.getElementById('serverStatus');
+  if (online) {
+    el.className = 'server-status server-online';
+    el.textContent = '🟢 Servidor online — alterações em tempo real';
+  } else {
+    el.className = 'server-status server-offline';
+    el.textContent = '🔴 Servidor offline — modo leitura';
+  }
+}
+
+// ─── TOAST ──────────────────────────────────────────────────────────────────
+function showToast(msg, type = '') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  clearTimeout(el._hide);
+  el._hide = setTimeout(() => el.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>

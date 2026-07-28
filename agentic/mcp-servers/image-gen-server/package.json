@@ -1,0 +1,11 @@
+{
+  "name": "fabrica-image-gen-server",
+  "version": "1.0.0",
+  "description": "MCP local (mcp_image_gen) da Fabrica Agentica de Livros - renderiza capa, contracapa e diagramas conceituais em SVG deterministico, sem dependencia de API paga.",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^3.23.8"
+  }
+}

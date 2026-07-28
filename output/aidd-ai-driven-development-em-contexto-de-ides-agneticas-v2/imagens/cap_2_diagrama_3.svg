@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 350" font-family="system-ui, sans-serif">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a0a1a"/><stop offset="100%" stop-color="#1a1a2a"/></linearGradient></defs>
+  <rect width="700" height="350" fill="url(#bg)" rx="12"/>
+  <text x="350" y="35" text-anchor="middle" fill="#e0e0ff" font-size="16" font-weight="bold">Ecossistema de Ferramentas AIDD</text>
+  <circle cx="350" cy="180" r="100" fill="none" stroke="#6c63ff" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <circle cx="350" cy="180" r="60" fill="#2a2a5a" stroke="#6c63ff" stroke-width="2"/>
+  <text x="350" y="175" text-anchor="middle" fill="#e0e0ff" font-size="13" font-weight="bold">AIDD</text>
+  <text x="350" y="195" text-anchor="middle" fill="#8888bb" font-size="10">Paradigma</text>
+  <rect x="30" y="110" width="130" height="40" rx="8" fill="#2a1a3a" stroke="#6c63ff" stroke-width="1"/>
+  <text x="95" y="135" text-anchor="middle" fill="#e0e0ff" font-size="11">CLI Agents</text>
+  <rect x="30" y="160" width="130" height="40" rx="8" fill="#2a1a3a" stroke="#6c63ff" stroke-width="1"/>
+  <text x="95" y="185" text-anchor="middle" fill="#e0e0ff" font-size="11">IDE Agents</text>
+  <rect x="30" y="210" width="130" height="40" rx="8" fill="#2a1a3a" stroke="#6c63ff" stroke-width="1"/>
+  <text x="95" y="235" text-anchor="middle" fill="#e0e0ff" font-size="11">Open Source</text>
+  <rect x="540" y="110" width="130" height="40" rx="8" fill="#1a3a2a" stroke="#00d4aa" stroke-width="1"/>
+  <text x="605" y="135" text-anchor="middle" fill="#e0e0ff" font-size="11">MCP Servers</text>
+  <rect x="540" y="160" width="130" height="40" rx="8" fill="#1a3a2a" stroke="#00d4aa" stroke-width="1"/>
+  <text x="605" y="185" text-anchor="middle" fill="#e0e0ff" font-size="11">Frameworks</text>
+  <rect x="540" y="210" width="130" height="40" rx="8" fill="#1a3a2a" stroke="#00d4aa" stroke-width="1"/>
+  <text x="605" y="235" text-anchor="middle" fill="#e0e0ff" font-size="11">BYOK Tools</text>
+  <text x="350" y="335" text-anchor="middle" fill="#555577" font-size="11">Ecossistema AIDD — 3 categorias principais de ferramentas</text>
+</svg>

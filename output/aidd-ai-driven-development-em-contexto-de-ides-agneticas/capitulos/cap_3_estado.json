@@ -1,0 +1,12 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": { "parte": "I", "capitulo": "3" },
+  "estado_execucao": "aguardando_checkpoint_humano",
+  "payload_estrategico": {
+    "pilares": [
+      { "nome": "SWE-bench e o panorama de benchmarks", "escopo": "SWE-bench Verified, SWE-bench Pro, scores frontier, limitações", "ancora_visual": "Gráfico de barras evolutivo" },
+      { "nome": "O paradoxo da produtividade", "escopo": "Atividade vs. entrega, gargalo de revisão, ganhos reais", "ancora_visual": "Diagrama de funil invertido" },
+      { "nome": "O perception gap", "escopo": "Estudo METR, lacuna percepção-realidade, métricas que importam, evals", "ancora_visual": "Gráfico de dispersão perception gap" }
+    ]
+  }
+}

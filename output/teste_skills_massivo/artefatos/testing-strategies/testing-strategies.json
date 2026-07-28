@@ -1,0 +1,13 @@
+{
+  "skill": "testing-strategies",
+  "slug": "testing-strategies",
+  "description": "Testing strategies including contract testing, snapshot testing, mutation testing, property-based testing, and test organization",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/testing-strategies/",
+  "metrics": {
+    "type": "html",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

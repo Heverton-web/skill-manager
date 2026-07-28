@@ -1,0 +1,13 @@
+{
+  "skill": "dossier",
+  "slug": "dossier",
+  "description": "Decision-grade entity research skill — produces a hypothesis-tested dossier on a specific company, person, nonprofit, or government org, not a generic profile. Forcing intake makes the user state t...",
+  "categoria": "Documentação & Comunicação",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/dossier/",
+  "metrics": {
+    "type": "report",
+    "category": "Documentação & Comunicação"
+  }
+}

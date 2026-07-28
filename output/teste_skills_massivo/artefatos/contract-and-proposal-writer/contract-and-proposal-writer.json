@@ -1,0 +1,13 @@
+{
+  "skill": "contract-and-proposal-writer",
+  "slug": "contract-and-proposal-writer",
+  "description": "Generate professional, jurisdiction-aware business documents: freelance contracts, project proposals, SOWs, NDAs, and MSAs. Structured Markdown output with docx conversion instructions. Covers US (...",
+  "categoria": "Documentação & Comunicação",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/contract-and-proposal-writer/",
+  "metrics": {
+    "type": "visual",
+    "category": "Documentação & Comunicação"
+  }
+}

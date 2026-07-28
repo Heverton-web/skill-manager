@@ -1,0 +1,13 @@
+{
+  "skill": "capa-officer",
+  "slug": "capa-officer",
+  "description": "CAPA system management for medical device QMS. Covers root cause analysis, corrective action planning, effectiveness verification, and CAPA metrics. Use when running CAPA investigations, 5-Why anal...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/capa-officer/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

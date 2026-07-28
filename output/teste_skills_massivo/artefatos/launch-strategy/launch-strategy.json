@@ -1,0 +1,13 @@
+{
+  "skill": "launch-strategy",
+  "slug": "launch-strategy",
+  "description": "When the user wants to plan a product launch, feature announcement, or release strategy. Also use when the user mentions 'launch,' 'Product Hunt,' 'feature release,' 'announcement,' 'go-to-market,'...",
+  "categoria": "Produto & Estratégia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/launch-strategy/",
+  "metrics": {
+    "type": "html",
+    "category": "Produto & Estratégia"
+  }
+}

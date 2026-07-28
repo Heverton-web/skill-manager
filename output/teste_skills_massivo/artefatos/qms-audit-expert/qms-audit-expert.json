@@ -1,0 +1,13 @@
+{
+  "skill": "qms-audit-expert",
+  "slug": "qms-audit-expert",
+  "description": "ISO 13485 internal audit expertise for medical device QMS. Covers audit planning, execution, nonconformity classification, and CAPA verification. Use when planning internal audits, executing audits...",
+  "categoria": "Segurança & Compliance",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/qms-audit-expert/",
+  "metrics": {
+    "type": "report",
+    "category": "Segurança & Compliance"
+  }
+}

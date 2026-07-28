@@ -1,0 +1,23 @@
+{
+  "titulo_obra": "Arquitetura de Agentes: Model Context Protocol na Prática",
+  "introducao": "Estabelecer, com um caso concreto de mercado, por que a fragmentação de integrações entre agentes de IA e ferramentas externas se tornou o principal gargalo de escala em sistemas multi-agente, e como um protocolo aberto e comum resolve esse gargalo.",
+  "partes": [
+    {
+      "parte": "I",
+      "titulo_parte": "Fundamentos de Integração Agente-Ferramenta",
+      "capitulos": [
+        {
+          "capitulo": "1",
+          "titulo": "Arquitetura de Servidores MCP como Motor de Ferramentas para Agentes de IA",
+          "objetivo": "Capacitar o leitor a entender e implementar um servidor MCP como o motor padronizado de ferramentas de um agente, cobrindo transporte, descoberta e invocação.",
+          "pilares_previstos": [
+            "Protocolo e transporte: JSON-RPC 2.0 sobre stdio e Streamable HTTP",
+            "Ciclo de vida da ferramenta: descoberta (tools/list) e invocação (tools/call)",
+            "Riscos de confiança: permissões amplas, confused deputy e isolamento de contexto"
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusao": "Consolidar o MCP como camada de integração determinística entre agentes e ferramentas, apontando a tensão entre velocidade de adoção enterprise e maturidade de segurança ainda em construção como o eixo central da próxima fase do protocolo."
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "skill-security-auditor",
+  "slug": "skill-security-auditor",
+  "description": ">",
+  "categoria": "Segurança & Compliance",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/skill-security-auditor/",
+  "metrics": {
+    "type": "html",
+    "category": "Segurança & Compliance"
+  }
+}

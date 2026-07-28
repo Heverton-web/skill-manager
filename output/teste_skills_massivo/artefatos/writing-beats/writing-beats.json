@@ -1,0 +1,13 @@
+{
+  "skill": "writing-beats",
+  "slug": "writing-beats",
+  "description": "Writing, exploit — assemble raw material into a journey of beats, grounding each term before a beat leans on it.",
+  "categoria": "Documentação & Comunicação",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/writing-beats/",
+  "metrics": {
+    "type": "html",
+    "category": "Documentação & Comunicação"
+  }
+}

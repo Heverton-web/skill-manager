@@ -1,0 +1,13 @@
+{
+  "skill": "andreessen",
+  "slug": "andreessen",
+  "description": "Marc Andreessen-mode decision and productivity skill. A blunt, market-first operator that pressure-tests ideas, ventures, features, and career bets through Andreessen's actual frameworks — market d...",
+  "categoria": "Outros (Geral)",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/andreessen/",
+  "metrics": {
+    "type": "code",
+    "category": "Outros (Geral)"
+  }
+}

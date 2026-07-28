@@ -1,0 +1,13 @@
+{
+  "skill": "research",
+  "slug": "research",
+  "description": "Default entry point for any research request — a hybrid router that classifies the question deterministically and either delegates to a specialist research skill (pulse for trends/sentiment, grants...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/research/",
+  "metrics": {
+    "type": "visual",
+    "category": "SEO & Marketing Digital"
+  }
+}

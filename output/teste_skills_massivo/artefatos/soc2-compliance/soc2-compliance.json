@@ -1,0 +1,13 @@
+{
+  "skill": "soc2-compliance",
+  "slug": "soc2-compliance",
+  "description": "Use when the user asks to prepare for SOC 2 audits, map Trust Service Criteria, build control matrices, collect audit evidence, perform gap analysis, or assess SOC 2 Type I vs Type II readiness.",
+  "categoria": "Segurança & Compliance",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/soc2-compliance/",
+  "metrics": {
+    "type": "report",
+    "category": "Segurança & Compliance"
+  }
+}

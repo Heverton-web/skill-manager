@@ -1,0 +1,13 @@
+{
+  "skill": "mcp-builder",
+  "slug": "mcp-builder",
+  "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate exte...",
+  "categoria": "Design & Visual",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/mcp-builder/",
+  "metrics": {
+    "type": "code",
+    "category": "Design & Visual"
+  }
+}

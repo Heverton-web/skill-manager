@@ -1,0 +1,7 @@
+# token-dashboard
+
+**Categoria:** Dados & Analytics
+**Descrição:** Open the Token Optimizer dashboard. Collects latest session data, regenerates the dashboard, and opens it in your browser.
+**Tipo:** html
+
+[Ver artefatos completos](../artefatos/token-dashboard/)

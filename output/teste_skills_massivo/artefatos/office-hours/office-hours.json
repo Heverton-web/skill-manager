@@ -1,0 +1,13 @@
+{
+  "skill": "office-hours",
+  "slug": "office-hours",
+  "description": "/cs:office-hours <topic> — YC-style 6-question founder interrogation before any advice. Forces clarity on problem, customer, distribution, defensibility, capital, and founder fit. Use when a founde...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/office-hours/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

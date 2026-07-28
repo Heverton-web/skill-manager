@@ -1,0 +1,13 @@
+{
+  "skill": "remember",
+  "slug": "remember",
+  "description": "Explicitly save important knowledge to auto-memory with timestamp and context. Use when a discovery is too important to rely on auto-capture.",
+  "categoria": "Outros (Geral)",
+  "tipo": "test",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/remember/",
+  "metrics": {
+    "type": "test",
+    "category": "Outros (Geral)"
+  }
+}

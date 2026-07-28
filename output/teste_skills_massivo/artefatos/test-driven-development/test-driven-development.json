@@ -1,0 +1,13 @@
+{
+  "skill": "test-driven-development",
+  "slug": "test-driven-development",
+  "description": "Use when implementing any feature or bugfix, before writing implementation code",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/test-driven-development/",
+  "metrics": {
+    "type": "code",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

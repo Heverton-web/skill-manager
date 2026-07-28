@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" font-family="system-ui, sans-serif">
+  <defs>
+    <linearGradient id="bgx" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a0a1a"/><stop offset="100%" stop-color="#0a0515"/></linearGradient>
+    <style>
+      @keyframes draw { to { stroke-dashoffset: 0; } }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes pulse { 0%,100%{opacity:.3}50%{opacity:.6} }
+      .edge { fill: none; stroke: #555577; stroke-width: 1.5; stroke-dasharray: 400; stroke-dashoffset: 400; animation: draw 2s ease forwards; }
+      .e2 { animation-delay: .5s; } .e3 { animation-delay: 1s; } .e4 { animation-delay: 1.5s; }
+      .fade { animation: fadeIn 1s ease both; } .f2 { animation-delay: .3s; } .f3 { animation-delay: .6s; } .f4 { animation-delay: .9s; }
+      .glow { animation: pulse 3s ease-in-out infinite; }
+      @media (prefers-reduced-motion: reduce) { .edge { animation: none; stroke-dashoffset: 0; } }
+    </style>
+  </defs>
+  <rect width="800" height="600" fill="url(#bgx)" rx="12"/>
+  <text x="400" y="45" text-anchor="middle" fill="#e0e0ff" font-size="18" font-weight="bold">Ecossistema AIDD — Mapa Conceitual</text>
+  <rect x="300" y="70" width="200" height="55" rx="10" fill="#2a2a5a" stroke="#6c63ff" stroke-width="2" class="fade"/><text x="400" y="98" text-anchor="middle" fill="#e0e0ff" font-size="13" font-weight="bold">AIDD</text><text x="400" y="115" text-anchor="middle" fill="#8888bb" font-size="9">Paradigma de Engenharia</text>
+  <rect x="30" y="210" width="180" height="55" rx="10" fill="#2a1a3a" stroke="#6c63ff" stroke-width="1.5" class="fade f2"/><text x="120" y="238" text-anchor="middle" fill="#e0e0ff" font-size="12" font-weight="bold">Claude Code</text><text x="120" y="255" text-anchor="middle" fill="#8888bb" font-size="9">CLI · MCP · Sub-agentes</text>
+  <rect x="260" y="210" width="180" height="55" rx="10" fill="#1a2a3a" stroke="#00d4aa" stroke-width="1.5" class="fade f3"/><text x="350" y="238" text-anchor="middle" fill="#e0e0ff" font-size="12" font-weight="bold">Cursor</text><text x="350" y="255" text-anchor="middle" fill="#8888bb" font-size="9">IDE · Agent Mode · Composer</text>
+  <rect x="490" y="210" width="180" height="55" rx="10" fill="#1a2a1a" stroke="#ffaa33" stroke-width="1.5" class="fade f4"/><text x="580" y="238" text-anchor="middle" fill="#e0e0ff" font-size="12" font-weight="bold">Windsurf</text><text x="580" y="255" text-anchor="middle" fill="#8888bb" font-size="9">IDE · Cascade · Flow</text>
+  <rect x="150" y="340" width="180" height="55" rx="10" fill="#1a3a2a" stroke="#00d4aa" stroke-width="1.5" class="fade f2"/><text x="240" y="368" text-anchor="middle" fill="#e0e0ff" font-size="12" font-weight="bold">MCP</text><text x="240" y="385" text-anchor="middle" fill="#8888bb" font-size="9">Model Context Protocol</text>
+  <rect x="470" y="340" width="180" height="55" rx="10" fill="#2a2a1a" stroke="#ff6b9d" stroke-width="1.5" class="fade f3"/><text x="560" y="368" text-anchor="middle" fill="#e0e0ff" font-size="12" font-weight="bold">Open Source</text><text x="560" y="385" text-anchor="middle" fill="#8888bb" font-size="9">Cline · Roo Code · BYOK</text>
+  <rect x="300" y="470" width="200" height="55" rx="10" fill="#2a2a5a" stroke="#6c63ff" stroke-width="2" class="fade"/><text x="400" y="498" text-anchor="middle" fill="#e0e0ff" font-size="13" font-weight="bold">Spec-to-Code</text><text x="400" y="515" text-anchor="middle" fill="#8888bb" font-size="9">Pipeline AIDD Completo</text>
+  <line x1="400" y1="125" x2="120" y2="210" class="edge e2"/><line x1="400" y1="125" x2="350" y2="210" class="edge e3"/><line x1="400" y1="125" x2="580" y2="210" class="edge e4"/>
+  <line x1="120" y1="265" x2="240" y2="340" class="edge"/><line x1="580" y1="265" x2="560" y2="340" class="edge"/>
+  <line x1="240" y1="395" x2="400" y2="470" class="edge e2"/><line x1="560" y1="395" x2="400" y2="470" class="edge e3"/>
+  <circle cx="400" cy="97" r="5" fill="#6c63ff" class="glow"/>
+  <text x="400" y="580" text-anchor="middle" fill="#555577" font-size="11">Ecossistema AIDD — Partes, Capítulos, Ferramentas e Padrões</text>
+</svg>

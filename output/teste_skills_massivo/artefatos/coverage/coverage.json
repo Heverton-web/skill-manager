@@ -1,0 +1,13 @@
+{
+  "skill": "coverage",
+  "slug": "coverage",
+  "description": ">-",
+  "categoria": "IA & Machine Learning",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/coverage/",
+  "metrics": {
+    "type": "html",
+    "category": "IA & Machine Learning"
+  }
+}

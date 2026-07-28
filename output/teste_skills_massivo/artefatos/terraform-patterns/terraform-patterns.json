@@ -1,0 +1,13 @@
+{
+  "skill": "terraform-patterns",
+  "slug": "terraform-patterns",
+  "description": "Terraform infrastructure-as-code agent skill and plugin for Claude Code, Codex, Gemini CLI, Cursor, OpenClaw. Covers module design patterns, state management strategies, provider configuration, sec...",
+  "categoria": "Infraestrutura & DevOps",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/terraform-patterns/",
+  "metrics": {
+    "type": "report",
+    "category": "Infraestrutura & DevOps"
+  }
+}

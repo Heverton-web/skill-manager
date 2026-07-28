@@ -1,0 +1,13 @@
+{
+  "skill": "company-os",
+  "slug": "company-os",
+  "description": "The meta-framework for how a company runs — the connective tissue between all C-suite roles. Covers operating system selection (EOS, Scaling Up, OKR-native, hybrid), accountability charts, scorecar...",
+  "categoria": "Outros (Geral)",
+  "tipo": "general",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/company-os/",
+  "metrics": {
+    "type": "general",
+    "category": "Outros (Geral)"
+  }
+}

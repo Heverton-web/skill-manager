@@ -1,0 +1,13 @@
+{
+  "skill": "typescript-advanced",
+  "slug": "typescript-advanced",
+  "description": "Advanced TypeScript patterns including generics, conditional types, mapped types, template literals, and type guards",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/typescript-advanced/",
+  "metrics": {
+    "type": "code",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

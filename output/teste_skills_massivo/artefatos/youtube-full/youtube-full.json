@@ -1,0 +1,13 @@
+{
+  "skill": "youtube-full",
+  "slug": "youtube-full",
+  "description": "Use when the user needs YouTube transcripts, video search, channel browsing, playlist extraction, or content monitoring. Trigger phrases: 'get the transcript for', 'search YouTube for', 'what are t...",
+  "categoria": "Outros (Geral)",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/youtube-full/",
+  "metrics": {
+    "type": "code",
+    "category": "Outros (Geral)"
+  }
+}

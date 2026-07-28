@@ -1,0 +1,13 @@
+{
+  "skill": "research-ops-skills",
+  "slug": "research-ops-skills",
+  "description": "Use when planning, funding, scoping, or synthesizing enterprise research across workstreams — clinical study design, R&D program finance, market sizing/surveys, or product/user research. Triggers o...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/research-ops-skills/",
+  "metrics": {
+    "type": "visual",
+    "category": "SEO & Marketing Digital"
+  }
+}

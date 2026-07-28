@@ -1,0 +1,13 @@
+{
+  "skill": "image-studio",
+  "slug": "image-studio",
+  "description": "Studio de geracao de imagens inteligente — roteamento automatico entre ai-studio-image (fotos humanizadas/influencer) e stability-ai (arte/ ilustracao/edicao). Detecta o tipo de imagem solicitada e...",
+  "categoria": "Design & Visual",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/image-studio/",
+  "metrics": {
+    "type": "visual",
+    "category": "Design & Visual"
+  }
+}

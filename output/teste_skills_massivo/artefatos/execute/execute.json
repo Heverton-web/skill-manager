@@ -1,0 +1,13 @@
+{
+  "skill": "execute",
+  "slug": "execute",
+  "description": "/cs:execute <decision> — Generate a 90-day execution plan with weekly milestones, DRIs, and check-in cadence from an approved decision. Use when a logged decision needs to become an operating plan ...",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "general",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/execute/",
+  "metrics": {
+    "type": "general",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

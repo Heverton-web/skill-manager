@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIDD — AI-Driven Development</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,500;6..72,600;6..72,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0b12;
+    --surface: #12121e;
+    --border: #1e1e30;
+    --gold: #d4af37;
+    --gold-dim: rgba(212,175,55,0.15);
+    --text: #eaeaea;
+    --text-secondary: #8888a0;
+    --accent-blue: #4a7dff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2em;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 600px 400px at 20% 40%, rgba(212,175,55,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 500px 500px at 80% 60%, rgba(74,125,255,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+  }
+  .hero-eyebrow {
+    font-family: 'Newsreader', serif;
+    font-size: clamp(0.75em, 1.2vw, 0.9em);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2em;
+    font-weight: 300;
+  }
+  .hero h1 {
+    font-family: 'Newsreader', serif;
+    font-size: clamp(2.8em, 6vw, 5em);
+    font-weight: 300;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3em;
+  }
+  .hero h1 .gold { color: var(--gold); font-weight: 500; }
+  .hero h1 .light { font-weight: 300; color: rgba(234,234,234,0.5); }
+  .hero-sub {
+    font-size: clamp(1em, 1.6vw, 1.2em);
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 65ch;
+    margin: 1em auto 2.5em;
+    font-weight: 300;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 1em;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--bg);
+    border: none;
+    padding: 0.9em 2.4em;
+    border-radius: 2em;
+    font-weight: 500;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,175,55,0.25); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 0.9em 2.4em;
+    border-radius: 2em;
+    font-weight: 400;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .btn-secondary:active { transform: scale(0.98); }
+
+  /* ─── Seções ─── */
+  section { padding: 6em 2em; }
+  .section-label {
+    font-family: 'Newsreader', serif;
+    font-size: 0.75em;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1em;
+    font-weight: 300;
+  }
+  .section-title {
+    font-family: 'Newsreader', serif;
+    font-size: clamp(1.8em, 3.5vw, 2.8em);
+    font-weight: 300;
+    line-height: 1.15;
+    margin-bottom: 0.5em;
+  }
+  .section-sub {
+    color: var(--text-secondary);
+    font-size: 1.05em;
+    line-height: 1.7;
+    max-width: 60ch;
+    font-weight: 300;
+  }
+
+  /* ─── Pilares ─── */
+  .pilares {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .pilar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5em;
+    margin-top: 3em;
+  }
+  .pilar-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5em 2em;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .pilar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .pilar-card:hover { border-color: rgba(212,175,55,0.3); transform: translateY(-4px); }
+  .pilar-card:hover::before { opacity: 1; }
+  .pilar-num {
+    font-family: 'Newsreader', serif;
+    font-size: 0.7em;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 0.8em;
+    font-weight: 300;
+  }
+  .pilar-card h3 {
+    font-family: 'Newsreader', serif;
+    font-size: 1.3em;
+    font-weight: 500;
+    margin-bottom: 0.6em;
+  }
+  .pilar-card p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    font-size: 0.9em;
+    font-weight: 300;
+  }
+
+  /* ─── Stats ─── */
+  .stats {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stats-grid {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2em;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Newsreader', serif;
+    font-size: clamp(2.5em, 4vw, 3.5em);
+    color: var(--gold);
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 0.3em;
+  }
+  .stat-label {
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    letter-spacing: 0.05em;
+    font-weight: 300;
+  }
+
+  /* ─── Estrutura ─── */
+  .estrutura {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .parte {
+    display: flex;
+    gap: 1.5em;
+    padding: 1.5em 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .parte:last-child { border-bottom: none; }
+  .parte-num {
+    font-family: 'Newsreader', serif;
+    font-size: 0.75em;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    white-space: nowrap;
+    padding-top: 0.2em;
+    font-weight: 300;
+  }
+  .parte h3 {
+    font-family: 'Newsreader', serif;
+    font-size: 1.15em;
+    font-weight: 500;
+    margin-bottom: 0.2em;
+  }
+  .parte p {
+    color: var(--text-secondary);
+    font-size: 0.85em;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    text-align: center;
+    padding: 3em 2em;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.75em;
+    letter-spacing: 0.05em;
+    font-weight: 300;
+  }
+
+  @media (max-width: 768px) {
+    section { padding: 4em 1.2em; }
+    .stats-grid { grid-template-columns: 1fr; gap: 2em; }
+    .pilar-grid { grid-template-columns: 1fr; }
+    .hide-mobile { display: none; }
+  }
+
+  /* ─── Decorative grid lines ─── */
+  .grid-lines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.03;
+    background-image:
+      linear-gradient(rgba(212,175,55,0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(212,175,55,0.3) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+</style>
+</head>
+<body>
+<div class="grid-lines"></div>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Fábrica Agêntica de Livros · 2026</div>
+    <h1>
+      <span class="light">AI-Driven</span><br>
+      <span class="gold">Development</span>
+    </h1>
+    <p class="hero-sub">
+      em Contexto de IDEs Agênticas — Evolução, Ferramentas, Metodologias<br class="hide-mobile">
+      e Governança para o Desenvolvedor do Futuro
+    </p>
+    <div class="hero-cta">
+      <button class="btn-primary">📖 Acessar o Livro</button>
+      <button class="btn-secondary">🎬 Ver Apresentação</button>
+    </div>
+  </div>
+</section>
+
+<section class="pilares">
+  <div class="section-label">· Conteúdo ·</div>
+  <h2 class="section-title">4 Partes, 12 Capítulos</h2>
+  <p class="section-sub">Uma jornada completa dos fundamentos à governança corporativa do desenvolvimento aumentado por IA.</p>
+  <div class="pilar-grid">
+    <div class="pilar-card">
+      <div class="pilar-num">PARTE I</div>
+      <h3>Fundamentos</h3>
+      <p>Evolução do desenvolvimento de software, coding agents (Claude Code, Cursor, Cline, Devin), SWE-bench, perception gap e o novo paradigma AIDD.</p>
+    </div>
+    <div class="pilar-card">
+      <div class="pilar-num">PARTE II</div>
+      <h3>Context &amp; SDD</h3>
+      <p>Context Engineering, especificações executáveis (CLAUDE.md, AGENTS.md), Spec-Driven Development, portabilidade multi-IDE com hardlinks.</p>
+    </div>
+    <div class="pilar-card">
+      <div class="pilar-num">PARTE III</div>
+      <h3>Protocolos</h3>
+      <p>Model Context Protocol (MCP), orquestração multi-agente (CrewAI, LangGraph), Fable Method — padrões de verificação adversarial.</p>
+    </div>
+    <div class="pilar-card">
+      <div class="pilar-num">PARTE IV</div>
+      <h3>Mundo Real</h3>
+      <p>Adoção corporativa (88% falham), dívida técnica em código gerado por IA, AI Agent Owner, engenheiro de intenção — o novo perfil profissional.</p>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div>
+      <div class="stat-num">12</div>
+      <div class="stat-label">Capítulos</div>
+    </div>
+    <div>
+      <div class="stat-num">20+</div>
+      <div class="stat-label">Diagramas Técnicos</div>
+    </div>
+    <div>
+      <div class="stat-num">4</div>
+      <div class="stat-label">Partes</div>
+    </div>
+  </div>
+</section>
+
+<section class="estrutura">
+  <div class="section-label">· Estrutura ·</div>
+  <h2 class="section-title">Roteiro da Obra</h2>
+  <div class="parte">
+    <div class="parte-num">I</div>
+    <div>
+      <h3>Fundamentos do AIDD</h3>
+      <p>Capítulos 1-3: A evolução dos mainframes aos agentes autônomos, taxonomia dos coding agents, métricas SWE-bench e o perception gap entre produtividade real e percebida.</p>
+    </div>
+  </div>
+  <div class="parte">
+    <div class="parte-num">II</div>
+    <div>
+      <h3>Context Engineering &amp; SDD</h3>
+      <p>Capítulos 4-6: Prompt Engineering vs. Context Engineering, especificações executáveis, Spec-Driven Development e arquitetura multi-IDE com hardlinks.</p>
+    </div>
+  </div>
+  <div class="parte">
+    <div class="parte-num">III</div>
+    <div>
+      <h3>Protocolos e Orquestração</h3>
+      <p>Capítulos 7-9: MCP como barramento universal de ferramentas, CrewAI e LangGraph para orquestração multi-agente, Fable Method e verificação adversarial.</p>
+    </div>
+  </div>
+  <div class="parte">
+    <div class="parte-num">IV</div>
+    <div>
+      <h3>Aplicação no Mundo Real</h3>
+      <p>Capítulos 10-12: Adoção corporativa, AI Agent Owner, engenheiro de intenção, dívida técnica, riscos legais e o futuro do desenvolvimento de software.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Fábrica Agêntica de Livros · Produzido com huashu-design · 2026
+</footer>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "skill": "brief",
+  "slug": "brief",
+  "description": "/cs:brief <topic> — Generate a one-page strategy brief from an office-hours intake. First step in the strategic sprint pipeline. Use when a strategic question needs to be framed before boardroom de...",
+  "categoria": "Documentação & Comunicação",
+  "tipo": "general",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/brief/",
+  "metrics": {
+    "type": "general",
+    "category": "Documentação & Comunicação"
+  }
+}

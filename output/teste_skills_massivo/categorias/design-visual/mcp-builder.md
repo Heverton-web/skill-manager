@@ -1,0 +1,7 @@
+# mcp-builder
+
+**Categoria:** Design & Visual
+**Descrição:** Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate exte...
+**Tipo:** code
+
+[Ver artefatos completos](../artefatos/mcp-builder/)

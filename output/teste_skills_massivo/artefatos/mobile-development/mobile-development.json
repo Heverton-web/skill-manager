@@ -1,0 +1,13 @@
+{
+  "skill": "mobile-development",
+  "slug": "mobile-development",
+  "description": "Mobile development patterns for React Native and Flutter including navigation, state management, and responsive design",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/mobile-development/",
+  "metrics": {
+    "type": "html",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill": "security-hardening",
+  "slug": "security-hardening",
+  "description": "Application security covering input validation, auth, headers, secrets management, and dependency auditing",
+  "categoria": "Segurança & Compliance",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/security-hardening/",
+  "metrics": {
+    "type": "html",
+    "category": "Segurança & Compliance"
+  }
+}

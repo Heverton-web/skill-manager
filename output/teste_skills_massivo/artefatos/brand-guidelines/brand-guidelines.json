@@ -1,0 +1,13 @@
+{
+  "skill": "brand-guidelines",
+  "slug": "brand-guidelines",
+  "description": "When the user wants to apply, document, or enforce brand guidelines for any product or company. Also use when the user mentions 'brand guidelines,' 'brand colors,' 'typography,' 'logo usage,' 'bran...",
+  "categoria": "Design & Visual",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/brand-guidelines/",
+  "metrics": {
+    "type": "visual",
+    "category": "Design & Visual"
+  }
+}

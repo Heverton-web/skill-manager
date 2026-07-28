@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" font-family="'Inter',sans-serif"><rect width="600" height="450" fill="#0a0a14" rx="12"/>
+<style>@keyframes p{0%,100%{opacity:.3}50%{opacity:.6}}</style>
+<text x="300" y="35" fill="#e0e0ff" font-size="14" font-weight="bold" text-anchor="middle">Lifecycle de Execução do Agente</text>
+<circle cx="300" cy="240" r="180" fill="none" stroke="#6c63ff" stroke-width="1" stroke-dasharray="6,4" opacity=".4"/>
+<circle cx="300" cy="240" r="120" fill="none" stroke="#555577" stroke-width="1" stroke-dasharray="3,3" opacity=".3"/>
+<rect x="215" y="70" width="170" height="50" rx="25" fill="#2a2a5a" stroke="#6c63ff" stroke-width="2"/><text x="300" y="100" fill="#e0e0ff" font-size="12" font-weight="bold" text-anchor="middle">1. Recebe Input</text>
+<rect x="440" y="215" width="170" height="50" rx="25" fill="#2a2a5a" stroke="#ff6b9d" stroke-width="2"/><text x="525" y="245" fill="#e0e0ff" font-size="12" font-weight="bold" text-anchor="middle">5. Retorna Output</text>
+<rect x="215" y="370" width="170" height="50" rx="25" fill="#2a2a5a" stroke="#ffaa33" stroke-width="2"/><text x="300" y="400" fill="#e0e0ff" font-size="12" font-weight="bold" text-anchor="middle">4. Aplica Correção</text>
+<rect x="10" y="215" width="170" height="50" rx="25" fill="#2a2a5a" stroke="#00d4aa" stroke-width="2"/><text x="95" y="245" fill="#e0e0ff" font-size="12" font-weight="bold" text-anchor="middle">3. Diagnostica Erro</text>
+<rect x="215" y="215" width="170" height="50" rx="25" fill="#2a2a5a" stroke="#6c63ff" stroke-width="1.5" stroke-dasharray="5,3"/><text x="300" y="245" fill="#e0e0ff" font-size="12" font-weight="bold" text-anchor="middle">2. Executa Ação</text>
+<circle cx="300" cy="95" r="6" fill="#6c63ff"><animate attributeName="opacity" values=".3;1;.3" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="525" cy="240" r="6" fill="#ff6b9d"><animate attributeName="opacity" values=".3;1;.3" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="300" cy="395" r="6" fill="#ffaa33"><animate attributeName="opacity" values=".3;1;.3" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="95" cy="240" r="6" fill="#00d4aa"><animate attributeName="opacity" values=".3;1;.3" dur="2s" repeatCount="indefinite"/></circle>
+<circle cx="300" cy="240" r="6" fill="#6c63ff"><animate attributeName="opacity" values=".3;1;.3" dur="2s" repeatCount="indefinite"/></circle>
+</svg>

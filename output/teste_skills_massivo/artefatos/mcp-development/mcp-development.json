@@ -1,0 +1,13 @@
+{
+  "skill": "mcp-development",
+  "slug": "mcp-development",
+  "description": "MCP server development including tool design, resource endpoints, prompt templates, and transport configuration",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "code",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/mcp-development/",
+  "metrics": {
+    "type": "code",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

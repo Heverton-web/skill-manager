@@ -1,0 +1,13 @@
+{
+  "skill": "stability-ai",
+  "slug": "stability-ai",
+  "description": "Geracao de imagens via Stability AI (SD3.5, Ultra, Core). Text-to-image, img2img, inpainting, upscale, remove-bg, search-replace. 15 estilos artisticos.",
+  "categoria": "IA & Machine Learning",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/stability-ai/",
+  "metrics": {
+    "type": "visual",
+    "category": "IA & Machine Learning"
+  }
+}

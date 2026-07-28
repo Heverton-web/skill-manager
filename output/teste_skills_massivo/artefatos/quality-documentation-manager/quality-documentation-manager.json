@@ -1,0 +1,13 @@
+{
+  "skill": "quality-documentation-manager",
+  "slug": "quality-documentation-manager",
+  "description": "Document control system management for medical device QMS. Covers document numbering, version control, change management, and 21 CFR Part 11 compliance. Use when working on document control procedu...",
+  "categoria": "Documentação & Comunicação",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/quality-documentation-manager/",
+  "metrics": {
+    "type": "report",
+    "category": "Documentação & Comunicação"
+  }
+}

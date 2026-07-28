@@ -1,0 +1,13 @@
+{
+  "skill": "caveman",
+  "slug": "caveman",
+  "description": ">",
+  "categoria": "Outros (Geral)",
+  "tipo": "html",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/caveman/",
+  "metrics": {
+    "type": "html",
+    "category": "Outros (Geral)"
+  }
+}

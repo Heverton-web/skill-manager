@@ -1,0 +1,13 @@
+{
+  "skill": "finance-skills",
+  "slug": "finance-skills",
+  "description": "Router/index for the 2 finance skills bundled in this plugin: financial-analyst (ratio analysis, DCF valuation, budget variance, rolling forecasts) and saas-metrics-coach (ARR/MRR, churn, CAC/LTV, ...",
+  "categoria": "Finanças & Negócios",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/finance-skills/",
+  "metrics": {
+    "type": "report",
+    "category": "Finanças & Negócios"
+  }
+}

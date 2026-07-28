@@ -1,0 +1,13 @@
+{
+  "skill": "self-eval",
+  "slug": "self-eval",
+  "description": "Honestly evaluate AI work quality using a two-axis scoring system. Use after completing a task, code review, or work session to get an unbiased assessment. Detects score inflation, forces devil's a...",
+  "categoria": "Outros (Geral)",
+  "tipo": "test",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/self-eval/",
+  "metrics": {
+    "type": "test",
+    "category": "Outros (Geral)"
+  }
+}

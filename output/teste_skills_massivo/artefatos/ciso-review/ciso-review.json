@@ -1,0 +1,13 @@
+{
+  "skill": "ciso-review",
+  "slug": "ciso-review",
+  "description": "/cs:ciso-review <plan> — Risk-paranoid interrogation of any plan that touches data, compliance, or production access. Use when launching features that handle customer data, before a SOC 2 / ISO aud...",
+  "categoria": "Segurança & Compliance",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/ciso-review/",
+  "metrics": {
+    "type": "report",
+    "category": "Segurança & Compliance"
+  }
+}

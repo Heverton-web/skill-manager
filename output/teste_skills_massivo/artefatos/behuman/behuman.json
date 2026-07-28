@@ -1,0 +1,13 @@
+{
+  "skill": "behuman",
+  "slug": "behuman",
+  "description": "Use when the user wants more human-like AI responses — less robotic, less listy, more authentic. Triggers: 'behuman', 'be real', 'like a human', 'more human', 'less AI', 'talk like a person', 'mirr...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/behuman/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

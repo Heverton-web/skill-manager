@@ -1,0 +1,13 @@
+{
+  "skill": "landing",
+  "slug": "landing",
+  "description": "Generates a premium single-page HTML landing page with 3D CSS animations, GSAP scroll effects, and mouse-parallax depth. Forcing intake (product + elevator pitch, audience register, brand overrides...",
+  "categoria": "SEO & Marketing Digital",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/landing/",
+  "metrics": {
+    "type": "visual",
+    "category": "SEO & Marketing Digital"
+  }
+}

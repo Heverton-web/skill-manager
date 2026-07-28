@@ -1,0 +1,26 @@
+<svg viewBox="0 0 800 500" width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="setaM" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#e8b94a"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="800" height="500" fill="#0f1720"/>
+  <text x="400" y="35" font-size="18" font-family="Georgia, serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">Ciclo de Vida de uma Tool Call MCP</text>
+  <rect x="250" y="60" width="300" height="50" rx="25" fill="#1c2a3a" stroke="#e8b94a" stroke-width="2"/>
+  <text x="400" y="90" font-size="13" font-family="Arial, sans-serif" fill="#e8b94a" text-anchor="middle">1. initialize</text>
+  <line x1="400" y1="110" x2="400" y2="140" stroke="#e8b94a" stroke-width="2" marker-end="url(#setaM)"/>
+  <rect x="250" y="140" width="300" height="50" rx="8" fill="#1c2a3a" stroke="#b9c2cc" stroke-width="1"/>
+  <text x="400" y="170" font-size="13" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">2. tools/list (descobrir ferramentas)</text>
+  <line x1="400" y1="190" x2="400" y2="220" stroke="#e8b94a" stroke-width="2" marker-end="url(#setaM)"/>
+  <rect x="200" y="220" width="400" height="50" rx="8" fill="#1c2a3a" stroke="#e8b94a" stroke-width="2"/>
+  <text x="400" y="245" font-size="13" font-family="Arial, sans-serif" fill="#e8b94a" text-anchor="middle">3. Agente decide: tools/call(ferramenta, args)</text>
+  <text x="400" y="262" font-size="10" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">JSON-RPC 2.0 com inputSchema validado</text>
+  <line x1="400" y1="270" x2="400" y2="300" stroke="#e8b94a" stroke-width="2" marker-end="url(#setaM)"/>
+  <rect x="200" y="300" width="400" height="50" rx="8" fill="#2a5a7a"/>
+  <text x="400" y="325" font-size="13" font-family="Arial, sans-serif" fill="#f5f2ea" text-anchor="middle">4. Servidor executa + retorna resultado</text>
+  <text x="400" y="342" font-size="10" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle">Sucesso: content[] | Erro: isError: true</text>
+  <line x1="400" y1="350" x2="400" y2="380" stroke="#e8b94a" stroke-width="2" marker-end="url(#setaM)"/>
+  <rect x="250" y="380" width="300" height="50" rx="25" fill="#4a8a4a"/>
+  <text x="400" y="410" font-size="13" font-family="Arial, sans-serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">5. Agente itera com o resultado</text>
+  <text x="400" y="470" font-size="11" font-family="Arial, sans-serif" fill="#6a7a8a" text-anchor="middle">Tool execution errors permitem auto-corre&ccedil;&atilde;o: agente ajusta args e tenta novamente</text>
+</svg>

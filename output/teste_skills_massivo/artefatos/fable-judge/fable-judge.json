@@ -1,0 +1,13 @@
+{
+  "skill": "fable-judge",
+  "slug": "fable-judge",
+  "description": "Adversarial verification of finished work. Treats any \"done\" as a set of claims, then re-runs the claimed verifications, diffs what actually changed, detects weakened tests and false completion cla...",
+  "categoria": "Outros (Geral)",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/fable-judge/",
+  "metrics": {
+    "type": "report",
+    "category": "Outros (Geral)"
+  }
+}

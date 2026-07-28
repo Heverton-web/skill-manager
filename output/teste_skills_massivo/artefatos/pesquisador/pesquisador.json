@@ -1,0 +1,13 @@
+{
+  "skill": "pesquisador",
+  "slug": "pesquisador",
+  "description": "Fase 1 (Nó 0A) da Fábrica Agêntica de Livros — varredura e mineração de dados técnicos, científicos e de repositórios sobre o tema central de um livro ou capítulo. Use quando o operador informar um...",
+  "categoria": "Design & Visual",
+  "tipo": "report",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/pesquisador/",
+  "metrics": {
+    "type": "report",
+    "category": "Design & Visual"
+  }
+}

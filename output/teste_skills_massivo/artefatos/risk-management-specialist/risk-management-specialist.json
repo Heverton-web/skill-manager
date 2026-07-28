@@ -1,0 +1,13 @@
+{
+  "skill": "risk-management-specialist",
+  "slug": "risk-management-specialist",
+  "description": "Medical device risk management specialist implementing ISO 14971 throughout product lifecycle. Provides risk analysis, risk evaluation, risk control, and post-production information analysis. Use w...",
+  "categoria": "Segurança & Compliance",
+  "tipo": "visual",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/risk-management-specialist/",
+  "metrics": {
+    "type": "visual",
+    "category": "Segurança & Compliance"
+  }
+}

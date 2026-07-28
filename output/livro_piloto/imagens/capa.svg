@@ -1,0 +1,20 @@
+<svg viewBox="0 0 1000 1500" width="1000" height="1500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1c2a3a"/>
+      <stop offset="100%" stop-color="#0f1720"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="1000" height="1500" fill="url(#bgGrad)"/>
+  <rect x="40" y="40" width="920" height="1420" fill="none" stroke="#e8b94a" stroke-width="3"/>
+  <rect x="60" y="60" width="880" height="1380" fill="none" stroke="#3a4a5a" stroke-width="1"/>
+  <line x1="440" y1="560" x2="560" y2="560" stroke="#e8b94a" stroke-width="4"/>
+  <text x="500" y="630" font-size="54" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">Arquitetura de</text>
+<text x="500" y="702.9" font-size="54" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">Agentes: Model</text>
+<text x="500" y="775.8" font-size="54" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">Context Protocol</text>
+<text x="500" y="848.7" font-size="54" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" fill="#f5f2ea" text-anchor="middle">na Pratica</text>
+  <line x1="440" y1="951.6" x2="560" y2="951.6" stroke="#e8b94a" stroke-width="4"/>
+  <text x="500" y="1001.6" font-size="24" font-family="Arial, sans-serif" font-weight="normal" fill="#b9c2cc" text-anchor="middle">Como servidores MCP viram o motor de</text>
+<text x="500" y="1034" font-size="24" font-family="Arial, sans-serif" font-weight="normal" fill="#b9c2cc" text-anchor="middle">ferramentas de sistemas multi-agente</text>
+  <text x="500" y="1410" font-size="18" font-family="Arial, sans-serif" fill="#b9c2cc" text-anchor="middle" letter-spacing="4">FABRICA AGENTICA DE LIVROS</text>
+</svg>

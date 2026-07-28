@@ -1,0 +1,13 @@
+{
+  "skill": "devops-automation",
+  "slug": "devops-automation",
+  "description": "CI/CD pipeline design with GitHub Actions, Docker, Kubernetes, Helm, and GitOps patterns",
+  "categoria": "Desenvolvimento & Engenharia",
+  "tipo": "test",
+  "timestamp": "2026-07-28",
+  "repo_path": ".claude/skills/devops-automation/",
+  "metrics": {
+    "type": "test",
+    "category": "Desenvolvimento & Engenharia"
+  }
+}

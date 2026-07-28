@@ -1,0 +1,24 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": { "parte": "II", "capitulo": "6" },
+  "estado_execucao": "draft_pronto_para_redacao",
+  "payload_estrategico": {
+    "pilares": [
+      {
+        "nome": "AGENTS.md como padrão aberto multi-ferramenta",
+        "escopo": "Explicar a origem: AGENTS.md como padrão aberto apoiado por OpenAI, Cursor, Zed, Sourcegraph e Aider. Funciona como instrução portátil que qualquer ferramenta de IA lê na raiz do repositório. Deve conter: visão geral, comandos de setup, estilo de código, testes, diretrizes de PR, considerações de segurança. Tamanho ideal: 500-2000 tokens. Exemplo de AGENTS.md bem escrito para um projeto real. Relação com outros formatos: CLAUDE.md, GEMINI.md, .cursorrules. Não incluir detalhes de SDD (Capítulo 5) ou MCP (Capítulo 7).",
+        "ancora_visual": "Diagrama mostrando AGENTS.md como hub central conectando múltiplas ferramentas"
+      },
+      {
+        "nome": "Estratégias de sincronia entre ambientes",
+        "escopo": "Estratégias para manter consistência entre múltiplas IDEs: hardlinks de arquivo (mesmo inode no filesystem), symlinks (macOS/Linux para compatibilidade), junctions (Windows), scripts de setup automáticos. Exemplo real do projeto Fábrica Agêntica: CLAUDE.md → AGENTS.md via hardlink, .cursor/rules/fabrica-agentica.mdc também hardlink. Riscos: git clone não preserva hardlinks, scripts de reconstrução são necessários. Incluir também a abordagem de sync de MCP config (cursor → vscode).",
+        "ancora_visual": "Diagrama de arquitetura de links entre arquivos de regras"
+      },
+      {
+        "nome": "Skills, MDC rules e instruções modulares",
+        "escopo": "Além do arquivo de regras global, instruções modulares permitem governança por escopo: MDC rules (Cursor) com glob patterns para aplicar regras específicas em diretórios; Skills (Claude Code) como habilidades carregadas sob demanda; escopos por glob. Vantagem: mantém o AGENTS.md enxuto (apenas regras globais) enquanto regras específicas ficam nos módulos. Exemplo: regras estritas de React em src/components, regras de SQL em src/database.",
+        "ancora_visual": "Diagrama de árvore mostrando hierarquia de regras: global → diretório → skill específica"
+      }
+    ]
+  }
+}
