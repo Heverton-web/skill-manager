@@ -32,5 +32,11 @@
   "dependencies": {
     "enquirer": "^2.4.1"
   },
+  "files": [
+    "scripts/skill-manager.mjs",
+    "scripts/skill-manager/",
+    "package.json",
+    "README.md"
+  ],
   "publishConfig": { "access": "public" }
 }
