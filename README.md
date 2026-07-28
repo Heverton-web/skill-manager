@@ -3,9 +3,9 @@
 > Gerenciador Multi-IDE de Agent Skills. Instale, ative, desative e gerencie skills em 13 IDEs com TUI interativa, Dashboard visual e API REST.
 
 ```bash
-npm install -g skill-manager
+npm install -g @hevertonperes/skill-manager
 # ou
-npx skill-manager
+npx @hevertonperes/skill-manager
 ```
 
 ## Uso Rápido
