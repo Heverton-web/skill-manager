@@ -188,4 +188,12 @@ Derivado de [drona23/claude-token-efficient](https://github.com/drona23/claude-t
 2. **headroom**: comprimir logs/outputs de comandos com mais de 7 linhas (primeiras 3 + últimas 4).
 3. **caveman**: respostas telegráficas e diretas sem prolixidade, mantendo diffs cirúrgicos — sem aberturas bajuladoras ou fechamentos decorativos.
 4. **rtk-memory**: registrar erros de build/tipo/runtime e novos padrões no RTK SCRATCHPAD.
-5. **pre-flight-check**: executar `type-check`, `testes`
+5. **pre-flight-check**: executar `type-check`, `testes` e `build` ANTES de qualquer commit ou deploy.
+6. **Leitura seletiva**: leia arquivos existentes antes de escrever. Não releia a menos que tenham mudado. Pule arquivos >100KB a menos que estritamente necessário.
+7. **Saída sem fluff**: sem emojis ou travessões desnecessários. Minucioso no raciocínio, conciso na saída.
+8. **Precisão técnica**: nunca adivinhe APIs, versões, flags, commit SHAs ou nomes de pacotes. Verifique lendo código ou documentação antes de afirmar.
+
+## RTK SCRATCHPAD
+
+*(Espaço reservado para registro de aprendizados e padrões pela skill `rtk-memory`)*
+

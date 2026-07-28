@@ -1,4 +1,35 @@
+# Node
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependências MCP
+.claude/mcp-servers/deps/
+
+# .env (API keys etc)
 .env
-.claude/mcp-servers/pdf-gen-server/.env
-.claude/mcp-servers/image-gen-server/.env
+.env.local
+.env.*.local
+
+# Output (gerado pela fábrica, muito volátil para versionar)
+output/
+
+# Config local
+.skill-manager-config.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# Logs
+*.log
+logs/
