@@ -1,6 +1,6 @@
 ---
 name: compilador-abnt
-description: Fase 4 da Fábrica Agêntica de Livros (Nós 5-10) — faz o merge de todos os capítulos aprovados e ilustrados, gera prefácio, conclusão geral e sumário dinâmico, compila as referências bibliográficas sem duplicatas, aplica normas ABNT de formatação e exporta o PDF final do livro via CloudConvert. Use somente depois que todos os capítulos da obra passaram pelo checkpoint humano e pela Fase 3.
+description: Fase 4 da Fábrica Agêntica de Livros (Nós 5-10) — faz o merge de todos os capítulos aprovados e ilustrados, gera prefácio, conclusão geral e sumário dinâmico, compila as referências bibliográficas sem duplicatas, aplica normas ABNT de formatação e exporta o PDF final do livro via Pandoc+Typst (método principal) ou CloudConvert (fallback). Use somente depois que todos os capítulos da obra passaram pelo checkpoint humano e pela Fase 3.
 ---
 
 # Skill_Compilador_ABNT
@@ -12,28 +12,139 @@ Você é o operário de acabamento e expedição da Fábrica Agêntica de Livros
 - **Auto-correção (REGRA 4):** se detectar capítulo fora do template EITA, hierarquia
   de títulos inconsistente, ou referência duplicada, corrija internamente antes de
   entregar o artefato final ao operador.
-- **Nunca crie conta nem gere API key do CloudConvert em nome do operador.** Se
-  `CLOUDCONVERT_API_KEY` não estiver disponível para o MCP `pdf_gen`, reporte a
-  pendência objetivamente (com o link para o operador criar a própria conta gratuita) e
-  siga em frente — a ausência da chave não bloqueia a expedição em Markdown.
 
 ## Objetivo
 Consolidar capítulos, elementos extrusos e referências em um único manuscrito final,
 normalizado conforme ABNT, e exportar em Markdown + PDF.
 
-## Método Automatizado (recomendado)
+---
+
+## Método Principal: Pandoc + Typst (recomendado)
+
+Método 100% local, sem necessidade de API key ou conta externa. Gera PDF de alta qualidade
+com formatação ABNT usando Pandoc como motor de conversão e Typst como motor de renderização.
+
+### Pré-requisitos
+
+| Ferramenta | Instalação | Verificação |
+|---|---|---|
+| **Pandoc** | `winget install JohnMacFarlane.Pandoc` ou https://pandoc.org/installing.html | `pandoc --version` |
+| **Typst** | `winget install Typst.Typst` ou https://github.com/typst/typst/releases | `typst --version` |
+
+### Arquivos do Método
+
+| Arquivo | Caminho | Função |
+|---|---|---|
+| **Script de conversão** | `scripts/converter-md-pdf.ps1` | Executa Pandoc+Typst em lote ou individual |
+| **Template ABNT** | `templates/template.typ` | Template Typst com margens ABNT, tipografia serifada, sumário, capa |
+
+### Uso do Script
+
+**Converter um livro específico:**
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/converter-md-pdf.ps1 -Slug <slug-do-livro>
+```
+
+**Converter TODOS os livros da pasta output:**
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/converter-md-pdf.ps1
+```
+
+**Parâmetros:**
+
+| Parâmetro | Obrigatório | Descrição |
+|---|---|---|
+| `-Slug` | Não | Slug do livro. Se omitido, converte todos os livros com `livro_final.md` |
+| `-OutputDir` | Não | Diretório de saída (padrão: `fabrica-de-livros\output`) |
+| `-TemplatePath` | Não | Caminho do template.typ (padrão: `fabrica-de-livros\templates\template.typ`) |
+
+### Pipeline de Conversão
+
+O script `converter-md-pdf.ps1` executa o seguinte pipeline:
+
+1. **Leitura** — Lê `livro_final.md` do diretório do livro
+2. **Extração de título** — Regex `^#\s+(.+)$` para extrair o título do conteúdo
+3. **Escaping de dollar signs** — Regex `(?<!\\)\$(?!\$)` escapeia `$` solitários para evitar erros de TeX math no Typst
+4. **Arquivo temporário** — Grava conteúdo processado em `_temp_convert.md` usando `[System.IO.File]::WriteAllText()` (sem BOM)
+5. **Conversão Pandoc** — Executa Pandoc com:
+   - `--pdf-engine=typst` — Motor de renderização Typst
+   - `--toc --toc-depth=3` — Gera sumário automático
+   - `--number-sections` — Numera seções
+   - `--template=template.typ` — Template ABNT
+   - `--wrap=preserve` — Preserva quebras de linha do Markdown (importante para blocos de poesia/letras)
+   - `--resource-path=$LivroPath` — Fallback para imagens relativas
+   - `--from=markdown-citations` — Desabilita processamento de citações para evitar erros quando o livro não tem bibliografia estruturada
+6. **Validação** — Verifica se o PDF foi gerado e conta páginas (estimativa via regex)
+7. **Limpeza** — Remove arquivo temporário `_temp_convert.md`
+
+### Template ABNT (template.typ)
+
+O template Typst implementa:
+
+| Elemento | Especificação |
+|---|---|
+| **Papel** | A4 |
+| **Margens** | Topo: 3cm, Fundo: 2cm, Esquerda: 3cm, Direita: 2cm |
+| **Tipografia** | Times New Roman / Liberation Serif, 12pt |
+| **Parágrafos** | Justificados, espaçamento 0.75em, recuo 1.25cm |
+| **Cabeçalho** | Título da obra (a partir da página 2) |
+| **Rodapé** | Paginação "X de Y" |
+| **Capa** | Título, subtítulo, autor, data |
+| **Sumário** | Automático, 3 níveis, com recuo 1.5cm |
+| **Títulos Nível 1** | 16pt bold com pagebreak; "Parte" usa 20pt |
+| **Títulos Nível 2** | 14pt bold |
+| **Títulos Nível 3** | 12pt bold |
+| **Código** | Fundo cinza claro (luma 240), borda arredondada |
+
+### Solução de Problemas Comuns
+
+| Erro | Causa | Solução |
+|---|---|---|
+| `pandoc: command not found` | Pandoc não está no PATH | Instale via winget ou adicione ao PATH manualmente |
+| `typst: command not found` | Typst não está no PATH | Instale via winget ou baixe do GitHub Releases |
+| `expected integer, float... found content` | Template com `try/catch` inválido | Usar `type(it.body) == str` em vez de try/catch |
+| `$` isolado causa erro de math | Dollar sign interpretado como TeX | Script já escapa automaticamente com regex |
+| PDF com poucas páginas | Conteúdo insuficiente | Expandir capítulos para mínimo 70 páginas |
+| Imagens não aparecem | Path incorreto | Usar `--resource-path` (já implementado no script) |
+
+### Validação Pós-Conversão
+
+O script valida automaticamente:
+- **Existência do PDF** — Verifica se o arquivo foi gerado
+- **Contagem de páginas** — Estimativa via regex `/Type\s*/Page[^s]` no PDF
+- **Aviso mínimo 70 páginas** — Alerta amarelo se abaixo do mínimo (não bloqueia)
+
+---
+
+## Método Alternativo: CloudConvert (fallback)
+
+Usa o MCP `pdf_gen` com API do CloudConvert. Requer configuração prévia.
+
+### Pré-requisitos
+- `CLOUDCONVERT_API_KEY` configurada em `.claude/mcp-servers/pdf-gen-server/.env`
+- Conta gratuita em https://cloudconvert.com/register
+- **Nunca crie conta nem gere API key em nome do operador**
+
+### Uso via MCP
+Chame a tool `markdown_para_pdf` do MCP `pdf_gen` com:
+- `caminho_markdown`: caminho absoluto de `output/<livro>/livro_final.md`
+- `caminho_pdf_saida`: caminho absoluto de `output/<livro>/livro_final.pdf`
+- `titulo_obra`: o título do livro de `sumario_macro.json`
+- `subtitulo`: opcional, ex: "N Partes · N Capítulos"
+
+### Uso via Script (compilar-livro.mjs)
+```bash
+node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug-do-livro>
+```
+
+---
+
+## Método Automatizado Completo (recomendado para produção)
 
 Use o script `compilar-livro.mjs` que executa todos os 6 nós automaticamente:
 
 ```bash
 node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug-do-livro>
-```
-
-Exemplo:
-
-```bash
-node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs \
-  aidd-ai-driven-development-em-contexto-de-ides-agneticas
 ```
 
 O script:
@@ -45,13 +156,11 @@ O script:
 6. Compila referências dos dossiês de pesquisa, eliminando duplicatas (Nó 7)
 7. Aplica formatação ABNT (Nó 8)
 8. Grava `output/<slug>/livro_final.md` (Nó 9)
-9. Dispara MCP `pdf_gen` para gerar PDF via CloudConvert (Nó 10)
+9. Dispara conversão para PDF (Nó 10)
 
-**Pré-requisitos para PDF:**
-- `CLOUDCONVERT_API_KEY` configurada em `.claude/mcp-servers/pdf-gen-server/.env`
-- Ver `README.md`, seção "Configurando o pdf_gen"
+---
 
-## Método Manual (se o script não estiver disponível)
+## Método Manual (se os scripts não estiverem disponíveis)
 
 Siga o procedimento abaixo passo a passo:
 
@@ -63,70 +172,48 @@ Siga o procedimento abaixo passo a passo:
    `imagens/` (porque `livro_final.md` fica no diretório raiz da obra, não em `capitulos/`).
 
 ### Nó 5.5 — Exportação de Selos Generativos (p5.js → SVG)
-*Os selos de abertura de Parte são originalmente gerados como HTML/p5.js pelo
-`subagente-design-por-parte` (reversa-selo-generativo). Para inclusão no PDF,
-é necessário extrair versões SVG estáticas — o script `extrait-selo-svg.mjs` faz
-isso sem depender de navegador headless, usando o mesmo algoritmo determinístico.*
-
 3. Para cada Parte no `sumario_macro.json`:
    - Verifique se `output/<livro>/imagens/selo_parte_<n>.svg` já existe.
-     (Se o `subagente-design-por-parte` já executou a extração, o SVG já estará lá.)
-   - Se não existir, execute o script de extração:
+   - Se não existir, execute:
      ```bash
-     node scripts/extrair-selo-svg.mjs <slug> <parte> \
-       --padrao <padrao> --estilo <estilo>
+     node scripts/extrair-selo-svg.mjs <slug> <parte> --padrao <padrao> --estilo <estilo>
      ```
-     - `<slug>`: o slug completo da obra (ex: `aidd-ai-driven-development-em-contexto-de-ides-agneticas-v2`)
-     - `<parte>`: numeral romano (ex: `I`, `II`, `III`)
-     - `--padrao`: opcional — um dos 5 padrões (flow-field, particle-orbit, crystal-lattice, wave-interference, noise-strata). Se omitido, deriva do seed.
-     - `--estilo`: opcional — sober, premium, dense, exploratory. Se omitido, deriva do seed.
-   - O script usa o **mesmo seed determinístico** do `subagente-design-por-parte`:
-     `sha256(slug + "parte" + parte_atual)` — garantindo que o SVG gerado corresponda
-     ao padrão visual do HTML original.
-   - Saída: `output/<slug>/imagens/selo_parte_<parte>.svg`
 4. Insira os selos SVG no `livro_final.md` como imagens antes de cada Parte:
    ```markdown
    ![Selo Generativo Parte I](imagens/selo_parte_I.svg)
    ```
 
-> ⚠️ **Nota sobre PNG:** O script gera apenas SVG (escalável, ideal para PDF).
-> Para versões PNG, instale `puppeteer` e use-o para capturar screenshot do
-> `selo_parte_<n>.html` — ou converta o SVG gerado para PNG via ferramentas
-> como Inkscape ou ImageMagick.
-
 ### Nó 6 — Elementos Extrusos
-3. Gere um **Prefácio** em prosa densa, ancorando a visão macro da obra a partir de
-   `sumario_macro.json.introducao`.
-4. Gere uma **Conclusão Geral** em prosa densa, a partir de
-   `sumario_macro.json.conclusao`.
-5. Gere o **Sumário dinâmico**: lista de Partes/Capítulos com títulos exatos.
+5. Gere um **Prefácio** em prosa densa a partir de `sumario_macro.json.introducao`.
+6. Gere uma **Conclusão Geral** em prosa densa a partir de `sumario_macro.json.conclusao`.
+7. Gere o **Sumário dinâmico**: lista de Partes/Capítulos com títulos exatos.
 
 ### Nó 7 — Auditor de Rastreabilidade
-6. Colete todas as seções "Fontes brutas" de todos os
+8. Colete todas as seções "Fontes brutas" de todos os
    `output/<livro>/pesquisa/dossie_*.md`, elimine duplicatas por URL normalizada, e
    ordene alfabeticamente por título.
 
 ### Nó 8 — Selo de Conformidade (ABNT)
-7. Aplique formatação ABNT:
+9. Aplique formatação ABNT:
    - Hierarquia de títulos: `#` para todo elemento de primeiro nível.
    - Referências no formato ABNT (SOBRENOME, Nome. *Título*. Fonte/Editora, ano.)
-   - Citações no corpo do texto no padrão autor-data quando aplicável.
 
 ### Nó 9 — A Expedição
-8. Grave o artefato final consolidado em `output/<livro>/livro_final.md` com a ordem:
-   Capa → Prefácio → Sumário → Partes/Capítulos com imagens →
-   Conclusão Geral → Referências Bibliográficas → Contracapa.
-9. Reporte ao operador, em uma linha objetiva, que o livro foi expedido em Markdown.
+10. Grave o artefato final em `output/<livro>/livro_final.md` com a ordem:
+    Capa → Prefácio → Sumário → Partes/Capítulos com imagens →
+    Conclusão Geral → Referências Bibliográficas → Contracapa.
 
 ### Nó 10 — Exportação em PDF
-10. Chame a tool `markdown_para_pdf` do MCP `pdf_gen` com:
-    - `caminho_markdown`: caminho absoluto de `output/<livro>/livro_final.md`
-    - `caminho_pdf_saida`: caminho absoluto de `output/<livro>/livro_final.pdf`
-    - `titulo_obra`: o título do livro de `sumario_macro.json`
-    - `subtitulo`: opcional, ex: "N Partes · N Capítulos"
-11. Se a chamada retornar erro por ausência de `CLOUDCONVERT_API_KEY`, repasse a
-    mensagem de configuração ao operador sem tentar contornar.
-12. Se a conversão for bem-sucedida, reporte o caminho do PDF gerado.
+11. Execute o script de conversão:
+    ```powershell
+    powershell -ExecutionPolicy Bypass -File scripts/converter-md-pdf.ps1 -Slug <slug>
+    ```
+    Ou, se o CloudConvert estiver configurado:
+    ```bash
+    node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug>
+    ```
+
+---
 
 ## Template de livro_final.md
 
@@ -158,5 +245,4 @@ isso sem depender de navegador headless, usando o mesmo algoritmo determinístic
 - `livro_final.md` está em `output/<slug>/`
 - As imagens estão em `output/<slug>/imagens/`
 - Portanto, paths relativos são: `imagens/capa.svg` (NÃO `../imagens/capa.svg`)
-- O template Paged.js (`template_livro.js`) já procura imagens em múltiplos
-  candidatos de path, mas o path correto no Markdown é sem "../"
+- O script de conversão usa `--resource-path` como fallback para paths relativos

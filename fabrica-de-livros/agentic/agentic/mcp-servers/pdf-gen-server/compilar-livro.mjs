@@ -22,7 +22,7 @@
  */
 
 import { readFile, writeFile, readdir, mkdtemp, unlink } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { fileURLToPath } from "node:url";
@@ -263,14 +263,126 @@ ${referencias}
 `;
 }
 
-// ─── Passo 8: Disparar PDF via MCP (Nó 10) ─────────────────────────────────
+// ─── Passo 8: Gerar PDF (Nó 10) ────────────────────────────────────────────
 
-async function gerarPdf(caminhoMarkdown, caminhoPdf, tituloObra, subtitulo) {
+/**
+ * Tenta converter Markdown para PDF usando Pandoc + Typst (gratuito).
+ * Retorna true se bem-sucedido, false caso contrário.
+ */
+async function gerarPdfPandocTypst(caminhoMarkdown, caminhoPdf, tituloObra) {
+  // Auto-detectar Pandoc e Typst no sistema
+  function findExecutable(name) {
+    // 1. Tentar via PATH (where no Windows)
+    try {
+      const result = execSync(`where ${name}`, { encoding: "utf-8", stdio: "pipe" }).trim();
+      return result.split("\n")[0] || null;
+    } catch { /* continue */ }
+
+    // 2. Buscar no WinGet Packages
+    try {
+      const localAppData = process.env.LOCALAPPDATA || "";
+      const wingetDir = path.join(localAppData, "Microsoft", "WinGet", "Packages");
+      if (existsSync(wingetDir)) {
+        const packages = readdirSync(wingetDir);
+        for (const pkg of packages) {
+          if (pkg.toLowerCase().includes(name.toLowerCase())) {
+            const pkgDir = path.join(wingetDir, pkg);
+            const files = readdirSync(pkgDir);
+            for (const f of files) {
+              if (f.toLowerCase() === `${name}.exe`) return path.join(pkgDir, f);
+              try {
+                const subDir = path.join(pkgDir, f);
+                if (existsSync(subDir)) {
+                  const subFiles = readdirSync(subDir);
+                  for (const sf of subFiles) {
+                    if (sf.toLowerCase() === `${name}.exe`) return path.join(subDir, sf);
+                  }
+                }
+              } catch { /* skip */ }
+            }
+          }
+        }
+      }
+    } catch { /* skip */ }
+    return null;
+  }
+
+  const pandocPath = findExecutable("pandoc");
+  if (!pandocPath) {
+    e("AVISO: Pandoc não encontrado — impossível usar Typst");
+    return false;
+  }
+
+  // Adicionar Typst ao PATH se necessário
+  const typstPath = findExecutable("typst");
+  if (typstPath) {
+    const typstDir = path.dirname(typstPath);
+    process.env.PATH = `${typstDir}${path.delimiter}${process.env.PATH || ""}`;
+  }
+
+  // Verificar se o template Typst existe (procura em vários locais)
+  const templateCandidates = [
+    path.resolve(DIR_RAIZ, "templates", "template.typ"),
+    path.resolve(DIR_RAIZ, "fabrica-de-livros", "templates", "template.typ"),
+    path.resolve(".", "fabrica-de-livros", "templates", "template.typ"),
+    path.resolve(".", "templates", "template.typ"),
+  ];
+  let templatePath = null;
+  for (const candidate of templateCandidates) {
+    if (existsSync(candidate)) {
+      templatePath = candidate;
+      break;
+    }
+  }
+  if (!templatePath) {
+    e("AVISO: templates/template.typ não encontrado — impossível usar Typst");
+    return false;
+  }
+
+  // Rodar Pandoc a partir do diretório do livro (para resolver paths relativos)
+  const dirLivro = path.dirname(caminhoMarkdown);
+  const mdBase = path.basename(caminhoMarkdown);
+  const pdfBase = path.basename(caminhoPdf);
+
+  try {
+    const args = [
+      mdBase,
+      `-o`, pdfBase,
+      `--pdf-engine=typst`,
+      `--toc`,
+      `--toc-depth=3`,
+      `--number-sections`,
+      `--template=${templatePath}`,
+      `-V`, `title=${tituloObra}`,
+      `-V`, `author=Fábrica Agêntica de Livros`,
+      `-V`, `subtitle=`,
+      `--wrap=preserve`,
+    ];
+
+    const cmd = `"${pandocPath}" ${args.map(a => `"${a}"`).join(" ")}`;
+    e("Disparando Pandoc + Typst (gratuito)...");
+    execSync(cmd, { encoding: "utf-8", cwd: dirLivro, stdio: "pipe" });
+
+    if (existsSync(caminhoPdf)) {
+      const size = statSync(caminhoPdf).size;
+      e(`PDF gerado via Pandoc+Typst: ${caminhoPdf} (${(size / 1024).toFixed(0)} KB)`);
+      return true;
+    }
+  } catch (err) {
+    e(`Pandoc+Typst falhou: ${err.message}`);
+  }
+  return false;
+}
+
+/**
+ * Tenta converter Markdown para PDF usando CloudConvert (requer API key).
+ */
+async function gerarPdfCloudConvert(caminhoMarkdown, caminhoPdf, tituloObra, subtitulo) {
   const testMcp = path.join(MCP_SERVER_DIR, "test_mcp.mjs");
   const indexJs = path.join(MCP_SERVER_DIR, "index.js");
 
   if (!existsSync(testMcp) || !existsSync(indexJs)) {
-    e("AVISO: MCP pdf_gen não encontrado — pulando geração de PDF");
+    e("AVISO: MCP pdf_gen não encontrado — pulando geração de PDF via CloudConvert");
     return false;
   }
 
@@ -288,13 +400,17 @@ async function gerarPdf(caminhoMarkdown, caminhoPdf, tituloObra, subtitulo) {
         if (chave === "CLOUDCONVERT_API_KEY" && valor) process.env.CLOUDCONVERT_API_KEY = valor;
       }
     } catch {
-      e("AVISO: CLOUDCONVERT_API_KEY não configurada — pulando PDF");
-      e("Para configurar: crie .claude/mcp-servers/pdf-gen-server/.env com CLOUDCONVERT_API_KEY=sua_chave");
+      e("AVISO: CLOUDCONVERT_API_KEY não configurada — impossível usar CloudConvert");
       return false;
     }
   }
 
-  // Escreve args em temp file para evitar shell injection no comando
+  if (!process.env.CLOUDCONVERT_API_KEY) {
+    e("AVISO: CLOUDCONVERT_API_KEY não configurada");
+    return false;
+  }
+
+  // Escreve args em temp file para evitar shell injection
   const tmpDir = await mkdtemp(path.join(os.tmpdir(), "pdf-args-"));
   const argsFile = path.join(tmpDir, "args.json");
   await writeFile(argsFile, JSON.stringify({
@@ -312,18 +428,42 @@ async function gerarPdf(caminhoMarkdown, caminhoPdf, tituloObra, subtitulo) {
     if (stdout.includes("CHAMADA_OK isError= false") || stdout.includes("PDF gerado com sucesso")) {
       const tamMatch = stdout.match(/\((\d+)\s*bytes\)/);
       const tamanho = tamMatch ? `${(parseInt(tamMatch[1]) / 1024).toFixed(0)} KB` : "?";
-      e(`PDF gerado com sucesso: ${caminhoPdf} (${tamanho})`);
+      e(`PDF gerado via CloudConvert: ${caminhoPdf} (${tamanho})`);
       return true;
     } else {
-      e(`Falha na geração do PDF. Output:\n${stdout.slice(0, 500)}`);
+      e(`CloudConvert falhou. Output:\n${stdout.slice(0, 500)}`);
       return false;
     }
   } catch (err) {
-    e(`ERRO ao gerar PDF: ${err.message}`);
+    e(`ERRO CloudConvert: ${err.message}`);
     return false;
   } finally {
     try { await unlink(argsFile); } catch { /* temp file already cleaned up */ }
   }
+}
+
+/**
+ * Gera PDF com fallback automático:
+ * 1. Pandoc + Typst (gratuito, rápido)
+ * 2. CloudConvert (requer API key)
+ */
+async function gerarPdf(caminhoMarkdown, caminhoPdf, tituloObra, subtitulo) {
+  // Tentar 1: Pandoc + Typst (gratuito)
+  e("[Nó 10] Tentativa 1: Pandoc + Typst (gratuito)...");
+  if (await gerarPdfPandocTypst(caminhoMarkdown, caminhoPdf, tituloObra)) {
+    return true;
+  }
+
+  // Tentar 2: CloudConvert (requer API key)
+  e("[Nó 10] Tentativa 2: CloudConvert (requer API key)...");
+  if (await gerarPdfCloudConvert(caminhoMarkdown, caminhoPdf, tituloObra, subtitulo)) {
+    return true;
+  }
+
+  e("AVISO: Nenhum método de geração de PDF disponível");
+  e("  - Instale Pandoc + Typst: winget install JohnMacFarlane.Pandoc Typst.Typst");
+  e("  - Ou configure CLOUDCONVERT_API_KEY em .claude/mcp-servers/pdf-gen-server/.env");
+  return false;
 }
 
 // ─── Main ───────────────────────────────────────────────────────────────────

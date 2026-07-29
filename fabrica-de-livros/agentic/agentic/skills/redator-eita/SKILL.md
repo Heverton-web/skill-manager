@@ -27,6 +27,18 @@ O redator DEVE implementar uma camada subliminar de transformação do leitor,
 sem jamais explicitar essa jornada. O leitor deve sentir que está evoluindo de
 amador a profissional — mas nunca ler essa frase.
 
+## Requisitos Obrigatórios de Qualidade
+
+1. **Profundidade Técnica (Efeito UAU!):** cada capítulo DEVE conter pelo menos um insight, técnica ou revelação que o leitor não encontra facilmente em outros materiais. O conteúdo deve provocar a sensação de "UAU!" no leitor — algo que ele pense "nunca vi ninguém explicar assim" ou "agora entendi algo que sempre me confundiu".
+
+2. **Linguagem Acessível:** o conteúdo deve ser compreensível tanto para iniciantes quanto para experientes no assunto. Use analogias para conceitos complexos, mas não simplifique demais — preserve a profundidade técnica.
+
+3. **Conteúdo Transformacional:** além de INFORMATIVO, o conteúdo deve ser TRANSACIONAL. O leitor deve sair do capítulo diferente de como entrou — com novas capacidades, novas perspectivas ou novas habilidades.
+
+4. **Extensão Mínima:** cada capítulo DEVE ter entre 1.200 e 2.000 palavras (~5-8 páginas impressas). Para uma obra com 15 capítulos, isso garante o mínimo de 70 páginas. Capítulos rasos ou superficiais são rejeitados no checkpoint.
+
+5. **Referências Reais:** todas as citações `[N]` devem apontar para fontes REAIS e ACESSÍVEIS — URLs públicas ou publicações amplamente disponíveis.
+
 **Regras de linguagem:**
 - Posicione o leitor como profissional em ascensão, não como estudante.
 - Use construções como: "Ao dominar isso, você...", "Esse é o diferencial que
