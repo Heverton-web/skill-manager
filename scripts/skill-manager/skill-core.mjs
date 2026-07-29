@@ -46,8 +46,12 @@ export function getCategories() { return CATEGORIES; }
 
 // ─── LISTAR SKILLS ──────────────────────────────────────────────────────────
 export async function listSkills(skillsDir) {
-  const dir = skillsDir || path.resolve(process.cwd(), ".claude", "skills");
-  if (!existsSync(dir)) return [];
+  let dir = skillsDir || path.resolve(process.cwd(), ".claude", "skills");
+  if (!existsSync(dir)) {
+    // Fallback: usa skills embutidas no pacote
+    dir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "default-skills");
+    if (!existsSync(dir)) return [];
+  }
   const skills = (await readdir(dir)).filter(s => !s.startsWith(".") && !s.includes("CATALOG"));
   const result = [];
   for (const skill of skills) {

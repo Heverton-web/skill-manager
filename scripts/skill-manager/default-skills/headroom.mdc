@@ -1,0 +1,15 @@
+---
+name: headroom
+description: Compressão severa de logs — mantenha só 3 primeiras + 4 últimas linhas
+category: Token Economy
+score: 85
+---
+
+# headroom — Compressão de Logs
+
+Se a saída do comando tiver mais de 7 linhas, comprime mantendo apenas as primeiras 3 e últimas 4 linhas.
+
+## Uso
+- Logs > 7 linhas → comprimir
+- Manter topo + cauda
+- Ideal para outputs de build/test

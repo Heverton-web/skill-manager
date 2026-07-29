@@ -1,0 +1,12 @@
+---
+name: pesquisador
+description: Skill automatica do ecossistema Agent Skills
+category: Desenvolvimento & Engenharia
+score: 75
+---
+
+# pesquisador — Skill do Ecossistema
+
+Skill integrada ao ecossistema Agent Skills.
+
+Uso: gerenciada via Skill Manager

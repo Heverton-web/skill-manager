@@ -1,6 +1,6 @@
 {
   "name": "@hevertonperes/skill-manager",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Gerenciador Multi-IDE de Agent Skills. Instale, ative, desative e gerencie skills em 13 IDEs com TUI, Dashboard visual e API REST.",
   "keywords": [
     "skills",
@@ -38,5 +38,6 @@
     "package.json",
     "README.md"
   ],
+  "_note": "default-skills/ dentro de scripts/skill-manager/ ja cobre pelo glob",
   "publishConfig": { "access": "public" }
 }

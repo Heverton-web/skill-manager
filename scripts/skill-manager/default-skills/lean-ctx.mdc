@@ -1,0 +1,20 @@
+---
+name: lean-ctx
+description: Economia de tokens — leia apenas assinaturas, não corpos completos
+category: Token Economy
+score: 92
+---
+
+# lean-ctx — Economia Severa de Contexto
+
+Economiza tokens priorizando `grep` antes de `view_file`, lendo assinaturas de funções antes de corpos completos.
+
+## Uso
+- Use `grep_search` antes de `view_file`
+- Leia apenas assinaturas de tipos/classes
+- Use slices restritos de linhas
+
+## Exemplo
+```bash
+grep -n 'function.*getUser' src/*.ts
+```
