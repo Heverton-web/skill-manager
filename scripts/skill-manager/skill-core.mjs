@@ -9,7 +9,7 @@
  * - Suporte multi-IDE
  */
 import { readFile, readdir, writeFile, mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync, copyFileSync } from "node:fs";
 import path from "node:path";
 import { execSync, spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
@@ -118,14 +118,40 @@ function testComplexidade(content) {
 
 // ─── INSTALAR / REMOVER (INDIVIDUAL) ────────────────────────────────────
 export function installSkill(skill, scope = "local") {
+  // Tenta via npx skills primeiro
   const cmd = `npx skills add "${skill}" -y${scope === "global" ? " -g" : ""}`;
   try {
-    console.log(`  ⏳ Instalando ${skill}...`);
+    console.log(`  ⏳ Instalando ${skill} via npx...`);
     execSync(cmd, { cwd: process.cwd(), stdio: "pipe", timeout: 120000 });
     return true;
   } catch (e) {
-    console.error(`  ❌ Erro ao instalar ${skill}: ${e.message.substring(0, 80)}`);
-    return false;
+    // Fallback: copia skill do diretório default-skills ou local
+    console.log(`  ⏳ Instalando ${skill} via cópia local...`);
+    try {
+      // Remove extensão se já existir (listSkills retorna ex: lean-ctx.mdc)
+      const skillName = skill.replace(/\.mdc$|\.md$/i, "");
+      const src = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "default-skills", skillName + ".mdc");
+      const skillsDir = path.resolve(process.cwd(), ".claude", "skills");
+      if (!existsSync(skillsDir)) { mkdirSync(skillsDir, { recursive: true }); }
+      const dest = path.join(skillsDir, skillName + ".mdc");
+      if (existsSync(src)) {
+        copyFileSync(src, dest);
+        console.log(`  ✅ ${skillName} instalado localmente em .claude/skills/`);
+        return true;
+      }
+      // Tenta achar o arquivo no diretório atual
+      const localPath = path.resolve(process.cwd(), skillName + ".mdc");
+      if (existsSync(localPath)) {
+        copyFileSync(localPath, dest);
+        console.log(`  ✅ ${skillName} instalado localmente`);
+        return true;
+      }
+      console.error(`  ❌ ${skillName}: arquivo não encontrado`);
+      return false;
+    } catch (e2) {
+      console.error(`  ❌ Erro ao copiar ${skill}: ${e2.message.substring(0, 80)}`);
+      return false;
+    }
   }
 }
 
