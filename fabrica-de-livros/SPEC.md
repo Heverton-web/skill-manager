@@ -7,7 +7,27 @@ e o comando conduz a produção inteira — pesquisa, arquitetura, redação par
 capítulo, arte final comercial e compilação em Markdown e PDF — respeitando as diretrizes
 definidas em `CLAUDE.md`.
 
-## 1. Sintaxe e disparo
+## 1. REQUISITOS CONTRATUAIS OBRIGATÓRIOS
+
+Toda obra produzida pela Fábrica Agêntica de Livros DEVE atender:
+
+| # | Requisito | Mínimo | Validação |
+|---|-----------|--------|-----------|
+| R1 | Capítulos por obra | 16 capítulos | Verificado no sumário macro |
+| R2 | Páginas estimadas | 70 páginas (~175.000-210.000 caracteres em formato ABNT) | Verificado na compilação |
+| R3 | Estrutura por capítulo | 7 seções: Introdução, Explica, Ilustra, Técnica, Aplica, Conclusão, Referências | Template EITA-V2 |
+| R4 | Referências por capítulo | Mínimo 3 referências no formato ABNT | Seção de referências de cada capítulo |
+| R5 | Artigos científicos no dossiê | Mínimo 3 papers | Seção "Artigos Científicos" do dossiê |
+| R6 | Formatação ABNT | Livro completo | Capa, sumário, referências, numeração |
+| R7 | PDF final | 1 arquivo .pdf | Pandoc+Typst (obrigatório) ou CloudConvert |
+| R8 | Artefatos visuais | Capa, Contracapa, Diagrama de Arquitetura | SVG |
+| R9 | Linguagem | Simples para iniciantes, transformacional para PhDs | Tom em camadas |
+| R10 | Citações inline [N] | Mínimo 3 por capítulo | Vinculadas às referências |
+
+**Violação de qualquer requisito = obra NÃO CONFORME.** O compilador-abnt DEVE
+reportar não-conformidades antes da entrega.
+
+## 2. Sintaxe e disparo
 
 ```
 /criar-livro <tema central da obra>
@@ -24,11 +44,11 @@ Exemplo:
 - Se `$ARGUMENTS` vier vazio, o comando solicita o tema ao operador na pergunta inicial. **Após essa definição do tema, não haverá nenhuma outra interação com o operador.**
 - **Fora do Claude Code:** peça diretamente ao agente "siga o processo de `.claude/commands/criar-livro.md` para o tema X".
 
-## 2. Natureza do processo: esteira 100% autônoma e paralela
+## 3. Natureza do processo: esteira 100% autônoma e paralela
 
 Por causa da **REGRA 3 (Autonomia Total Agêntica)**, este comando executa em modo **lote autônomo**. Após a definição do tema inicial, a esteira não realiza nenhuma pausa para aprovação manual no chat. O Orquestrador Mestre gerencia a execução e instancia **Subagentes de Execução Paralela** para otimizar o tempo de redação e ilustração técnica dos capítulos.
 
-## 3. Máquina de estados de alto nível
+## 4. Máquina de estados de alto nível
 
 ```
 [tema informado]
