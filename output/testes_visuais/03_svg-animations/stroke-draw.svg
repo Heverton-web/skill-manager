@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" font-family="sans-serif"><rect width="400" height="200" fill="#0a0a14" rx="8"/>
-<style>@keyframes d{to{stroke-dashoffset:0}}@keyframes f{to{opacity:1}}
-.p{stroke-dasharray:300;stroke-dashoffset:300;animation:d 2s ease forwards}
-.l{animation:f 1s .5s both}</style>
-<path class="p" d="M30 100 C 30 30, 370 30, 370 100 S 370 170, 200 170 S 30 170, 30 100" fill="none" stroke="#6c63ff" stroke-width="2" stroke-linecap="round"/>
-<text class="l" x="200" y="190" text-anchor="middle" fill="#8888bb" font-size="10">Stroke Drawing Animation · SMIL</text>
-</svg>

@@ -1,0 +1,50 @@
+{
+  "name": "@hevertonperes/skill-manager",
+  "version": "1.0.4",
+  "description": "Gerenciador Multi-IDE de Agent Skills. Instale, ative, desative e gerencie skills em 13 IDEs com TUI, Dashboard visual e API REST.",
+  "keywords": [
+    "skills",
+    "agent-skills",
+    "claude-code",
+    "cursor",
+    "windsurf",
+    "codex",
+    "antigravity",
+    "opencode",
+    "freebuff",
+    "mimocode",
+    "grok",
+    "ai",
+    "ide",
+    "cli",
+    "dashboard"
+  ],
+  "homepage": "https://github.com/Heverton-web/skill-manager#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Heverton-web/skill-manager.git",
+    "directory": "skills-manager"
+  },
+  "bugs": { "url": "https://github.com/Heverton-web/skill-manager/issues" },
+  "license": "MIT",
+  "author": "Heverton Peres <hevertonperes@github.com>",
+  "type": "module",
+  "bin": {
+    "sm": "./scripts/skill-manager.mjs",
+    "skill-manager": "./scripts/skill-manager.mjs"
+  },
+  "main": "./scripts/skill-manager/skill-core.mjs",
+  "engines": { "node": ">=18.0.0" },
+  "dependencies": {
+    "enquirer": "^2.4.1"
+  },
+  "files": [
+    "scripts/skill-manager.mjs",
+    "scripts/skill-manager/",
+    "package.json",
+    "README.md",
+    "SKILL_MANAGER_GUIDE.md"
+  ],
+  "_note": "default-skills/ dentro de scripts/skill-manager/ ja cobre pelo glob",
+  "publishConfig": { "access": "public" }
+}

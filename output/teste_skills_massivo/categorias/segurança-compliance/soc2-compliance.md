@@ -1,7 +1,0 @@
-# soc2-compliance
-
-**Categoria:** Segurança & Compliance
-**Descrição:** Use when the user asks to prepare for SOC 2 audits, map Trust Service Criteria, build control matrices, collect audit evidence, perform gap analysis, or assess SOC 2 Type I vs Type II readiness.
-**Tipo:** report
-
-[Ver artefatos completos](../artefatos/soc2-compliance/)

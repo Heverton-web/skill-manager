@@ -1,31 +1,64 @@
-# 🛠️ Skill Manager
+# 🏭 Monorepo — Fábrica Agêntica de Livros + Skills Manager
 
-> Gerencie skills em 13 IDEs. Um comando.
+Repositório compartilhado contendo dois projetos independentes:
 
-```bash
-npm install -g @hevertonperes/skill-manager
-sm
+## 📂 Estrutura
+
+```
+proj_livros/
+├── fabrica-de-livros/     ← Fábrica Agêntica de Livros
+├── skills-manager/        ← Skill Manager (npm @hevertonperes/skill-manager)
+├── node_modules/          ← Dependências compartilhadas
+└── README.md              ← Este arquivo
 ```
 
-Se já tiver instalado antes:
+---
+
+## 📚 Fábrica de Livros (`fabrica-de-livros/`)
+
+Indústria gráfica editorial agêntica automatizada para produção de literatura técnica.
+Comando principal: `/criar-livro <tema>`
+
+**Para usar:** Abra a pasta `fabrica-de-livros/` no Claude Code (ou outra IDE agêntica) e execute `/criar-livro <tema>`.
+
+Documentação completa: `fabrica-de-livros/CLAUDE.md`, `fabrica-de-livros/SPEC.md`
+
+---
+
+## 🛠️ Skills Manager (`skills-manager/`)
+
+Gerenciador Multi-IDE de Agent Skills. Instale, ative, desative e gerencie skills em 13 IDEs com TUI, Dashboard visual e API REST.
+
 ```bash
-npm install -g @hevertonperes/skill-manager --force
-sm
+cd skills-manager
+npm install
+node scripts/skill-manager.mjs --help
 ```
 
-**É só isso.** A TUI interativa guia você em 5 passos:
-1. IDEs · 2. Categorias · 3. Skills · 4. Escopo · 5. Submit
+Documentação completa: `skills-manager/README.md`, `skills-manager/SKILL_MANAGER_GUIDE.md`
 
-## Dashboard visual
+---
+
+## ⚙️ Setup Inicial
+
+### Requisitos
+- Node.js >= 18.0.0
+- Git
+
+### Instalação de dependências
 ```bash
-sm --serve
-# → http://localhost:3030
+npm install
 ```
 
-## 13 IDEs
-`Claude Code` · `Cursor` · `Windsurf` · `Codex CLI` · `Antigravity` · `OpenCode` · `Freebuff` · `MimoCode` · `Grok` · `Oh My Pi` · `Cline` · `GitHub Copilot` · `Custom`
+### Recriar links entre IDEs (após clone)
+```bash
+# Windows
+powershell -ExecutionPolicy Bypass -File fabrica-de-livros/scripts/setup-links.ps1
 
-## Links
-📦 [npm](https://www.npmjs.com/package/@hevertonperes/skill-manager) · 💻 [GitHub](https://github.com/Heverton-web/skill-manager) · 📖 [Guia completo](SKILL_MANAGER_GUIDE.md)
+# macOS/Linux
+bash fabrica-de-livros/scripts/setup-links.sh
+```
 
-MIT
+---
+
+MIT License

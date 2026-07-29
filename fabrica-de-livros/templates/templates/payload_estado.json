@@ -1,0 +1,11 @@
+{
+  "fase_atual": "fase_2_manufatura",
+  "coordenadas": {
+    "parte": "I",
+    "capitulo": "3"
+  },
+  "estado_execucao": "aguardando_checkpoint_humano",
+  "payload_estrategico": {
+    "pilares": ["string", "string", "string"]
+  }
+}

@@ -1,0 +1,24 @@
+# Dependências MCP
+.claude/mcp-servers/deps/
+
+# Output (gerado pela fábrica)
+output/
+
+# .env (API keys etc)
+.env
+.env.local
+.env.*.local
+
+# Config local
+.skill-manager-config.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/

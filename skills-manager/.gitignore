@@ -1,0 +1,5 @@
+# Config local
+.skill-manager-config.json
+
+# Logs
+*.log

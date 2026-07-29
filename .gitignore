@@ -1,11 +1,12 @@
+# ============================================================
+# Monorepo: Fábrica de Livros + Skills Manager
+# ============================================================
+
 # Node
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Dependências MCP
-.claude/mcp-servers/deps/
 
 # .env (API keys etc)
 .env
@@ -15,8 +16,11 @@ yarn-error.log*
 # Output (gerado pela fábrica, muito volátil para versionar)
 output/
 
-# Config local
+# Config local do Skills Manager
 .skill-manager-config.json
+
+# Dependências MCP
+.claude/mcp-servers/deps/
 
 # Sistema
 .DS_Store
@@ -27,7 +31,6 @@ Thumbs.db
 
 # IDE
 .idea/
-.vscode/
 *.sublime-*
 
 # Logs
