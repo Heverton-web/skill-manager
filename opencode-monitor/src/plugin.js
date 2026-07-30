@@ -40,37 +40,78 @@ export function createMonitorHook(eventFilePath, onEvent) {
   return {
     name: "opencode-monitor",
     hooks: {
-      "event:session:create": async (event) => {
-        emit("session:create", { session: event.properties?.info })
-      },
-      "event:session:prompt": async (event) => {
-        emit("session:prompt", {
-          prompt: event.properties?.message?.content,
+      "chat.message": async (input, output) => {
+        emit("chat.message", {
+          sessionID: input.sessionID,
+          agent: input.agent,
+          model: input.model,
+          messageID: input.messageID,
+          parts: output.parts?.map((p) => ({
+            type: p.type,
+            text: p.type === "text" ? p.text?.slice(0, 500) : undefined,
+            tool: p.type === "tool" ? p.tool : undefined,
+          })),
         })
       },
-      "event:session:response": async (event) => {
-        emit("session:response", {
-          response: event.properties?.message?.content,
+
+      "tool.execute.before": async (input, output) => {
+        emit("tool.execute.before", {
+          tool: input.tool,
+          sessionID: input.sessionID,
+          callID: input.callID,
+          args: output.args,
         })
       },
-      "event:tool:call": async (event) => {
-        emit("tool:call", {
-          tool: event.properties?.tool,
-          args: event.properties?.args,
+
+      "tool.execute.after": async (input, output) => {
+        emit("tool.execute.after", {
+          tool: input.tool,
+          sessionID: input.sessionID,
+          callID: input.callID,
+          args: input.args,
+          title: output.title,
+          output: output.output?.slice(0, 1000),
+          metadata: output.metadata,
         })
       },
-      "event:tool:result": async (event) => {
-        emit("tool:result", {
-          tool: event.properties?.tool,
-          result: event.properties?.result,
+
+      "command.execute.before": async (input, output) => {
+        emit("command.execute.before", {
+          command: input.command,
+          sessionID: input.sessionID,
+          arguments: input.arguments,
+          parts: output.parts,
         })
       },
-      "event:llm:completion": async (event) => {
-        emit("llm:completion", {
-          provider: event.properties?.provider,
-          model: event.properties?.model,
-          tokens: event.properties?.tokens,
+
+      "experimental.session.compacting": async (input, output) => {
+        emit("session.compacting", {
+          sessionID: input.sessionID,
+          context: output.context,
         })
+      },
+
+      event: async (input) => {
+        const evt = input.event
+        if (
+          evt.type === "session.created" ||
+          evt.type === "session.updated" ||
+          evt.type === "session.idle" ||
+          evt.type === "session.compacted" ||
+          evt.type === "session.error" ||
+          evt.type === "session.status"
+        ) {
+          emit(evt.type, evt.properties)
+        }
+        if (evt.type === "message.updated") {
+          emit("message.updated", { info: evt.properties?.info })
+        }
+        if (evt.type === "message.part.updated") {
+          emit("message.part.updated", {
+            part: evt.properties?.part,
+            delta: evt.properties?.delta,
+          })
+        }
       },
     },
   }
