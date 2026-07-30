@@ -4,232 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpenCode Monitor</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: #0a0a0f;
-      color: #e0e0e0;
-      min-height: 100vh;
-    }
-
-    header {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      border-bottom: 1px solid #333;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    header h1 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    header .status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.85rem;
-    }
-
-    header .status .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #ef4444;
-      transition: background 0.3s;
-    }
-
-    header .status .dot.connected {
-      background: #22c55e;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px;
-    }
-
-    .flow-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      margin: 32px 0;
-      flex-wrap: wrap;
-    }
-
-    .flow-node {
-      background: #1a1a2e;
-      border: 2px solid #333;
-      border-radius: 12px;
-      padding: 20px 24px;
-      text-align: center;
-      min-width: 140px;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .flow-node.active {
-      border-color: #3b82f6;
-      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-      transform: scale(1.05);
-    }
-
-    .flow-node.done {
-      border-color: #22c55e;
-    }
-
-    .flow-node .icon {
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
-
-    .flow-node .label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #fff;
-    }
-
-    .flow-node .sublabel {
-      font-size: 0.75rem;
-      color: #888;
-      margin-top: 4px;
-    }
-
-    .flow-arrow {
-      font-size: 1.5rem;
-      color: #555;
-      transition: color 0.3s;
-    }
-
-    .flow-arrow.active {
-      color: #3b82f6;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin: 24px 0;
-    }
-
-    .stat-card {
-      background: #1a1a2e;
-      border: 1px solid #333;
-      border-radius: 8px;
-      padding: 16px;
-    }
-
-    .stat-card .stat-label {
-      font-size: 0.75rem;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .stat-card .stat-value {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #fff;
-      margin-top: 4px;
-    }
-
-    .events-log {
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 8px;
-      max-height: 400px;
-      overflow-y: auto;
-      font-family: 'Cascadia Code', 'Fira Code', monospace;
-      font-size: 0.8rem;
-    }
-
-    .events-log .event-row {
-      padding: 8px 16px;
-      border-bottom: 1px solid #222;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .events-log .event-row:hover {
-      background: #1a1a2e;
-    }
-
-    .events-log .event-time {
-      color: #666;
-      white-space: nowrap;
-      min-width: 80px;
-    }
-
-    .events-log .event-type {
-      font-weight: 600;
-      min-width: 160px;
-    }
-
-    .events-log .event-type.session { color: #a78bfa; }
-    .events-log .event-type.chat { color: #60a5fa; }
-    .events-log .event-type.tool { color: #fbbf24; }
-    .events-log .event-type.message { color: #34d399; }
-    .events-log .event-type.part { color: #f472b6; }
-    .events-log .event-type.system { color: #94a3b8; }
-
-    .events-log .event-detail {
-      color: #999;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 400px;
-    }
-
-    .timeline {
-      position: relative;
-      margin: 24px 0;
-      padding-left: 24px;
-      border-left: 2px solid #333;
-    }
-
-    .timeline-item {
-      position: relative;
-      margin-bottom: 16px;
-      padding: 12px 16px;
-      background: #1a1a2e;
-      border-radius: 8px;
-      border: 1px solid #333;
-    }
-
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -30px;
-      top: 16px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #333;
-      border: 2px solid #1a1a2e;
-    }
-
-    .timeline-item.active::before { background: #3b82f6; }
-    .timeline-item.done::before { background: #22c55e; }
-
-    .no-events {
-      text-align: center;
-      color: #555;
-      padding: 48px;
-      font-size: 1.1rem;
-    }
-
-    @media (max-width: 768px) {
-      .flow-container { flex-direction: column; }
-      .flow-arrow { transform: rotate(90deg); }
-    }
-  </style>
+  <link rel="stylesheet" href="app.css">
 </head>
 <body>
   <header>
@@ -241,33 +16,57 @@
   </header>
 
   <main>
+    <section class="context-bar">
+      <div class="context-header">
+        <span class="context-label">Context Window</span>
+        <span class="context-model" id="contextModel">&mdash;</span>
+      </div>
+      <div class="context-progress">
+        <div class="context-track">
+          <div class="context-fill" id="contextFill" style="width: 0%"></div>
+        </div>
+        <span class="context-text" id="contextText">0 / 0 tokens</span>
+      </div>
+      <div class="context-actions">
+        <button class="btn-action" id="btnCompact" title="Compactar sessao (/compact)">
+          <span class="btn-icon">&#x1F4E6;</span> Compact
+        </button>
+        <button class="btn-action" id="btnClear" title="Limpar sessao (/clear)">
+          <span class="btn-icon">&#x1F5D1;&#xFE0F;</span> Clear
+        </button>
+        <button class="btn-action" id="btnSummarize" title="Gerar resumo da sessao">
+          <span class="btn-icon">&#x1F4DD;</span> Summarize
+        </button>
+      </div>
+    </section>
+
     <div class="flow-container" id="flowDiagram">
       <div class="flow-node" id="node-user">
-        <div class="icon">👤</div>
+        <div class="icon">&#x1F464;</div>
         <div class="label">USUARIO</div>
         <div class="sublabel">Prompt</div>
       </div>
-      <div class="flow-arrow" id="arrow-1">→</div>
+      <div class="flow-arrow" id="arrow-1">&rarr;</div>
       <div class="flow-node" id="node-harness">
-        <div class="icon">⚙️</div>
+        <div class="icon">&#x2699;&#xFE0F;</div>
         <div class="label">HARNESS</div>
-        <div class="sublabel">Agent</div>
+        <div class="sublabel" id="agentLabel">Agent</div>
       </div>
-      <div class="flow-arrow" id="arrow-2">→</div>
+      <div class="flow-arrow" id="arrow-2">&rarr;</div>
       <div class="flow-node" id="node-llm">
-        <div class="icon">🧠</div>
+        <div class="icon">&#x1F9E0;</div>
         <div class="label">LLM</div>
-        <div class="sublabel">Model</div>
+        <div class="sublabel" id="modelLabel">Model</div>
       </div>
-      <div class="flow-arrow" id="arrow-3">→</div>
+      <div class="flow-arrow" id="arrow-3">&rarr;</div>
       <div class="flow-node" id="node-tools">
-        <div class="icon">🔧</div>
+        <div class="icon">&#x1F527;</div>
         <div class="label">TOOLS</div>
-        <div class="sublabel">Tool Calls</div>
+        <div class="sublabel" id="toolLabel">Tool Calls</div>
       </div>
-      <div class="flow-arrow" id="arrow-4">→</div>
+      <div class="flow-arrow" id="arrow-4">&rarr;</div>
       <div class="flow-node" id="node-response">
-        <div class="icon">💬</div>
+        <div class="icon">&#x1F4AC;</div>
         <div class="label">RESPOSTA</div>
         <div class="sublabel">Output</div>
       </div>
@@ -283,14 +82,37 @@
         <div class="stat-value" id="statTools">0</div>
       </div>
       <div class="stat-card">
+        <div class="stat-label">Tokens</div>
+        <div class="stat-value" id="statTokens">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Custo</div>
+        <div class="stat-value" id="statCost">$0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tokens/s</div>
+        <div class="stat-value" id="statTps">0</div>
+      </div>
+      <div class="stat-card">
         <div class="stat-label">Duracao</div>
         <div class="stat-value" id="statDuration">0s</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Status</div>
+        <div class="stat-value" id="statStatus">idle</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Sessao</div>
         <div class="stat-value" id="statSession">-</div>
       </div>
     </div>
+
+    <section class="tools-panel">
+      <h2>Ferramentas Disponiveis</h2>
+      <div class="tools-grid" id="toolsGrid">
+        <div class="no-events">Carregando...</div>
+      </div>
+    </section>
 
     <h2 style="margin: 24px 0 12px; font-size: 1.1rem; color: #fff;">Timeline</h2>
     <div class="timeline" id="timeline">
@@ -303,154 +125,6 @@
     </div>
   </main>
 
-  <script>
-    const statusDot = document.getElementById('statusDot')
-    const statusText = document.getElementById('statusText')
-    const statEvents = document.getElementById('statEvents')
-    const statTools = document.getElementById('statTools')
-    const statDuration = document.getElementById('statDuration')
-    const statSession = document.getElementById('statSession')
-    const timeline = document.getElementById('timeline')
-    const eventsLog = document.getElementById('eventsLog')
-
-    let eventCount = 0
-    let toolCount = 0
-    let startTime = null
-    let eventSource = null
-
-    function connect() {
-      eventSource = new EventSource('/events')
-
-      eventSource.onopen = () => {
-        statusDot.classList.add('connected')
-        statusText.textContent = 'Conectado'
-      }
-
-      eventSource.onerror = () => {
-        statusDot.classList.remove('connected')
-        statusText.textContent = 'Reconectando...'
-        setTimeout(connect, 3000)
-      }
-
-      eventSource.onmessage = (msg) => {
-        const event = JSON.parse(msg.data)
-        handleEvent(event)
-      }
-    }
-
-    function handleEvent(event) {
-      if (event.type === 'connected') return
-
-      eventCount++
-      statEvents.textContent = eventCount
-
-      if (!startTime) {
-        startTime = event.timestamp
-        statSession.textContent = event.sessionId?.slice(0, 8) || event.properties?.sessionID?.slice(0, 8) || '-'
-      }
-
-      const elapsed = ((event.timestamp - startTime) / 1000).toFixed(0)
-      statDuration.textContent = elapsed + 's'
-
-      updateFlowDiagram(event)
-      addTimelineEntry(event)
-      addLogEntry(event)
-    }
-
-    function updateFlowDiagram(event) {
-      document.querySelectorAll('.flow-node').forEach(n => n.classList.remove('active', 'done'))
-      document.querySelectorAll('.flow-arrow').forEach(a => a.classList.remove('active'))
-
-      const t = event.type
-
-      if (t === 'chat.message' || t === 'session:prompt') {
-        document.getElementById('node-user').classList.add('active')
-      } else if (t === 'tool.execute.before' || t === 'tool:call') {
-        toolCount++
-        statTools.textContent = toolCount
-        document.getElementById('node-tools').classList.add('active')
-        document.getElementById('arrow-3').classList.add('active')
-      } else if (t === 'tool.execute.after' || t === 'tool:result') {
-        document.getElementById('node-tools').classList.add('done')
-      } else if (t === 'message.updated' || t === 'session:response') {
-        const msg = event.properties?.info || event.properties
-        if (msg?.role === 'assistant') {
-          document.getElementById('node-harness').classList.add('done')
-          document.getElementById('node-llm').classList.add('done')
-          document.getElementById('node-response').classList.add('active')
-        }
-      } else if (t === 'message.part.updated') {
-        const part = event.properties?.part
-        if (part?.type === 'tool') {
-          document.getElementById('node-tools').classList.add('active')
-        } else if (part?.type === 'text') {
-          document.getElementById('node-llm').classList.add('active')
-        }
-      }
-    }
-
-    function addTimelineEntry(event) {
-      if (timeline.querySelector('.no-events')) {
-        timeline.innerHTML = ''
-      }
-
-      const item = document.createElement('div')
-      item.className = 'timeline-item active'
-
-      const time = new Date(event.timestamp).toLocaleTimeString('pt-BR')
-      let detail = ''
-      const t = event.type
-      const props = event.properties || {}
-
-      if (t === 'chat.message') {
-        const parts = props.parts || []
-        const textPart = parts.find(p => p.type === 'text')
-        detail = textPart?.text?.slice(0, 100) || ''
-      } else if (t === 'tool.execute.before') {
-        detail = `${props.tool}(${JSON.stringify(props.args || {}).slice(0, 60)})`
-      } else if (t === 'tool.execute.after') {
-        detail = `${props.tool} → ${props.title || 'OK'}`
-      } else if (t === 'message.updated') {
-        const msg = props.info || props
-        detail = `${msg.role || '?'} — ${(msg.modelID || msg.model || '').slice(0, 30)}`
-      } else if (t === 'message.part.updated') {
-        const part = props.part || {}
-        detail = `${part.type}: ${(part.text || part.tool || '').slice(0, 60)}`
-      } else if (t === 'session:prompt') {
-        detail = (event.prompt || '').slice(0, 100)
-      } else if (t === 'session:response') {
-        detail = (event.response || '').slice(0, 100)
-      } else {
-        detail = JSON.stringify(props).slice(0, 80)
-      }
-
-      item.innerHTML = `<strong>${time}</strong> — ${t}<br><small style="color:#888">${detail}</small>`
-      timeline.appendChild(item)
-    }
-
-    function addLogEntry(event) {
-      if (eventsLog.querySelector('.no-events')) {
-        eventsLog.innerHTML = ''
-      }
-
-      const row = document.createElement('div')
-      row.className = 'event-row'
-
-      const time = new Date(event.timestamp).toLocaleTimeString('pt-BR')
-      const t = event.type
-      const typeClass = t.split('.')[0].split(':')[0]
-      let detail = JSON.stringify(event).slice(0, 150)
-
-      row.innerHTML = `
-        <span class="event-time">${time}</span>
-        <span class="event-type ${typeClass}">${t}</span>
-        <span class="event-detail">${detail}</span>
-      `
-      eventsLog.appendChild(row)
-      eventsLog.scrollTop = eventsLog.scrollHeight
-    }
-
-    connect()
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
