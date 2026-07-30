@@ -14,12 +14,6 @@
         "C:\\Users\\trcnologia\\Desktop\\proj_livros"
       ]
     },
-    "image_gen": {
-      "command": "node",
-      "args": [
-        "C:\\Users\\trcnologia\\Desktop\\proj_livros\\.claude\\mcp-servers\\image-gen-server\\index.js"
-      ]
-    },
     "pdf_gen": {
       "command": "node",
       "args": [

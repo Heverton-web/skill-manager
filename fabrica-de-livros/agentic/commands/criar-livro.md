@@ -14,10 +14,9 @@ O operador acabou de disparar este comando com o tema central da obra em `$ARGUM
 | R3 | 7 seções/capítulo | Introdução, Explica, Ilustra, Técnica, Aplica, Conclusão, Referências |
 | R4 | 3+ refs/capítulo | Formato ABNT, citadas como [N] no texto |
 | R5 | 3+ papers/dossiê | Artigos científicos (arXiv, ACM, IEEE) |
-| R6 | Formatação ABNT | Livro completo com capa, sumário, referências |
+| R6 | Formatação ABNT | Livro completo com sumário, referências |
 | R7 | PDF final | Pandoc+Typst obrigatório |
-| R8 | Artefatos visuais | Capa, Contracapa, Diagrama de Arquitetura |
-| R9 | Tom transformacional | Simples p/ iniciante, denso p/ PhD |
+| R8 | Tom transformacional | Simples p/ iniciante, denso p/ PhD |
 | R10 | Citações inline | Mínimo 3 [N] por capítulo |
 
 ## Validação obrigatória na entrega
@@ -40,19 +39,19 @@ Após a compilação, VALIDE (comandos compatíveis Windows/PowerShell):
 ## Passo 2 — Fase 2 (Manufatura)
 6. Para todos os capítulos do sumário, instancie em paralelo `subagente-redator-capitulo`.
 7. Cada capítulo SIGUE o template EITA-V2 (7 seções: Introdução, Explica, Ilustra, Técnica, Aplica, Conclusão, Referências).
-8. Instancie `subagente-ilustrador` para diagramas.
-9. Instancie `subagente-design-por-parte` para selos/landing pages.
 
-## Passo 2.5 — Fase 3.5 (Arte Final)
-10. Invoque `subagente-arte-final` para capa/contracapa.
-
-## Passo 3 — Fase 4 (Compilação + PDF)
-11. Invoque `compilador-abnt` — merge + ABNT + livro_final.md.
-12. Execute **conversão PDF via Pandoc+Typst**:
+## Passo 3 — Fase 3 (Compilação + PDF)
+8. Invoque `compilador-abnt` — merge + ABNT + livro_final.md.
+9. Execute **conversão PDF via Pandoc+Typst** (método principal, 100% local):
     ```powershell
     powershell -ExecutionPolicy Bypass -File scripts/converter-md-pdf.ps1 -Slug <slug>
     ```
-13. VALIDE o PDF gerado.
+    > Alternativa: `python compilar-para-pdf.py <slug>` também gera PDF via Pandoc+Typst.
+10. Se Pandoc+Typst falhar, tente fallback CloudConvert:
+    ```bash
+    node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug>
+    ```
+11. VALIDE o PDF gerado (verifique se existe e não está corrompido).
 
 ## Passo 4 — Relatório
-14. Exiba: caminhos .md e .pdf, total capítulos, se ≥70 páginas, lista de conformidade (R1-R10).
+12. Exiba: caminhos .md e .pdf, total capítulos, se ≥70 páginas, lista de conformidade (R1-R9).

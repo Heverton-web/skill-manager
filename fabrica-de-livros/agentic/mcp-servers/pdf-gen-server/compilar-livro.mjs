@@ -17,8 +17,9 @@
  *   5. Compila referências dos dossiês de pesquisa (Nó 7)
  *   6. Aplica formatação ABNT (Nó 8)
  *   7. Grava livro_final.md (Nó 9)
- *   8. Dispara pdf_gen MCP para gerar PDF via CloudConvert (Nó 10)
- *   9. Reporta resultado
+ *   8. Gera PDF via Pandoc+Typst (Nó 10 — método principal)
+ *   9. Fallback para CloudConvert se Pandoc+Typst não estiver disponível
+ *   10. Reporta resultado
  */
 
 import { readFile, writeFile, readdir, mkdtemp, unlink } from "node:fs/promises";
@@ -263,9 +264,55 @@ ${referencias}
 `;
 }
 
-// ─── Passo 8: Disparar PDF via MCP (Nó 10) ─────────────────────────────────
+// ─── Passo 8: Gerar PDF via Pandoc+Typst (Nó 10 — método principal) ───────
 
+/**
+ * Tenta gerar PDF via Pandoc+Typst (método principal, sem API key).
+ * Fallback para CloudConvert se Pandoc não estiver disponível.
+ */
 async function gerarPdf(caminhoMarkdown, caminhoPdf, tituloObra, subtitulo) {
+  // ── Método 1: Pandoc + Typst (recomendado, 100% local) ──────────────
+  const pandocPaths = [
+    "pandoc",
+    "C:\\Users\\trcnologia\\AppData\\Local\\Microsoft\\WinGet\\Packages\\JohnMacFarlane.Pandoc_Microsoft.Winget.Source_8wekyb3d8bbwe\\pandoc-3.10\\pandoc.exe",
+  ];
+  const typstPaths = [
+    "typst",
+    "C:\\Users\\trcnologia\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Typst.Typst_Microsoft.Winget.Source_8wekyb3d8bbwe\\typst-x86_64-pc-windows-msvc\\typst.exe",
+  ];
+
+  let pandocBin = null;
+  let typstBin = null;
+
+  for (const p of pandocPaths) {
+    try { execSync(`${p} --version`, { stdio: "ignore" }); pandocBin = p; break; } catch {}
+  }
+  for (const t of typstPaths) {
+    try { execSync(`${t} --version`, { stdio: "ignore" }); typstBin = t; break; } catch {}
+  }
+
+  const templatePath = path.resolve(SCRIPT_DIR, "../../templates/template.typ");
+
+  if (pandocBin && typstBin && existsSync(templatePath)) {
+    e("Gerando PDF via Pandoc+Typst (método principal)...");
+    try {
+      const cmd = `"${pandocBin}" "${caminhoMarkdown}" -o "${caminhoPdf}" --pdf-engine="${typstBin}" --template="${templatePath}" --toc --toc-depth=3 --number-sections --from=markdown-citations --wrap=preserve --resource-path="${path.dirname(caminhoMarkdown)}" -V "title=${tituloObra}" -V "author=Fábrica Agêntica de Livros" -V "subtitle=${subtitulo || ''}"`;
+      const stdout = execSync(cmd, { timeout: 180000, encoding: "utf-8", maxBuffer: 10 * 1024 * 1024 });
+      if (existsSync(caminhoPdf)) {
+        const stats = await readFile(caminhoPdf);
+        const tamanho = `${(stats.length / 1024).toFixed(0)} KB`;
+        e(`PDF gerado com sucesso via Pandoc+Typst: ${caminhoPdf} (${tamanho})`);
+        return true;
+      }
+      e(`Falha na geração do PDF via Pandoc. Stdout: ${stdout.slice(0, 200)}`);
+    } catch (err) {
+      e(`ERRO no Pandoc+Typst: ${err.message.slice(0, 200)}. Tentando fallback...`);
+    }
+  } else {
+    e("Pandoc+Typst não encontrado — tentando fallback CloudConvert...");
+  }
+
+  // ── Método 2: CloudConvert (fallback) ────────────────────────────────
   const testMcp = path.join(MCP_SERVER_DIR, "test_mcp.mjs");
   const indexJs = path.join(MCP_SERVER_DIR, "index.js");
 
@@ -289,7 +336,7 @@ async function gerarPdf(caminhoMarkdown, caminhoPdf, tituloObra, subtitulo) {
       }
     } catch {
       e("AVISO: CLOUDCONVERT_API_KEY não configurada — pulando PDF");
-      e("Para configurar: crie .claude/mcp-servers/pdf-gen-server/.env com CLOUDCONVERT_API_KEY=sua_chave");
+      e("Método principal Pandoc+Typst falhou e CloudConvert não configurado. Para instalar Pandoc+Typst: winget install JohnMacFarlane.Pandoc && winget install Typst.Typst");
       return false;
     }
   }
@@ -306,20 +353,20 @@ async function gerarPdf(caminhoMarkdown, caminhoPdf, tituloObra, subtitulo) {
 
   try {
     const cmd = `node "${testMcp}" node "${indexJs}" -- markdown_para_pdf "${argsFile}"`;
-    e("Disparando pdf_gen MCP via CloudConvert...");
+    e("Disparando pdf_gen MCP via CloudConvert (fallback)...");
     const stdout = execSync(cmd, { timeout: 120000, encoding: "utf-8", cwd: MCP_SERVER_DIR });
 
     if (stdout.includes("CHAMADA_OK isError= false") || stdout.includes("PDF gerado com sucesso")) {
       const tamMatch = stdout.match(/\((\d+)\s*bytes\)/);
       const tamanho = tamMatch ? `${(parseInt(tamMatch[1]) / 1024).toFixed(0)} KB` : "?";
-      e(`PDF gerado com sucesso: ${caminhoPdf} (${tamanho})`);
+      e(`PDF gerado com sucesso via CloudConvert (fallback): ${caminhoPdf} (${tamanho})`);
       return true;
     } else {
-      e(`Falha na geração do PDF. Output:\n${stdout.slice(0, 500)}`);
+      e(`Fallback CloudConvert falhou. Output:\n${stdout.slice(0, 500)}`);
       return false;
     }
   } catch (err) {
-    e(`ERRO ao gerar PDF: ${err.message}`);
+    e(`ERRO no fallback CloudConvert: ${err.message}`);
     return false;
   } finally {
     try { await unlink(argsFile); } catch { /* temp file already cleaned up */ }
@@ -393,7 +440,7 @@ async function main() {
     console.log(`  Partes:   ${sumario.partes.length}`);
     console.log(`  Capítulos: ${sumario.partes.reduce((a, p) => a + p.capitulos.length, 0)}`);
     console.log(`  Markdown: ${caminhoMd}`);
-    console.log(`  PDF:      ${pdfOk ? caminhoPdf : "❌ Não gerado (configure CLOUDCONVERT_API_KEY)"}`);
+    console.log(`  PDF:      ${pdfOk ? caminhoPdf : "❌ Não gerado (instale Pandoc+Typst via winget ou configure CLOUDCONVERT_API_KEY)"}`);
     console.log("=".repeat(60) + "\n");
 
   } catch (err) {

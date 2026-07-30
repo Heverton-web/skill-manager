@@ -1,11 +1,11 @@
 ---
 name: compilador-abnt
-description: Fase 4 da Fábrica Agêntica de Livros (Nós 5-10) — faz o merge de todos os capítulos aprovados e ilustrados, gera prefácio, conclusão geral e sumário dinâmico, compila as referências bibliográficas sem duplicatas, aplica normas ABNT de formatação e exporta o PDF final do livro via Pandoc+Typst (método principal) ou CloudConvert (fallback). Use somente depois que todos os capítulos da obra passaram pelo checkpoint humano e pela Fase 3.
+description: Fase 3 da Fábrica Agêntica de Livros (Nós 5-10) — faz o merge de todos os capítulos aprovados e validados, gera prefácio, conclusão geral e sumário dinâmico, compila as referências bibliográficas sem duplicatas, aplica normas ABNT de formatação e exporta o PDF final do livro via Pandoc+Typst (método principal) ou CloudConvert (fallback). Use somente depois que todos os capítulos da obra passaram pela validação da Fase 2.
 ---
 
 # Skill_Compilador_ABNT
 
-Você é o operário de acabamento e expedição da Fábrica Agêntica de Livros (Fase 4).
+Você é o operário de acabamento e expedição da Fábrica Agêntica de Livros (Fase 3).
 
 ## Regras
 - PT-BR estrito (REGRA 1). Sem metatexto (REGRA 2).
@@ -17,7 +17,7 @@ Você é o operário de acabamento e expedição da Fábrica Agêntica de Livros
   2. Mínimo estimado de 70 páginas (aproximadamente 175.000-210.000 caracteres de texto no formato ABNT) — alerta se abaixo
   3. Cada capítulo segue o template EITA-V2 (7 seções: Introdução, Explica, Ilustra, Técnica, Aplica, Conclusão, Referências)
   4. Todas as obras têm capa.svg, contracapa.svg e diagrama de arquitetura
-  5. PDF foi gerado com sucesso (Pandoc+Typst ou CloudConvert)
+  5. PDF foi gerado com sucesso via Pandoc+Typst (método principal)
 
 ## Objetivo
 Consolidar capítulos, elementos extrusos e referências em um único manuscrito final,
@@ -147,7 +147,24 @@ node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug-do-livro>
 
 ## Método Automatizado Completo (recomendado para produção)
 
-Use o script `compilar-livro.mjs` que executa todos os 6 nós automaticamente:
+### Opção A — Python (Pandoc+Typst, recomendado)
+
+Use o script `compilar-para-pdf.py` que executa merge + conversão PDF:
+
+```bash
+python compilar-para-pdf.py <slug-do-livro>
+```
+
+O script:
+1. Lê todos os `cap_<n>.md` do diretório `capitulos/` (Nó 5)
+2. Concatena na ordem correta (Nó 5)
+3. Gera Prefácio e Conclusão (Nó 6)
+4. Aplica formatação ABNT com YAML frontmatter (Nó 8)
+5. Converte para PDF via Pandoc+Typst com template ABNT (Nó 10)
+
+### Opção B — Node.js (Pandoc+Typst com fallback CloudConvert)
+
+Use o script `compilar-livro.mjs` para merge + PDF:
 
 ```bash
 node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug-do-livro>
@@ -162,7 +179,8 @@ O script:
 6. Compila referências dos dossiês de pesquisa, eliminando duplicatas (Nó 7)
 7. Aplica formatação ABNT (Nó 8)
 8. Grava `output/<slug>/livro_final.md` (Nó 9)
-9. Dispara conversão para PDF (Nó 10)
+9. Gera PDF via Pandoc+Typst (Nó 10 — método principal)
+10. Fallback para CloudConvert se Pandoc+Typst não estiver disponível
 
 ---
 
@@ -172,49 +190,37 @@ Siga o procedimento abaixo passo a passo:
 
 ### Nó 5 — O Compilador (merge)
 1. Leia `output/<livro>/sumario_macro.json` e, na ordem de Partes/Capítulos ali
-   definida, concatene todos os `output/<livro>/capitulos/cap_<n>.md` (já ilustrados
-   pelo `Skill_Diretor_Arte`) em um fluxo contínuo.
-2. Corrija os paths das imagens: onde os capítulos usam `../imagens/`, mude para
-   `imagens/` (porque `livro_final.md` fica no diretório raiz da obra, não em `capitulos/`).
-
-### Nó 5.5 — Exportação de Selos Generativos (p5.js → SVG)
-3. Para cada Parte no `sumario_macro.json`:
-   - Verifique se `output/<livro>/imagens/selo_parte_<n>.svg` já existe.
-   - Se não existir, execute:
-     ```bash
-     node scripts/extrair-selo-svg.mjs <slug> <parte> --padrao <padrao> --estilo <estilo>
-     ```
-4. Insira os selos SVG no `livro_final.md` como imagens antes de cada Parte:
-   ```markdown
-   ![Selo Generativo Parte I](imagens/selo_parte_I.svg)
-   ```
+   definida, concatene todos os `output/<livro>/capitulos/cap_<n>.md` em um fluxo contínuo.
 
 ### Nó 6 — Elementos Extrusos
-5. Gere um **Prefácio** em prosa densa a partir de `sumario_macro.json.introducao`.
-6. Gere uma **Conclusão Geral** em prosa densa a partir de `sumario_macro.json.conclusao`.
-7. Gere o **Sumário dinâmico**: lista de Partes/Capítulos com títulos exatos.
+2. Gere um **Prefácio** em prosa densa a partir de `sumario_macro.json.introducao`.
+3. Gere uma **Conclusão Geral** em prosa densa a partir de `sumario_macro.json.conclusao`.
+4. Gere o **Sumário dinâmico**: lista de Partes/Capítulos com títulos exatos.
 
 ### Nó 7 — Auditor de Rastreabilidade
-8. Colete todas as seções "Fontes brutas" de todos os
+5. Colete todas as seções "Fontes brutas" de todos os
    `output/<livro>/pesquisa/dossie_*.md`, elimine duplicatas por URL normalizada, e
    ordene alfabeticamente por título.
 
 ### Nó 8 — Selo de Conformidade (ABNT)
-9. Aplique formatação ABNT:
+6. Aplique formatação ABNT:
    - Hierarquia de títulos: `#` para todo elemento de primeiro nível.
    - Referências no formato ABNT (SOBRENOME, Nome. *Título*. Fonte/Editora, ano.)
 
 ### Nó 9 — A Expedição
-10. Grave o artefato final em `output/<livro>/livro_final.md` com a ordem:
-    Capa → Prefácio → Sumário → Partes/Capítulos com imagens →
-    Conclusão Geral → Referências Bibliográficas → Contracapa.
+7. Grave o artefato final em `output/<livro>/livro_final.md` com a ordem:
+    Prefácio → Sumário → Partes/Capítulos → Conclusão Geral → Referências Bibliográficas.
 
-### Nó 10 — Exportação em PDF
-11. Execute o script de conversão:
+### Nó 10 — Exportação em PDF (Pandoc+Typst — método principal)
+8. Execute o script de conversão Pandoc+Typst (método principal, 100% local):
     ```powershell
     powershell -ExecutionPolicy Bypass -File scripts/converter-md-pdf.ps1 -Slug <slug>
     ```
-    Ou, se o CloudConvert estiver configurado:
+    Ou via Python (alternativa recomendada para produção):
+    ```bash
+    python compilar-para-pdf.py <slug>
+    ```
+    **Fallback — CloudConvert (requer API key):**
     ```bash
     node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug>
     ```

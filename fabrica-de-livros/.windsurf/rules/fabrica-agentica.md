@@ -39,8 +39,7 @@ Implementadas como Claude Code Skills nativas em `.claude/skills/`:
 | `arquiteto` | 1 (Nó 0B) | Desenha o sumário macro (Partes/Capítulos) e marcos EITA |
 | `estrategista` | 2 (Nó 1-2) | Decompõe o capítulo em 3 pilares lógicos de ensino |
 | `redator-eita` | 2 (Nó 2/4) | Expande o texto aplicando o framework EITA |
-| `diretor-arte` | 3 | Identifica âncoras cognitivas e aciona `mcp_image_gen` |
-| `compilador-abnt` | 4 (Nós 5-9) | Merge final, pré/pós-textuais, referências, normas ABNT |
+| `compilador-abnt` | 3 (Nós 5-9) | Merge final, pré/pós-textuais, referências, normas ABNT |
 
 ### Subagentes de Execução Paralela
 Implementados em `.claude/agents/`:
@@ -48,9 +47,6 @@ Implementados em `.claude/agents/`:
 |---|---|
 | `subagente-pesquisador` | Varredura e inteligência técnica prévia |
 | `subagente-redator-capitulo` | Manufatura autônoma paralela por capítulo (Estratégia + Redação EITA + Auto-Validação) |
-| `subagente-ilustrador` | Geração paralela de diagramas conceituais, animados e landing pages dos capítulos |
-| **`subagente-design-por-parte`** 🆕 | Orquestra `reversa-selo-generativo` + `svg-animations` + `huashu-design` em sequência para cada Parte — gera selo generativo, diagrama animado e landing page conceito por Parte |
-| `subagente-arte-final` | Síntese global da obra finalizada e renderização comercial de Capa, Contracapa e artefatos visuais premium |
 
 ### Economia Severa de Tokens & Qualidade
 | Skill | Trigger / Função |
@@ -72,27 +68,6 @@ Implementados em `.claude/agents/`:
 | `self-learning` | Aprendizado contínuo e criação autônoma de skills |
 | `i-have-adhd` | Resumos estruturados com foco em atenção e clareza visual |
 
-### Skills de Imagem, Diagramação e Design Visual
-| Skill | Função | API |
-|---|---|---|
-| `archify` | Diagramas de arquitetura, workflow, sequência, dataflow e lifecycle em HTML interativo standalone com tema dark/light e exportação PNG/JPEG/SVG/WebM | ❌ Nenhuma |
-| `dashi-ppt` | Geração de apresentações HTML (PPT) com 12 temas visuais, exportável para PPTX/PDF — ideal para slides e pitches do livro | ❌ Nenhuma |
-| `design-taste-frontend` | Skill anti-slop para landing pages, portfolios e redesigns — impõe padrões de design premium, tipografia calibrada, layouts assimétricos e micro-animações perpétuas | ❌ Nenhuma |
-| `high-end-visual-design` | Ensina o agente a projetar como uma agência de alto nível — fontes, espaçamentos, sombras, cards e animações que fazem um site parecer caro | ❌ Nenhuma |
-| `reversa-selo-generativo` | Selos visuais generativos seeded com p5.js — HTML standalone com arte algorítmica reprodutível para capas, aberturas de parte e identidade visual | ❌ Nenhuma |
-| `reversa-image-prompt-json` | Prompts JSON estruturados para geração de imagens com estética cinematográfica — compatível com Nano Banana 2, Midjourney, DALL-E, Flux | ❌ Nenhuma* |
-| `svg-animations` | Animação SVG via SMIL, CSS keyframes, stroke path drawing, shape morphing e motion paths — diagramas animados sem dependências | ❌ Nenhuma |
-| `ai-graphic-design` | Guia/metodologia de design gráfico com IA — matriz de ferramentas, engenharia de prompt, pipeline de vetorização, mockups e IP safety | ❌ Nenhuma |
-| `ai-studio-image` | Fotos humanizadas estilo influencer/educacional via Google AI Studio (Gemini 2.0 Flash) — iluminação natural e imperfeições sutis | ✅ Gemini API (grátis) |
-| `stability-ai` | Arte digital, ilustração, edição, inpainting, upscale e remove-bg via Stability AI (SD3.5, Ultra, Core) — 15 estilos artísticos | ✅ Stability API |
-
-### MIRA Animator (Framework Externo)
-| Skill | Função |
-|---|---|
-| `MIRA Animator` (sandeco/mira-animator) | Framework de apresentações animadas em HTML com 39 agentes especializados (extract, planner, copywriter, builder, animator, 3D, SVG, chart, quiz, survey, etc.). Instala via `npx mira-animator install` |
-
-> 💡 Skills sem API key funcionam 100% offline. As que requerem API key (`ai-studio-image`, `stability-ai`) são opcionais e podem ser ativadas quando o operador configurar as chaves.
-
 ## 3. Os MCPs (motor de execução)
 
 Registrados em `.mcp.json`:
@@ -101,23 +76,18 @@ Registrados em `.mcp.json`:
   `mcp_db_state`: controla o estado/transições da esteira (fase, coordenadas, payload).
 - **`file_writer`** (`@modelcontextprotocol/server-filesystem`, raiz do projeto) — mapeia
   `mcp_file_writer`: grava Markdown puro no repositório.
-- **`image_gen`** (servidor custom em `.claude/mcp-servers/image-gen-server/`) — mapeia
-  `mcp_image_gen`: renderiza diagramas conceituais, capa e contracapa em SVG a partir de
-  uma especificação estrutural (ver seção 5). Não depende de API paga; é um motor de
-  geração determinística local. Pode ser substituído por um serviço pago (DALL-E,
-  Stability, Ideogram) trocando apenas este servidor no `.mcp.json`.
 - **`mcp_deep_search`** não é um MCP externo: é mapeado para as ferramentas nativas
   `WebSearch`/`WebFetch` já disponíveis nesta CLI, que cumprem o mesmo papel de
   prospecção web de alta densidade sem necessidade de servidor adicional.
 - **`pdf_gen`** (servidor custom em `.claude/mcp-servers/pdf-gen-server/`) — mapeia
-  `mcp_pdf_gen`: converte o `livro_final.md` (já com capa/contracapa/diagramas) em um
-  PDF de livro visualmente estruturado — capa de página inteira, folha de rosto,
-  sumário paginado com numeração real (via Paged.js), cabeçalho corrente com o nome do
-  capítulo, tipografia serifada — usando a API real do **CloudConvert** (engine Chrome,
-  plano gratuito) para a renderização HTML→PDF. Requer que o operador configure a
-  variável `CLOUDCONVERT_API_KEY` (conta gratuita em https://cloudconvert.com/register)
-  em `.claude/mcp-servers/pdf-gen-server/.env` — a Fábrica nunca cria essa conta ou gera
-  essa chave sozinha, apenas consome a chave já fornecida pelo operador.
+  `mcp_pdf_gen`: método **alternativo** (fallback) de geração de PDF via CloudConvert
+  (engine Chrome, plano gratuito) para renderização HTML→PDF. O método **principal** e
+  **recomendado** é Pandoc+Typst via `compilar-para-pdf.py` ou `scripts/converter-md-pdf.ps1`,
+  que não requer API key externa e produz PDFs ABNT profissionais.
+  Requer que o operador configure a variável `CLOUDCONVERT_API_KEY` (conta gratuita em
+  https://cloudconvert.com/register) em `.claude/mcp-servers/pdf-gen-server/.env` —
+  a Fábrica nunca cria essa conta ou gera essa chave sozinha, apenas consome a chave
+  já fornecida pelo operador.
 
 ## 4. Templates
 
@@ -133,17 +103,8 @@ abaixo descreve o mesmo processo em nível conceitual.
 1. **Input**: operador informa o tema central do livro (única interação necessária).
 2. **Fase 1**: `pesquisador`/`subagente-pesquisador` varre fontes → `arquiteto` gera a planta baixa do sumário macro.
 3. **Fase 2** (Manufatura Tática Autônoma & Paralela): o Orquestrador instancia múltiplos `subagente-redator-capitulo` para processar os capítulos em paralelo (estrategista + redator-eita + auto-validação de qualidade interna).
-4. **Fase 3** (Ilustração Tática + Skills de Design): `subagente-ilustrador` gera:
-   - Diagramas conceituais (`cap_<n>_diagrama_<m>.svg`) via MCP `image_gen`
-   - Diagramas animados (`cap_<n>_diagrama_<m>_animado.svg`) via skill `svg-animations`
-   - Landing pages de capítulo (`cap_<n>_landing.html`) via skill `huashu-design` (primeiro capítulo de cada Parte)
-5. **Fase 3.5 — Arte Final da Obra + Skills de Design**: quando 100% do conteúdo de todos os capítulos estiver concluído, o `subagente-arte-final` executa:
-   - **Capa** (`capa.svg`) e **Contracapa** (`contracapa.svg`) via MCP `image_gen`
-   - **Selos generativos** (`selo_parte_<n>.html`) para cada Parte via skill `reversa-selo-generativo`
-   - **Conceito de capa premium** (`capa_conceito.html`) via skill `huashu-design`
-   - **Diagrama animado do ecossistema** (`ecossistema_animado.svg`) via skill `svg-animations`
-6. **Fase 4**: `compilador-abnt` faz o merge final, inclui prefácio, conclusão, Capa, Contracapa, selos, diagramas, sumário dinâmico, referências e normas ABNT em `output/<livro>/livro_final.md`.
-7. **Fase 4, passo final — Exportação em PDF (Nó 10)**: aciona `pdf_gen` para produzir `output/<livro>/livro_final.pdf` via CloudConvert.
+4. **Fase 3**: `compilador-abnt` faz o merge final, inclui prefácio, conclusão, sumário dinâmico, referências e normas ABNT em `output/<livro>/livro_final.md`.
+5. **Fase 3, passo final — Exportação em PDF (Nó 10)**: executa Pandoc+Typst via `compilar-para-pdf.py <slug>` ou `scripts/converter-md-pdf.ps1 -Slug <slug>` para produzir `output/<livro>/livro_final.pdf` com formatação ABNT profissional (margens ABNT, Times New Roman 12pt, sumário automático, paginação). CloudConvert fica como fallback opcional se configurado.
 
 Todo estado de execução (fase atual, coordenadas de parte/capítulo, payload) deve ser
 persistido via o MCP `db_state` a cada transição de nó.
@@ -196,4 +157,3 @@ Derivado de [drona23/claude-token-efficient](https://github.com/drona23/claude-t
 ## RTK SCRATCHPAD
 
 *(Espaço reservado para registro de aprendizados e padrões pela skill `rtk-memory`)*
-

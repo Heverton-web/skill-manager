@@ -130,12 +130,11 @@ def merge_todos_livros():
     # Salvar livro_final.md do mega-livro
     livro_final_path = dir_mega / "livro_final.md"
     with open(livro_final_path, 'w', encoding='utf-8') as f:
-        f.write("![Capa do Livro](imagens/capa.svg)\n\n")
         f.write("# Guia Completo de AI-Driven Development\n\n")
         f.write("*Todos os Livros da Fabrica Agentic de Livros*\n\n")
         f.write("---\n\n")
         f.writelines(conteudo_mega)
-        f.write("\n\n---\n\n![Contracapa do Livro](imagens/contracapa.svg)\n")
+        f.write("\n\n---\n")
     
     # Relatorio
     print()

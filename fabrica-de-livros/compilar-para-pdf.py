@@ -26,6 +26,8 @@ SLUGS = [
     "modelos-avancados-terminal",
     "roteamento-llms-gratuito",
     "fluxos-profissionais",
+    # Serie LLMs (nota: diretorio real com prefixo B3-)
+    "llms-freetiers",  # symlink aponta para B3-llms-freetiers no disco local
     # Serie Segredos
     "segredos-opencode",
     "segredos-freebuff",
@@ -34,6 +36,7 @@ SLUGS = [
     # Serie AIDD
     "00-mega-livro-todos-aidd",
     "01-aidd-ai-driven-development",
+    "01-transicao-dev-aidd",
     "02-harness-camada-orquestracao",
     "03-harness-suas-camadas",
     "04-motor-cognitivo-llm-core",
@@ -48,7 +51,25 @@ SLUGS = [
     "13-higiene-contexto",
     "14-arvore-decisao-auditoria",
     "A-opencode-personalizacoes-escondidas",
+    # Serie Camadas AIDD
+    "02-camada-interface",
+    "03-camada-harness",
+    "04-camada-operarios",
+    "05-camada-llm-core",
 ]
+
+
+def copiar_pdf_com_nome_slug(slug, dir_livro):
+    """Copia livro_final.pdf para <slug>.pdf no mesmo diretorio."""
+    import shutil
+    origem = dir_livro / "livro_final.pdf"
+    destino = dir_livro / f"{slug}.pdf"
+    if origem.exists():
+        shutil.copy2(origem, destino)
+        tamanho_kb = destino.stat().st_size / 1024
+        print(f"  [OK] PDF copiado: {destino.name} ({tamanho_kb:.1f} KB)")
+        return True
+    return False
 
 
 def extrair_frontmatter(texto):
@@ -101,6 +122,7 @@ def converter_md_direto(slug, dir_livro, md_path, pdf_path):
         if pdf_path.exists() and pdf_path.stat().st_size > 0:
             tamanho_kb = pdf_path.stat().st_size / 1024
             print(f"  [OK] PDF gerado: {pdf_path.name} ({tamanho_kb:.1f} KB)")
+            copiar_pdf_com_nome_slug(slug, dir_livro)
             return True
         else:
             print(f"  [FALHA] PDF nao foi criado")
@@ -238,6 +260,7 @@ lang: pt-BR
         if pdf_path.exists() and pdf_path.stat().st_size > 0:
             tamanho_kb = pdf_path.stat().st_size / 1024
             print(f"  [OK] PDF gerado: {pdf_path.name} ({tamanho_kb:.1f} KB)")
+            copiar_pdf_com_nome_slug(slug, dir_livro)
 
             # Limpar temporario
             if md_compilado.exists():

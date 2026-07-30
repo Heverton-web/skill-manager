@@ -1,6 +1,13 @@
 # Relatório de Construção — Fábrica Agêntica de Livros
 
 Data: 28/07/2026
+
+> **Nota (30/07/2026):** Toda a geração de imagens foi removida do processo ativo.
+> Foram deletados: `image-gen-server/` (MCP), `subagente-ilustrador`, `subagente-design-por-parte`,
+> `subagente-arte-final`, skill `diretor-arte`, script `extrair-selo-svg.mjs`.
+> O conteúdo abaixo documenta o estado histórico da fábrica e pode conter referências
+> a esses componentes que já não fazem mais parte do fluxo operacional.
+> Ver `docs/fluxo-fabrica-de-livros.md` para o fluxo atual.
 Diretório do projeto: `C:\Users\trcnologia\Desktop\proj_livros`
 
 ## 1. Contexto e decisões de arquitetura
