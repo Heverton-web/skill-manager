@@ -12,6 +12,7 @@ import {
 import { join, dirname, basename } from "path"
 import { fileURLToPath } from "url"
 import { EventEmitter } from "events"
+import { SessionTracker } from "./session-tracker.js"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PUBLIC_DIR = join(__dirname, "..", "public")
@@ -24,9 +25,10 @@ function addCORS(res) {
 }
 
 export class MonitorServer {
-  constructor(port = 7777, host = "localhost") {
+  constructor(port = 7777, host = "localhost", openCodeUrl = "http://localhost:4096") {
     this.port = port
     this.host = host
+    this.openCodeUrl = process.env.OPENCODE_URL || openCodeUrl
     this.clients = new Set()
     this.events = new EventEmitter()
     this.server = null
@@ -34,6 +36,7 @@ export class MonitorServer {
     this.fileCursors = new Map()
     this.dirWatcher = null
     this.fileWatchers = new Map()
+    this.sessionTracker = new SessionTracker()
   }
 
   setDataDir(dir) {
@@ -172,6 +175,58 @@ export class MonitorServer {
           return
         }
 
+        if (req.url === "/api/session-status" && req.method === "GET") {
+          res.writeHead(200, { "Content-Type": "application/json" })
+          res.end(JSON.stringify(this.sessionTracker.getState()))
+          return
+        }
+
+        if (req.url === "/api/tools" && req.method === "GET") {
+          this._proxyToOpenCode(req, res, "/agent")
+          return
+        }
+
+        if (req.url === "/api/mcp" && req.method === "GET") {
+          this._proxyToOpenCode(req, res, "/mcp")
+          return
+        }
+
+        if (req.url === "/api/compact" && req.method === "POST") {
+          const sessionId = this.sessionTracker.getState().sessionId
+          if (!sessionId) {
+            res.writeHead(400, { "Content-Type": "application/json" })
+            res.end(JSON.stringify({ error: "No active session" }))
+            return
+          }
+          this._proxyToOpenCode(req, res, `/session/${sessionId}/compact`)
+          return
+        }
+
+        if (req.url === "/api/clear" && req.method === "POST") {
+          const sessionId = this.sessionTracker.getState().sessionId
+          if (!sessionId) {
+            res.writeHead(400, { "Content-Type": "application/json" })
+            res.end(JSON.stringify({ error: "No active session" }))
+            return
+          }
+          this._proxyToOpenCode(req, res, `/session/${sessionId}/command`, {
+            method: "POST",
+            body: JSON.stringify({ command: "clear", arguments: "", agent: "build" }),
+          })
+          return
+        }
+
+        if (req.url === "/api/summarize" && req.method === "POST") {
+          const sessionId = this.sessionTracker.getState().sessionId
+          if (!sessionId) {
+            res.writeHead(400, { "Content-Type": "application/json" })
+            res.end(JSON.stringify({ error: "No active session" }))
+            return
+          }
+          this._proxyToOpenCode(req, res, `/session/${sessionId}/summarize`)
+          return
+        }
+
         this._serveStatic(req, res)
       } catch (err) {
         console.error("Erro na requisicao:", err.message)
@@ -262,9 +317,30 @@ export class MonitorServer {
   }
 
   broadcast(event) {
+    this.sessionTracker.processEvent(event)
     const data = JSON.stringify(event)
     for (const client of this.clients) {
       client.write(`data: ${data}\n\n`)
+    }
+  }
+
+  async _proxyToOpenCode(req, res, path, options = {}) {
+    try {
+      const url = new URL(path, this.openCodeUrl)
+      const fetchOptions = {
+        method: options.method || req.method,
+        headers: { "Content-Type": "application/json" },
+      }
+      if (options.body) fetchOptions.body = options.body
+
+      const response = await fetch(url.toString(), fetchOptions)
+      const data = await response.text()
+
+      res.writeHead(response.status, { "Content-Type": "application/json" })
+      res.end(data)
+    } catch (err) {
+      res.writeHead(502, { "Content-Type": "application/json" })
+      res.end(JSON.stringify({ error: "OpenCode server unreachable", detail: err.message }))
     }
   }
 
