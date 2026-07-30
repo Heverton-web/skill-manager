@@ -1,0 +1,44 @@
+# CLAUDE.md — Fabrica Agentica de Livros
+
+## O que e
+
+Industria grafica editorial agentic automatizada para producao de literatura tecnica.
+Gera livros completos em Markdown e PDF (ABNT) a partir de um tema.
+
+## Comando principal
+
+```
+/criar-livro <tema>
+```
+
+## Stack
+
+- Python 3.10+ (scripts de compilacao)
+- Pandoc + Typst (geracao de PDF)
+- Claude Code Skills (orquestracao)
+- SQLite via MCP (estado da esteira)
+
+## Estrutura
+
+```
+.claude/skills/       # Skills do Claude Code
+.claude/agents/       # Subagentes
+.claude/commands/     # Comandos (/criar-livro)
+templates/            # Templates Typst
+data/                 # Estado SQLite
+output/               # Livros gerados
+scripts/              # Scripts auxiliares
+```
+
+## Documentacao
+
+- `AGENTS.md` / `CLAUDE.md` — regras para agentes
+- `SPEC.md` — especificacao completa
+- `RELATORIO_FABRICA.md` — relatorio de uso
+
+## Regras
+
+1. PT-BR em todo o conteudo
+2. Sem preambulos conversacionais nos artefatos
+3. Autonomia total apos definir o tema
+4. Auto-correcao interna antes da compilacao

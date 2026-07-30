@@ -29,6 +29,15 @@ Thumbs.db
 *.swo
 *~
 
+# OpenCode interno
+.opencode/
+
+# Nul (Windows artifact)
+nul
+
+# PDFs gerados
+*.pdf
+
 # IDE
 .idea/
 *.sublime-*

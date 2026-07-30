@@ -10,6 +10,12 @@ logs/
 Thumbs.db
 *~
 
+# Eventos (runtime)
+data/
+
+# Testes locais
+test-full.js
+
 # IDE
 .idea/
 *.sublime-*

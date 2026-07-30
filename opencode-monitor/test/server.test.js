@@ -36,9 +36,9 @@ describe("MonitorServer", () => {
     server.stop()
   })
 
-  it("setEventFile define caminho", () => {
+  it("setDataDir define diretorio", () => {
     const server = new MonitorServer()
-    server.setEventFile("/tmp/test.jsonl")
-    assert.strictEqual(server.eventFile, "/tmp/test.jsonl")
+    server.setDataDir("/tmp/test-data")
+    assert.strictEqual(server.dataDir, "/tmp/test-data")
   })
 })

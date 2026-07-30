@@ -1,5 +1,23 @@
+# Dependencias
+node_modules/
+
 # Config local
 .skill-manager-config.json
 
+# Env
+.env
+.env.local
+
 # Logs
 *.log
+logs/
+
+# Sistema
+.DS_Store
+Thumbs.db
+*~
+
+# IDE
+.idea/
+*.sublime-*
+.vscode/

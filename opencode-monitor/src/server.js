@@ -1,11 +1,21 @@
 import { createServer } from "http"
-import { readFileSync, existsSync, watch, statSync } from "fs"
-import { join, dirname } from "path"
+import {
+  readFileSync,
+  existsSync,
+  watch,
+  statSync,
+  openSync,
+  readSync,
+  closeSync,
+  readdirSync,
+} from "fs"
+import { join, dirname, basename } from "path"
 import { fileURLToPath } from "url"
 import { EventEmitter } from "events"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PUBLIC_DIR = join(__dirname, "..", "public")
+const DEFAULT_DATA_DIR = join(__dirname, "..", "data")
 
 function addCORS(res) {
   res.setHeader("Access-Control-Allow-Origin", "*")
@@ -20,53 +30,110 @@ export class MonitorServer {
     this.clients = new Set()
     this.events = new EventEmitter()
     this.server = null
-    this.eventFile = null
-    this.watcher = null
-    this.fileCursor = 0
+    this.dataDir = DEFAULT_DATA_DIR
+    this.fileCursors = new Map()
+    this.dirWatcher = null
+    this.fileWatchers = new Map()
   }
 
-  setEventFile(path) {
-    this.eventFile = path
-    this.fileCursor = 0
+  setDataDir(dir) {
+    this.dataDir = dir
   }
 
-  watchFile() {
-    if (!this.eventFile || !existsSync(this.eventFile)) {
+  watchDir() {
+    if (!existsSync(this.dataDir)) {
       return
     }
 
-    try {
-      const stat = statSync(this.eventFile)
-      this.fileCursor = stat.size
-    } catch {
-      this.fileCursor = 0
+    const files = this._getJsonlFiles()
+    for (const file of files) {
+      this._initFileCursor(file)
+      this._watchFile(file)
     }
 
     try {
-      this.watcher = watch(this.eventFile, () => {
-        this._readNewEvents()
+      this.dirWatcher = watch(this.dataDir, (eventType, filename) => {
+        if (!filename || !filename.endsWith(".jsonl")) return
+
+        const filePath = join(this.dataDir, filename)
+
+        if (eventType === "rename") {
+          if (existsSync(filePath)) {
+            this._initFileCursor(filePath)
+            this._watchFile(filePath)
+          } else {
+            this._unwatchFile(filePath)
+          }
+        }
       })
-      this.watcher.on("error", (err) => {
-        console.error("Erro no watcher:", err.message)
+      this.dirWatcher.on("error", (err) => {
+        console.error("Erro no watcher do diretorio:", err.message)
       })
     } catch (err) {
-      console.error("Erro ao iniciar watcher:", err.message)
+      console.error("Erro ao iniciar watcher do diretorio:", err.message)
     }
   }
 
-  _readNewEvents() {
-    if (!this.eventFile || !existsSync(this.eventFile)) return
+  _getJsonlFiles() {
+    try {
+      return readdirSync(this.dataDir)
+        .filter((f) => f.endsWith(".jsonl"))
+        .map((f) => join(this.dataDir, f))
+    } catch {
+      return []
+    }
+  }
+
+  _initFileCursor(filePath) {
+    if (this.fileCursors.has(filePath)) return
+    try {
+      const stat = statSync(filePath)
+      this.fileCursors.set(filePath, stat.size)
+    } catch {
+      this.fileCursors.set(filePath, 0)
+    }
+  }
+
+  _watchFile(filePath) {
+    if (this.fileWatchers.has(filePath)) return
 
     try {
-      const stat = statSync(this.eventFile)
-      if (stat.size <= this.fileCursor) return
+      const watcher = watch(filePath, () => {
+        this._readNewEvents(filePath)
+      })
+      watcher.on("error", (err) => {
+        console.error(`Erro no watcher de ${basename(filePath)}:`, err.message)
+      })
+      this.fileWatchers.set(filePath, watcher)
+    } catch (err) {
+      console.error(`Erro ao iniciar watcher de ${basename(filePath)}:`, err.message)
+    }
+  }
 
-      const fd = require("fs").openSync(this.eventFile, "r")
-      const buffer = Buffer.alloc(stat.size - this.fileCursor)
-      require("fs").readSync(fd, buffer, 0, buffer.length, this.fileCursor)
-      require("fs").closeSync(fd)
+  _unwatchFile(filePath) {
+    const watcher = this.fileWatchers.get(filePath)
+    if (watcher) {
+      watcher.close()
+      this.fileWatchers.delete(filePath)
+    }
+    this.fileCursors.delete(filePath)
+  }
 
-      this.fileCursor = stat.size
+  _readNewEvents(filePath) {
+    if (!existsSync(filePath)) return
+
+    const cursor = this.fileCursors.get(filePath) || 0
+
+    try {
+      const stat = statSync(filePath)
+      if (stat.size <= cursor) return
+
+      const fd = openSync(filePath, "r")
+      const buffer = Buffer.alloc(stat.size - cursor)
+      readSync(fd, buffer, 0, buffer.length, cursor)
+      closeSync(fd)
+
+      this.fileCursors.set(filePath, stat.size)
 
       const newContent = buffer.toString("utf-8")
       const lines = newContent.trim().split("\n").filter(Boolean)
@@ -76,11 +143,11 @@ export class MonitorServer {
           const event = JSON.parse(line)
           this.broadcast(event)
         } catch {
-          // linha inválida, ignora
+          // linha invalida, ignora
         }
       }
     } catch (err) {
-      console.error("Erro ao ler novos eventos:", err.message)
+      console.error(`Erro ao ler eventos de ${basename(filePath)}:`, err.message)
     }
   }
 
@@ -107,7 +174,7 @@ export class MonitorServer {
 
         this._serveStatic(req, res)
       } catch (err) {
-        console.error("Erro na requisição:", err.message)
+        console.error("Erro na requisicao:", err.message)
         res.writeHead(500, { "Content-Type": "application/json" })
         res.end(JSON.stringify({ error: "Erro interno do servidor" }))
       }
@@ -121,32 +188,37 @@ export class MonitorServer {
   }
 
   _handleAPIEvents(req, res) {
-    if (!this.eventFile || !existsSync(this.eventFile)) {
-      res.writeHead(200, { "Content-Type": "application/json" })
-      res.end(JSON.stringify({ events: [], total: 0, sessionId: null }))
-      return
-    }
+    const files = this._getJsonlFiles()
+    const allEvents = []
 
-    try {
-      const content = readFileSync(this.eventFile, "utf-8")
-      const lines = content.trim().split("\n").filter(Boolean)
-      const events = lines.map((line) => {
-        try {
-          return JSON.parse(line)
-        } catch {
-          return null
+    for (const file of files) {
+      try {
+        const content = readFileSync(file, "utf-8")
+        const lines = content.trim().split("\n").filter(Boolean)
+        for (const line of lines) {
+          try {
+            allEvents.push(JSON.parse(line))
+          } catch {
+            // invalida
+          }
         }
-      }).filter(Boolean)
-
-      const sessionId = events.length > 0 ? events[0].sessionId : null
-
-      res.writeHead(200, { "Content-Type": "application/json" })
-      res.end(JSON.stringify({ events, total: events.length, sessionId }))
-    } catch (err) {
-      console.error("Erro ao ler eventos:", err.message)
-      res.writeHead(500, { "Content-Type": "application/json" })
-      res.end(JSON.stringify({ error: "Erro ao ler eventos" }))
+      } catch {
+        // erro ao ler arquivo
+      }
     }
+
+    allEvents.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0))
+
+    const sessionId = allEvents.length > 0 ? allEvents[0].sessionId : null
+
+    res.writeHead(200, { "Content-Type": "application/json" })
+    res.end(
+      JSON.stringify({
+        events: allEvents,
+        total: allEvents.length,
+        sessionId,
+      })
+    )
   }
 
   _handleSSE(req, res) {
@@ -157,7 +229,7 @@ export class MonitorServer {
       "Access-Control-Allow-Origin": "*",
     })
 
-    res.write("data: {\"type\":\"connected\"}\n\n")
+    res.write('data: {"type":"connected"}\n\n')
     this.clients.add(res)
 
     req.on("close", () => {
@@ -197,13 +269,19 @@ export class MonitorServer {
   }
 
   stop() {
-    if (this.watcher) {
-      this.watcher.close()
-      this.watcher = null
+    if (this.dirWatcher) {
+      this.dirWatcher.close()
+      this.dirWatcher = null
     }
 
+    for (const [, watcher] of this.fileWatchers) {
+      watcher.close()
+    }
+    this.fileWatchers.clear()
+    this.fileCursors.clear()
+
     for (const client of this.clients) {
-      client.write("data: {\"type\":\"server:shutdown\"}\n\n")
+      client.write('data: {"type":"server:shutdown"}\n\n')
       client.end()
     }
     this.clients.clear()
