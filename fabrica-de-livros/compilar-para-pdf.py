@@ -13,6 +13,12 @@ import sys
 import subprocess
 from pathlib import Path
 
+# ── CARREGAR 50 LIVROS DAS SÉRIES E-N ──────────────────────────
+try:
+    from dados_series import SLUGS_EXTRA
+except ImportError:
+    SLUGS_EXTRA = []
+
 DIR_RAIZ = Path(__file__).parent / "output"
 DIR_PROJETO = Path(__file__).parent
 
@@ -59,6 +65,9 @@ SLUGS = [
     "C4-camada-operarios",
     "C5-camada-llm-core",
 ]
+
+# Estender com as 10 series (50 livros)
+SLUGS.extend(SLUGS_EXTRA)
 
 
 def copiar_pdf_com_nome_slug(slug, dir_livro):

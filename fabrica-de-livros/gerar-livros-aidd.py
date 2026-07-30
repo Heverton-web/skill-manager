@@ -25,6 +25,13 @@ import random
 from pathlib import Path
 from datetime import date
 
+# ── CARREGAR 50 LIVROS DAS SÉRIES E-N (10 séries) ──────────
+try:
+    from dados_series import LIVROS_EXTRA, SLUGS_EXTRA
+except ImportError:
+    LIVROS_EXTRA = {}
+    SLUGS_EXTRA = []
+
 DIR_RAIZ = Path(__file__).parent / "output"
 
 # slug -> nome descritivo para usar no texto
@@ -45,6 +52,11 @@ SLUGS = [
     "C4-camada-operarios",
     "C5-camada-llm-core",
 ]
+
+# Estender com as 10 series (50 livros) de dados_series.py
+for _sl in SLUGS_EXTRA:
+    NOMES_LIVROS[_sl] = LIVROS_EXTRA[_sl][0]
+    SLUGS.append(_sl)
 
 # ── POOLS DE TEMPLATES VARIADOS ────────────────────────────────
 
@@ -551,6 +563,15 @@ O que consome a janela:
 }
 
 
+# ── CARREGAR CONTEUDO DAS 10 SERIES ───────────────────────────
+for _sl in SLUGS_EXTRA:
+    if _sl not in CONTEUDO:
+        _nome = LIVROS_EXTRA[_sl][0]
+        _explica = LIVROS_EXTRA[_sl][5]  # capitulo1_explica
+        CONTEUDO[_sl] = {
+            1: {"explica": _explica}
+        }
+
 # ── GERADOR DE CONTEÚDO ────────────────────────────────────────
 
 def gerar_conteudo_capitulo(slug, cap_num, cap_info, sumario):
@@ -676,7 +697,7 @@ def gerar_conteudo_capitulo(slug, cap_num, cap_info, sumario):
     extra_ref = ref_extra[idx_ref]
 
     if slug == "00-eita-metodo":
-        refs = f"""[1] Heberton Peres. *O Método EITA: Explica, Ilustra, Técnica, Aplica*. Fábrica Agêntica de Livros, 2026.
+        refs = f"""[1] Heverton Eduardo Peres. *O Método EITA: Explica, Ilustra, Técnica, Aplica*. Fábrica Agêntica de Livros, 2026.
 
 [2] Papert, S. *Mindstorms: Children, Computers, and Powerful Ideas*. Basic Books, 1980.
 
@@ -688,7 +709,7 @@ def gerar_conteudo_capitulo(slug, cap_num, cap_info, sumario):
 
 {extra_ref}"""
     else:
-        refs = f"""[1] Heberton Peres. *O Método EITA: Explica, Ilustra, Técnica, Aplica*. Fábrica Agêntica de Livros, 2026.
+        refs = f"""[1] Heverton Eduardo Peres. *O Método EITA: Explica, Ilustra, Técnica, Aplica*. Fábrica Agêntica de Livros, 2026.
 
 [2] Heverton Eduardo Peres. *AIDD — AI-Driven Development: O Paradigma que Substitui Escrever Código por Orquestrar Agentes*. Fábrica Agêntica de Livros, 2026.
 
