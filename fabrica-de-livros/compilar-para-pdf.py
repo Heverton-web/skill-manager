@@ -52,10 +52,12 @@ SLUGS = [
     "14-arvore-decisao-auditoria",
     "A-opencode-personalizacoes-escondidas",
     # Serie Camadas AIDD
-    "02-camada-interface",
-    "03-camada-harness",
-    "04-camada-operarios",
-    "05-camada-llm-core",
+    "00-eita-metodo",
+    "C1-transicao-dev-aidd",
+    "C2-camada-interface",
+    "C3-camada-harness",
+    "C4-camada-operarios",
+    "C5-camada-llm-core",
 ]
 
 
@@ -109,7 +111,7 @@ def converter_md_direto(slug, dir_livro, md_path, pdf_path):
             "--from", "markdown-citations",
             "--wrap", "preserve",
             "-V", f"title={titulo}",
-            "-V", "author=Heberton Peres",
+            "-V", "author=Heverton Eduardo Peres",
             "-V", "subtitle=",
             "--resource-path", str(dir_livro),
         ]
@@ -217,7 +219,7 @@ def compilar_livro(slug):
     # Criar frontmatter YAML completo para o Pandoc
     frontmatter = f"""---
 title: "{titulo}"
-author: "Heberton Peres"
+author: "Heverton Eduardo Peres"
 date: "Julho 2026"
 lang: pt-BR
 ---
@@ -247,7 +249,7 @@ lang: pt-BR
             "--from", "markdown-citations",
             "--wrap", "preserve",
             "-V", f"title={titulo}",
-            "-V", "author=Heberton Peres",
+            "-V", "author=Heverton Eduardo Peres",
             "-V", "subtitle=",
             "--resource-path", str(dir_livro),
         ]

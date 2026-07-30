@@ -40,11 +40,12 @@ if not TEMPLATE.exists():
 DIR_RAIZ = Path(__file__).parent / "output"
 
 SLUGS_CAMADAS = [
-    ("01-transicao-dev-aidd", "A Transição: De Dev Tradicional a Engenheiro AIDD"),
-    ("02-camada-interface",   "Camada 1 — Interface: A Tela"),
-    ("03-camada-harness",     "Camada 2 — Harness: O Motor de Orquestração"),
-    ("04-camada-operarios",   "Camada 3 — Operários: Skills, MCPs e Subagentes"),
-    ("05-camada-llm-core",    "Camada 4 — LLM Core: O Cérebro que Pensa"),
+    ("00-eita-metodo",           "O Método EITA: Explica, Ilustra, Técnica, Aplica"),
+    ("C1-transicao-dev-aidd",    "A Transição: De Dev Tradicional a Engenheiro AIDD"),
+    ("C2-camada-interface",      "Camada 1 — Interface: A Tela"),
+    ("C3-camada-harness",        "Camada 2 — Harness: O Motor de Orquestração"),
+    ("C4-camada-operarios",      "Camada 3 — Operários: Skills, MCPs e Subagentes"),
+    ("C5-camada-llm-core",       "Camada 4 — LLM Core: O Cérebro que Pensa"),
 ]
 
 SLUG_COMPILADO = f"07-mega-livro-completo-aidd-{date.today().isoformat()}"
@@ -237,8 +238,6 @@ Utilize o sumário abaixo para localizar rapidamente os temas de seu interesse.
 
 {conclusao}
 
----
-
 *Compilado gerado pela Fábrica Agêntica de Livros em {hoje.strftime('%d/%m/%Y')}.*
 """
 
@@ -251,7 +250,7 @@ Utilize o sumário abaixo para localizar rapidamente os temas de seu interesse.
     for parte in partes_unificadas:
         parte_num = parte["parte"]
         if parte_num != ultima_parte:
-            corpo_partes.append(f"\n\n---\n\n# Parte {parte_num} — {parte['titulo_parte']}\n")
+            corpo_partes.append(f"\n\n# Parte {parte_num} — {parte['titulo_parte']}\n")
             ultima_parte = parte_num
         for cap in parte["capitulos"]:
             idx = cap["capitulo"]
@@ -270,11 +269,7 @@ Utilize o sumário abaixo para localizar rapidamente os temas de seu interesse.
 
 {sumario_texto}
 
----
-
 {corpo_texto}
-
----
 
 {conc}
 """
@@ -300,7 +295,7 @@ Utilize o sumário abaixo para localizar rapidamente os temas de seu interesse.
             "--from", "markdown-citations",
             "--wrap", "preserve",
             "-V", f"title={titulo_base}",
-            "-V", "author=Heberton Peres",
+            "-V", "author=Heverton Eduardo Peres",
             "-V", "subtitle=",
             "--resource-path", str(dir_compilado),
             "-V", f"date={hoje.strftime('%d/%m/%Y')}",

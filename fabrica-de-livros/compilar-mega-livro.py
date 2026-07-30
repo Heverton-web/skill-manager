@@ -343,7 +343,7 @@ conceitos, ferramentas, técnicas avançadas e padrões de orquestração.
             "--from", "markdown-citations",
             "--wrap", "preserve",
             "-V", f"title={titulo_obra}",
-            "-V", "author=Heberton Peres",
+            "-V", "author=Heverton Eduardo Peres",
             "-V", "subtitle=",
             "--resource-path", str(dir_compilado),
             "-V", f"date={date.today().strftime('%d/%m/%Y')}",

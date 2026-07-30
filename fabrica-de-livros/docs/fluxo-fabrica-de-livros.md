@@ -19,6 +19,7 @@ A fábrica opera em **3 Fases** (P&D, Manufatura, Acabamento), executadas por um
 | **REGRA 2** | Sem metatexto ou saudações nos artefatos — Markdown limpo |
 | **REGRA 3** | Autonomia total após o tema ser definido (sem paradas no chat) |
 | **REGRA 4** | Auto-correção interna de desvios estruturais antes da entrega |
+| **REGRA 5** | NUNCA usar `---` (horizontal rules) dentro de capítulos individuais — usar apenas separadores de parágrafo duplo (`\n\n`) entre seções |
 
 ---
 
@@ -319,7 +320,7 @@ python compilar-para-pdf.py <slug>
 7. Aplica formatação ABNT com YAML frontmatter (Nó 8):
    ```yaml
    title: "Título da Obra"
-   author: "Heberton Peres"
+   author: "Heverton Eduardo Peres"
    date: "Julho 2026"
    lang: pt-BR
    ```
