@@ -29,15 +29,28 @@ npm test           # Roda todos os testes
 
 ```
 src/
-  cli.js           # Entry point CLI
-  server.js        # HTTP server + SSE
-  event-logger.js  # Salva eventos em JSONL
-  plugin.js        # Plugin para OpenCode
+  cli.js              # Entry point CLI
+  server.js           # HTTP server + SSE + API proxy
+  session-tracker.js  # Estado da sessao (tokens, cost, context)
+  event-logger.js     # Salva eventos em JSONL
+  plugin.js           # Plugin para OpenCode
 public/
-  index.html       # Dashboard visual
+  index.html          # Dashboard visual
+  app.css             # Estilos
+  app.js              # JS do dashboard
 test/
-  *.test.js        # Testes
-data/              # Eventos (auto-criado, gitignored)
+  *.test.js           # Testes
+data/                 # Eventos (auto-criado, gitignored)
+```
+
+## Arquitetura V2
+
+```
+OpenCode (plugin) → JSONL → server.js → SSE → browser
+                         ↓
+                   session-tracker.js (tokens, cost, context, tools)
+                         ↓
+                   /api/* routes (proxy para OpenCode SDK)
 ```
 
 ## Regras
