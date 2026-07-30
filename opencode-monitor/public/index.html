@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenCode Monitor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-bottom: 1px solid #333;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    header .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+    }
+
+    header .status .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ef4444;
+      transition: background 0.3s;
+    }
+
+    header .status .dot.connected {
+      background: #22c55e;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .flow-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 32px 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-node {
+      background: #1a1a2e;
+      border: 2px solid #333;
+      border-radius: 12px;
+      padding: 20px 24px;
+      text-align: center;
+      min-width: 140px;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .flow-node.active {
+      border-color: #3b82f6;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+      transform: scale(1.05);
+    }
+
+    .flow-node.done {
+      border-color: #22c55e;
+    }
+
+    .flow-node .icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .flow-node .label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .flow-node .sublabel {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .flow-arrow {
+      font-size: 1.5rem;
+      color: #555;
+      transition: color 0.3s;
+    }
+
+    .flow-arrow.active {
+      color: #3b82f6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .stat-card {
+      background: #1a1a2e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.75rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 4px;
+    }
+
+    .events-log {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.8rem;
+    }
+
+    .events-log .event-row {
+      padding: 8px 16px;
+      border-bottom: 1px solid #222;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .events-log .event-row:hover {
+      background: #1a1a2e;
+    }
+
+    .events-log .event-time {
+      color: #666;
+      white-space: nowrap;
+      min-width: 80px;
+    }
+
+    .events-log .event-type {
+      font-weight: 600;
+      min-width: 120px;
+    }
+
+    .events-log .event-type.session { color: #a78bfa; }
+    .events-log .event-type.prompt { color: #60a5fa; }
+    .events-log .event-type.tool { color: #fbbf24; }
+    .events-log .event-type.llm { color: #34d399; }
+    .events-log .event-type.response { color: #f472b6; }
+
+    .events-log .event-detail {
+      color: #999;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 400px;
+    }
+
+    .timeline {
+      position: relative;
+      margin: 24px 0;
+      padding-left: 24px;
+      border-left: 2px solid #333;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: #1a1a2e;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 16px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #333;
+      border: 2px solid #1a1a2e;
+    }
+
+    .timeline-item.active::before { background: #3b82f6; }
+    .timeline-item.done::before { background: #22c55e; }
+
+    .no-events {
+      text-align: center;
+      color: #555;
+      padding: 48px;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 768px) {
+      .flow-container { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OpenCode Monitor</h1>
+    <div class="status">
+      <div class="dot" id="statusDot"></div>
+      <span id="statusText">Desconectado</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="flow-container" id="flowDiagram">
+      <div class="flow-node" id="node-user">
+        <div class="icon">👤</div>
+        <div class="label">USUARIO</div>
+        <div class="sublabel">Prompt</div>
+      </div>
+      <div class="flow-arrow" id="arrow-1">→</div>
+      <div class="flow-node" id="node-harness">
+        <div class="icon">⚙️</div>
+        <div class="label">HARNESS</div>
+        <div class="sublabel">System Prompt</div>
+      </div>
+      <div class="flow-arrow" id="arrow-2">→</div>
+      <div class="flow-node" id="node-llm">
+        <div class="icon">🧠</div>
+        <div class="label">LLM</div>
+        <div class="sublabel">MiMo V2.5</div>
+      </div>
+      <div class="flow-arrow" id="arrow-3">→</div>
+      <div class="flow-node" id="node-tools">
+        <div class="icon">🔧</div>
+        <div class="label">TOOLS</div>
+        <div class="sublabel">Tool Calls</div>
+      </div>
+      <div class="flow-arrow" id="arrow-4">→</div>
+      <div class="flow-node" id="node-response">
+        <div class="icon">💬</div>
+        <div class="label">RESPOSTA</div>
+        <div class="sublabel">Output</div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Eventos</div>
+        <div class="stat-value" id="statEvents">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tool Calls</div>
+        <div class="stat-value" id="statTools">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Duracao</div>
+        <div class="stat-value" id="statDuration">0s</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Sessao</div>
+        <div class="stat-value" id="statSession">-</div>
+      </div>
+    </div>
+
+    <h2 style="margin: 24px 0 12px; font-size: 1.1rem; color: #fff;">Timeline</h2>
+    <div class="timeline" id="timeline">
+      <div class="no-events">Aguardando eventos...</div>
+    </div>
+
+    <h2 style="margin: 24px 0 12px; font-size: 1.1rem; color: #fff;">Log Completo</h2>
+    <div class="events-log" id="eventsLog">
+      <div class="no-events">Nenhum evento registrado</div>
+    </div>
+  </main>
+
+  <script>
+    const statusDot = document.getElementById('statusDot')
+    const statusText = document.getElementById('statusText')
+    const statEvents = document.getElementById('statEvents')
+    const statTools = document.getElementById('statTools')
+    const statDuration = document.getElementById('statDuration')
+    const statSession = document.getElementById('statSession')
+    const timeline = document.getElementById('timeline')
+    const eventsLog = document.getElementById('eventsLog')
+
+    let eventCount = 0
+    let toolCount = 0
+    let startTime = null
+    let eventSource = null
+
+    function connect() {
+      eventSource = new EventSource('/events')
+
+      eventSource.onopen = () => {
+        statusDot.classList.add('connected')
+        statusText.textContent = 'Conectado'
+      }
+
+      eventSource.onerror = () => {
+        statusDot.classList.remove('connected')
+        statusText.textContent = 'Reconectando...'
+        setTimeout(connect, 3000)
+      }
+
+      eventSource.onmessage = (msg) => {
+        const event = JSON.parse(msg.data)
+        handleEvent(event)
+      }
+    }
+
+    function handleEvent(event) {
+      if (event.type === 'connected') return
+
+      eventCount++
+      statEvents.textContent = eventCount
+
+      if (!startTime) {
+        startTime = event.timestamp
+        statSession.textContent = event.sessionId?.slice(0, 8) || '-'
+      }
+
+      const elapsed = ((event.timestamp - startTime) / 1000).toFixed(0)
+      statDuration.textContent = elapsed + 's'
+
+      updateFlowDiagram(event)
+      addTimelineEntry(event)
+      addLogEntry(event)
+    }
+
+    function updateFlowDiagram(event) {
+      document.querySelectorAll('.flow-node').forEach(n => n.classList.remove('active', 'done'))
+      document.querySelectorAll('.flow-arrow').forEach(a => a.classList.remove('active'))
+
+      if (event.type === 'session:prompt') {
+        document.getElementById('node-user').classList.add('active')
+      } else if (event.type === 'session:response') {
+        document.getElementById('node-harness').classList.add('done')
+        document.getElementById('node-llm').classList.add('done')
+        document.getElementById('node-tools').classList.add('done')
+        document.getElementById('node-response').classList.add('active')
+      } else if (event.type === 'tool:call') {
+        toolCount++
+        statTools.textContent = toolCount
+        document.getElementById('node-tools').classList.add('active')
+        document.getElementById('arrow-3').classList.add('active')
+      } else if (event.type === 'tool:result') {
+        document.getElementById('node-tools').classList.add('done')
+      } else if (event.type === 'llm:completion') {
+        document.getElementById('node-llm').classList.add('done')
+      }
+    }
+
+    function addTimelineEntry(event) {
+      if (timeline.querySelector('.no-events')) {
+        timeline.innerHTML = ''
+      }
+
+      const item = document.createElement('div')
+      item.className = 'timeline-item active'
+
+      const time = new Date(event.timestamp).toLocaleTimeString('pt-BR')
+      let detail = ''
+
+      if (event.type === 'session:prompt') {
+        detail = event.prompt?.slice(0, 100) || ''
+      } else if (event.type === 'tool:call') {
+        detail = `${event.tool}(${JSON.stringify(event.args || {}).slice(0, 60)})`
+      } else if (event.type === 'tool:result') {
+        detail = `${event.tool} → OK`
+      } else if (event.type === 'llm:completion') {
+        detail = `${event.provider}/${event.model}`
+      }
+
+      item.innerHTML = `<strong>${time}</strong> — ${event.type}<br><small style="color:#888">${detail}</small>`
+      timeline.appendChild(item)
+    }
+
+    function addLogEntry(event) {
+      if (eventsLog.querySelector('.no-events')) {
+        eventsLog.innerHTML = ''
+      }
+
+      const row = document.createElement('div')
+      row.className = 'event-row'
+
+      const time = new Date(event.timestamp).toLocaleTimeString('pt-BR')
+      const typeClass = event.type.split(':')[0]
+      let detail = JSON.stringify(event).slice(0, 120)
+
+      row.innerHTML = `
+        <span class="event-time">${time}</span>
+        <span class="event-type ${typeClass}">${event.type}</span>
+        <span class="event-detail">${detail}</span>
+      `
+      eventsLog.appendChild(row)
+      eventsLog.scrollTop = eventsLog.scrollHeight
+    }
+
+    connect()
+  </script>
+</body>
+</html>

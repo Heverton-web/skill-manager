@@ -1,0 +1,32 @@
+{
+  "name": "opencode-monitor",
+  "version": "1.0.0",
+  "description": "Dashboard em tempo real para visualizar o fluxo interno do OpenCode",
+  "type": "module",
+  "main": "./src/server.js",
+  "bin": {
+    "opencode-monitor": "./src/cli.js"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "keywords": [
+    "opencode",
+    "monitor",
+    "dashboard",
+    "ai",
+    "real-time",
+    "websocket"
+  ],
+  "author": "Heverton Peres",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {}
+}
