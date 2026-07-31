@@ -19,6 +19,36 @@ try:
 except ImportError:
     SLUGS_EXTRA = []
 
+# ── CARREGAR 50 LIVROS DAS SÉRIES DE PERFUMARIA (P1-P5) ────────
+try:
+    from dados_series_perfumaria import SLUGS_PERFUMARIA
+except ImportError:
+    SLUGS_PERFUMARIA = []
+
+# ── CARREGAR 50 LIVROS DAS SÉRIES DE WEB FULLSTACK (W1-W5) ─────
+try:
+    from dados_series_web import SLUGS_WEB
+except ImportError:
+    SLUGS_WEB = []
+
+# ── CARREGAR 50 LIVROS DAS SÉRIES DE IA E AGENTES (IA1-IA5) ────
+try:
+    from dados_series_ia import SLUGS_IA
+except ImportError:
+    SLUGS_IA = []
+
+# ── CARREGAR 50 LIVROS DAS SÉRIES DA STACK FULLSTACK (FE/BE/BD/AP/DV) ──
+try:
+    from dados_series_stack import SLUGS_STACK
+except ImportError:
+    SLUGS_STACK = []
+
+# ── CARREGAR LIVRO DE MARKETING DIGITAL (MK-01) ───────────────
+try:
+    from dados_livro_marketing import SLUGS_MARKETING
+except ImportError:
+    SLUGS_MARKETING = []
+
 DIR_RAIZ = Path(__file__).parent / "output"
 DIR_PROJETO = Path(__file__).parent
 
@@ -66,8 +96,15 @@ SLUGS = [
     "C5-camada-llm-core",
 ]
 
-# Estender com as 10 series (50 livros)
+# Estender com as 10 series (50 livros), as 5 series de perfumaria (50 livros),
+# as 5 series de desenvolvimento web (50 livros), as 5 series de IA (50 livros),
+# as 5 series da stack fullstack (50 livros) e o livro de marketing digital
 SLUGS.extend(SLUGS_EXTRA)
+SLUGS.extend(SLUGS_PERFUMARIA)
+SLUGS.extend(SLUGS_WEB)
+SLUGS.extend(SLUGS_IA)
+SLUGS.extend(SLUGS_STACK)
+SLUGS.extend(SLUGS_MARKETING)
 
 
 def copiar_pdf_com_nome_slug(slug, dir_livro):

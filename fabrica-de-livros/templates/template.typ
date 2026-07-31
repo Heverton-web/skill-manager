@@ -62,7 +62,7 @@
 #show heading.where(level: 1): it => {
   set par(first-line-indent: 0cm)
   let isParte = type(it.body) == str and it.body.starts-with("Parte")
-  pagebreak(weak: true)
+  pagebreak()
   if isParte {
     set text(size: 20pt, weight: "bold")
     v(3cm)
