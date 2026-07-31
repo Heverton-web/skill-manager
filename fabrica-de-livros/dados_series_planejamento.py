@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """
 Dados das 5 Séries de Livros de Planejamento Estratégico de Marketing (MK1-MK5)
-Cada série tem ~20 livros, cada livro tem 4 Partes e 16 Capítulos (EITA-V2).
+Cada série tem 20 livros (total 100), cada livro tem 4 Partes e 16 Capítulos (EITA-V2).
 Usado por gerar-livros-planejamento.py e compilar-para-pdf.py
+
+NOTA: as séries MK1-MK2 vivem neste arquivo; as séries MK3, MK4 e MK5 vivem nos
+arquivos companheiros dados_series_planejamento_mk3.py, _mk4.py e _mk5.py,
+mesclados abaixo. Ao copiar/clonar, leve os 4 arquivos juntos.
 """
 
 SERIES_PLANEJAMENTO = {
@@ -185,14 +189,6 @@ LIVROS_PLANEJAMENTO = {
         "Viabilidade não é opinião: é evidência. Antes de produzir em escala, o negócio precisa saber se existe demanda, a que preço e com que margem. Testar a aceitação com métodos baratos e rápidos reduz drasticamente o risco de lançar um produto que ninguém quer.",
         "A análise de viabilidade combina dimensões: mercado (existe demanda?), financeira (a margem sustenta o negócio?), operacional (conseguimos entregar?) e estratégica (alinha com a marca?) [1]. O teste de aceitação usa métodos como entrevistas, landing page com pré-venda, protótipo funcional e pesquisa de disposição a pagar [2].\\n\\n**Por que importa?** A maioria dos lançamentos fracassados falha na validação: a empresa investe em produção antes de validar a demanda. Testar com o mercado — mesmo com amostra pequena — gera dados reais de intenção de compra que valem mais que qualquer pesquisa interna [3].\\n\\n**O que muda na prática:** Antes de produzir, valide com pré-venda ou landing page de interesse, meça a disposição a pagar e estime a demanda; só então decida sobre o investimento em produção e estoque."
     ),
-    "MK1-21-revisao-trimestral-de-rota": (
-        "Revisão Trimestral de Rota (Quarterly Review)",
-        "Revisão Trimestral de Rota (Quarterly Review): Como pivotar o planejamento estratégico no meio do caminho sem desestruturar a operação",
-        "Como pivotar o planejamento estratégico no meio do caminho sem desestruturar a operação",
-        "O plano anual foi feito em janeiro, mas o mundo mudou em março. A Revisão Trimestral de Rota (Quarterly Review) é o rito que permite pivotar a estratégia no meio do caminho sem desestruturar a operação. Este livro ensina a revisar, decidir e comunicar mudanças de rota.",
-        "A revisão trimestral separa o que funcionou do que precisa mudar — com dados, não com ansiedade. Ela preserva a visão, ajusta o caminho e comunica as mudanças com clareza, mantendo o time executando mesmo durante o pivot.",
-        "A Quarterly Review é um rito de gestão que avalia o trimestre contra as metas e define o trimestre seguinte: resultados alcançados, causas dos desvios, decisões de continuar, corrigir ou abandonar iniciativas [1]. O pivot estruturado preserva o que funciona e realoca recursos do que não funciona [2].\\n\\n**Por que importa?** O planejamento estático morre no primeiro imprevisto — mas pivotar sem método gera desestruturação. A revisão trimestral dá o espaço seguro para mudar: o time sabe que a rota será revista, então executa sem medo e sem improviso [3].\\n\\n**O que muda na prática:** Agende a revisão trimestral com pauta fixa (resultados, causas, decisões), defina critérios objetivos para manter/pivotar/cortar e comunique as mudanças em documento único atualizando o masterbook."
-    ),
 
     # ═══════════════ SÉRIE MK2 — IA APLICADA AO PLANEJAMENTO ═══════════════
     "MK2-01-arquitetura-de-prompts-estrategicos": (
@@ -356,3 +352,15 @@ LIVROS_PLANEJAMENTO = {
         "A metáfora do diretor de orquestra captura a nova função do profissional de marketing: ele não toca cada instrumento (não executa cada tarefa), mas define a partitura (estratégia), comanda os músicos (agentes e ferramentas de IA) e garante a harmonia (qualidade e coerência) [1]. As habilidades-chave mudam: de técnica para curadoria, briefing, avaliação e ética [2].\\n\\n**Por que importa?** Quem só executa será substituído pela ferramenta; quem dirige multiplica a ferramenta. A carreira do profissional de marketing se torna mais estratégica, mais valorizada e menos repetitiva — desde que ele domine a orquestração [3].\\n\\n**O que muda na prática:** Desenvolva as habilidades de direção — briefing preciso, avaliação crítica de resultados gerados, curadoria de agentes — e reorganize o dia a dia para delegar o executável à IA e concentrar-se no estratégico."
     ),
 }
+
+# ═══════════════ SÉRIES MK3-MK5 (dados_series_planejamento_mk3/4/5.py) ═══════════════
+from dados_series_planejamento_mk3 import LIVROS_MK3
+from dados_series_planejamento_mk4 import LIVROS_MK4
+from dados_series_planejamento_mk5 import LIVROS_MK5
+
+LIVROS_PLANEJAMENTO.update(LIVROS_MK3)
+LIVROS_PLANEJAMENTO.update(LIVROS_MK4)
+LIVROS_PLANEJAMENTO.update(LIVROS_MK5)
+
+# Ordem canônica das séries MK1-MK5 (21+20 -> 20+20+20+20+20 = 100 livros)
+SLUGS_PLANEJAMENTO = list(LIVROS_PLANEJAMENTO.keys())

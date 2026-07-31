@@ -49,6 +49,24 @@ try:
 except ImportError:
     SLUGS_MARKETING = []
 
+# ── CARREGAR 100 LIVROS DAS 5 SÉRIES DE PLANEJAMENTO (MK1-MK5) ─
+try:
+    from dados_series_planejamento import SLUGS_PLANEJAMENTO
+except ImportError:
+    SLUGS_PLANEJAMENTO = []
+
+# ── CARREGAR LIVRO DOS SEGREDOS TÉCNICOS DO DEEPSEEK ──────────
+try:
+    from dados_livro_deepseek import SLUGS_DEEPSEEK
+except ImportError:
+    SLUGS_DEEPSEEK = []
+
+# ── CARREGAR 80 LIVROS DAS 4 SÉRIES DO ZERO AO PROFISSIONAL (ZP1-ZP4) ─
+try:
+    from dados_series_zp import SLUGS_ZP
+except ImportError:
+    SLUGS_ZP = []
+
 DIR_RAIZ = Path(__file__).parent / "output"
 DIR_PROJETO = Path(__file__).parent
 
@@ -105,6 +123,9 @@ SLUGS.extend(SLUGS_WEB)
 SLUGS.extend(SLUGS_IA)
 SLUGS.extend(SLUGS_STACK)
 SLUGS.extend(SLUGS_MARKETING)
+SLUGS.extend(SLUGS_PLANEJAMENTO)
+SLUGS.extend(SLUGS_DEEPSEEK)
+SLUGS.extend(SLUGS_ZP)
 
 
 def copiar_pdf_com_nome_slug(slug, dir_livro):
@@ -201,23 +222,24 @@ def compilar_livro(slug):
     print(f"  COMPILANDO: {slug}")
     print(f"{'='*60}")
 
+    md_precompilado = dir_livro / "livro_final.md"
+
+    if md_precompilado.exists():
+        # Preferir o livro_final.md pre-compilado: contem titulo, prefacio, sumario,
+        # cabecalhos de Parte, capitulos e conclusao (estrutura ABNT completa).
+        print(f"  Usando livro_final.md pre-compilado (estrutura completa)")
+        return converter_md_direto(slug, dir_livro, md_precompilado, pdf_path)
+
+    # --- Caminho legado: apenas para livros SEM livro_final.md (montagem por capítulos) ---
     # Ler todos os capitulos ordenados
     caps = sorted(
         dir_caps.glob("cap_*.md"),
         key=lambda p: int(re.search(r'cap_(\d+)', p.stem).group(1))
     )
 
-    md_precompilado = dir_livro / "livro_final.md"
-    
     if not caps:
-        # Fallback: usar livro_final.md ja compilado (AIDD books)
-        if md_precompilado.exists():
-            print(f"  Usando livro_final.md pre-compilado (sem capitulos individuais)")
-            # Usar diretamente o MD existente
-            return converter_md_direto(slug, dir_livro, md_precompilado, pdf_path)
-        else:
-            print(f"  [SKIP] {slug}: nenhum capitulo ou livro_final.md encontrado")
-            return False
+        print(f"  [SKIP] {slug}: nenhum capitulo ou livro_final.md encontrado")
+        return False
 
     print(f"  Capitulos encontrados: {len(caps)}")
 
