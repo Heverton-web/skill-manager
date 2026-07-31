@@ -8,7 +8,10 @@
 </head>
 <body>
   <header>
-    <h1>OpenCode Monitor</h1>
+    <div class="header-left">
+      <h1>OpenCode Monitor</h1>
+      <span class="header-sub">Dashboard em tempo real</span>
+    </div>
     <div class="status">
       <div class="dot" id="statusDot"></div>
       <span id="statusText">Desconectado</span>
@@ -16,112 +19,225 @@
   </header>
 
   <main>
-    <section class="context-bar">
-      <div class="context-header">
-        <span class="context-label">Context Window</span>
-        <span class="context-model" id="contextModel">&mdash;</span>
-      </div>
-      <div class="context-progress">
-        <div class="context-track">
-          <div class="context-fill" id="contextFill" style="width: 0%"></div>
+    <!-- 1. Context Window -->
+    <section class="card context-card" data-card="context">
+      <div class="card-header">
+        <div class="card-title-group">
+          <h2 class="card-title">Context Window</h2>
+          <span class="card-badge" id="contextModel">&mdash;</span>
         </div>
-        <span class="context-text" id="contextText">0 / 0 tokens</span>
+        <span class="card-toggle">&#x25BC;</span>
       </div>
-      <div class="context-actions">
-        <button class="btn-action" id="btnCompact" title="Compactar sessao (/compact)">
-          <span class="btn-icon">&#x1F4E6;</span> Compact
-        </button>
-        <button class="btn-action" id="btnClear" title="Limpar sessao (/clear)">
-          <span class="btn-icon">&#x1F5D1;&#xFE0F;</span> Clear
-        </button>
-        <button class="btn-action" id="btnSummarize" title="Gerar resumo da sessao">
-          <span class="btn-icon">&#x1F4DD;</span> Summarize
-        </button>
-      </div>
-    </section>
-
-    <div class="flow-container" id="flowDiagram">
-      <div class="flow-node" id="node-user">
-        <div class="icon">&#x1F464;</div>
-        <div class="label">USUARIO</div>
-        <div class="sublabel">Prompt</div>
-      </div>
-      <div class="flow-arrow" id="arrow-1">&rarr;</div>
-      <div class="flow-node" id="node-harness">
-        <div class="icon">&#x2699;&#xFE0F;</div>
-        <div class="label">HARNESS</div>
-        <div class="sublabel" id="agentLabel">Agent</div>
-      </div>
-      <div class="flow-arrow" id="arrow-2">&rarr;</div>
-      <div class="flow-node" id="node-llm">
-        <div class="icon">&#x1F9E0;</div>
-        <div class="label">LLM</div>
-        <div class="sublabel" id="modelLabel">Model</div>
-      </div>
-      <div class="flow-arrow" id="arrow-3">&rarr;</div>
-      <div class="flow-node" id="node-tools">
-        <div class="icon">&#x1F527;</div>
-        <div class="label">TOOLS</div>
-        <div class="sublabel" id="toolLabel">Tool Calls</div>
-      </div>
-      <div class="flow-arrow" id="arrow-4">&rarr;</div>
-      <div class="flow-node" id="node-response">
-        <div class="icon">&#x1F4AC;</div>
-        <div class="label">RESPOSTA</div>
-        <div class="sublabel">Output</div>
-      </div>
-    </div>
-
-    <div class="stats">
-      <div class="stat-card">
-        <div class="stat-label">Eventos</div>
-        <div class="stat-value" id="statEvents">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Tool Calls</div>
-        <div class="stat-value" id="statTools">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Tokens</div>
-        <div class="stat-value" id="statTokens">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Custo</div>
-        <div class="stat-value" id="statCost">$0.00</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Tokens/s</div>
-        <div class="stat-value" id="statTps">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Duracao</div>
-        <div class="stat-value" id="statDuration">0s</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Status</div>
-        <div class="stat-value" id="statStatus">idle</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Sessao</div>
-        <div class="stat-value" id="statSession">-</div>
-      </div>
-    </div>
-
-    <section class="tools-panel">
-      <h2>Ferramentas Disponiveis</h2>
-      <div class="tools-grid" id="toolsGrid">
-        <div class="no-events">Carregando...</div>
+      <div class="card-body">
+        <div class="bars">
+          <div class="bar-item">
+            <div class="bar-info">
+              <span class="bar-name">Todas as sessoes</span>
+              <span class="bar-value" id="contextText">0 tokens (0%)</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill all" id="contextFill" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-info">
+              <span class="bar-name">Sessao atual</span>
+              <span class="bar-value" id="sessionText">0 tokens (0%)</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill session" id="sessionFill" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <h2 style="margin: 24px 0 12px; font-size: 1.1rem; color: #fff;">Timeline</h2>
-    <div class="timeline" id="timeline">
-      <div class="no-events">Aguardando eventos...</div>
-    </div>
+    <!-- 2. Flow Diagram -->
+    <section class="card flow-card" data-card="flow">
+      <div class="card-header">
+        <h2 class="card-title">Flow</h2>
+        <span class="card-toggle">&#x25BC;</span>
+      </div>
+      <div class="card-body">
+        <div class="flow-container" id="flowDiagram">
+          <div class="flow-node c-blue" id="node-user">
+            <div class="flow-icon">&#x1F464;</div>
+            <div class="flow-label">USUARIO</div>
+            <div class="flow-sub" id="agentLabel">Prompt</div>
+          </div>
+          <div class="flow-arrow" id="arrow-1">
+            <svg width="32" height="24" viewBox="0 0 32 24"><path d="M4 12h20m-6-6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="flow-node c-amber" id="node-harness">
+            <div class="flow-icon">&#x2699;&#xFE0F;</div>
+            <div class="flow-label">HARNESS</div>
+            <div class="flow-sub" id="agentLabel2">Agent</div>
+          </div>
+          <div class="flow-arrow" id="arrow-2">
+            <svg width="32" height="24" viewBox="0 0 32 24"><path d="M4 12h20m-6-6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="flow-node c-purple" id="node-llm">
+            <div class="flow-icon">&#x1F9E0;</div>
+            <div class="flow-label">LLM</div>
+            <div class="flow-sub" id="modelLabel">Model</div>
+          </div>
+          <div class="flow-arrow" id="arrow-3">
+            <svg width="32" height="24" viewBox="0 0 32 24"><path d="M4 12h20m-6-6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="flow-node c-yellow" id="node-tools">
+            <div class="flow-icon">&#x1F527;</div>
+            <div class="flow-label">TOOLS</div>
+            <div class="flow-sub" id="toolLabel">Tool Calls</div>
+          </div>
+          <div class="flow-arrow" id="arrow-4">
+            <svg width="32" height="24" viewBox="0 0 32 24"><path d="M4 12h20m-6-6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="flow-node c-green" id="node-response">
+            <div class="flow-icon">&#x1F4AC;</div>
+            <div class="flow-label">RESPOSTA</div>
+            <div class="flow-sub">Output</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <h2 style="margin: 24px 0 12px; font-size: 1.1rem; color: #fff;">Log Completo</h2>
-    <div class="events-log" id="eventsLog">
-      <div class="no-events">Nenhum evento registrado</div>
+    <!-- 3. Stats Grid -->
+    <section class="card stats-card" data-card="stats">
+      <div class="card-header">
+        <h2 class="card-title">Stats</h2>
+        <span class="card-toggle">&#x25BC;</span>
+      </div>
+      <div class="card-body">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">&#x1F4CA;</div>
+            <div class="stat-info">
+              <div class="stat-label">Eventos</div>
+              <div class="stat-value" id="statEvents">0</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#x1F527;</div>
+            <div class="stat-info">
+              <div class="stat-label">Tool Calls</div>
+              <div class="stat-value" id="statTools">0</div>
+            </div>
+          </div>
+          <div class="stat-card accent">
+            <div class="stat-icon">&#x1F4B1;</div>
+            <div class="stat-info">
+              <div class="stat-label">Tokens</div>
+              <div class="stat-value" id="statTokens">0</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#x1F4B0;</div>
+            <div class="stat-info">
+              <div class="stat-label">Custo</div>
+              <div class="stat-value" id="statCost">$0.00</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#x26A1;</div>
+            <div class="stat-info">
+              <div class="stat-label">Tokens/s</div>
+              <div class="stat-value" id="statTps">0</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#x23F1;&#xFE0F;</div>
+            <div class="stat-info">
+              <div class="stat-label">Duracao</div>
+              <div class="stat-value" id="statDuration">0s</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#x1F7E2;</div>
+            <div class="stat-info">
+              <div class="stat-label">Status</div>
+              <div class="stat-value" id="statStatus">idle</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">&#x1F4BB;</div>
+            <div class="stat-info">
+              <div class="stat-label">Sessao</div>
+              <div class="stat-value" id="statSession">-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Comandos e Skills -->
+    <section class="card commands-card" data-card="commands">
+      <div class="card-header">
+        <h2 class="card-title">&#x26A1; Comandos</h2>
+        <span class="card-toggle">&#x25BC;</span>
+      </div>
+      <div class="card-body">
+        <div class="cmd-group">
+          <div class="cmd-group-title">Sess&#227;o</div>
+          <div class="cmd-row">
+            <button class="cmd-btn" data-cmd="/compact">/compact</button>
+            <button class="cmd-btn" data-cmd="/clear">/clear</button>
+            <button class="cmd-btn" data-cmd="/summarize">/summarize</button>
+          </div>
+        </div>
+        <div class="cmd-group">
+          <div class="cmd-group-title">Navega&#231;&#227;o</div>
+          <div class="cmd-row">
+            <button class="cmd-btn" data-cmd="/help">/help</button>
+            <button class="cmd-btn" data-cmd="/model">/model</button>
+            <button class="cmd-btn" data-cmd="/theme">/theme</button>
+            <button class="cmd-btn" data-cmd="/cost">/cost</button>
+          </div>
+        </div>
+        <div class="cmd-group">
+          <div class="cmd-group-title">Skills Dispon&#237;veis</div>
+          <div class="skills-grid" id="skillsPanel"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Ferramentas -->
+    <section class="card tools-card" data-card="tools">
+      <div class="card-header">
+        <h2 class="card-title">Ferramentas</h2>
+        <span class="card-toggle">&#x25BC;</span>
+      </div>
+      <div class="card-body">
+        <div class="tools-grid" id="toolsGrid">
+          <div class="no-events">Carregando...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Timeline + Logs (lado a lado) -->
+    <div class="two-col">
+      <section class="card timeline-card" data-card="timeline">
+        <div class="card-header">
+          <h2 class="card-title">Timeline</h2>
+          <span class="card-toggle">&#x25BC;</span>
+        </div>
+        <div class="card-body">
+          <div class="timeline" id="timeline">
+            <div class="no-events">Aguardando eventos...</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card log-card" data-card="logs">
+        <div class="card-header">
+          <h2 class="card-title">Log Completo</h2>
+          <span class="card-toggle">&#x25BC;</span>
+        </div>
+        <div class="card-body">
+          <div class="events-log" id="eventsLog">
+            <div class="no-events">Nenhum evento registrado</div>
+          </div>
+        </div>
+      </section>
     </div>
   </main>
 

@@ -4,7 +4,7 @@ import { MonitorServer } from "./server.js"
 
 const PORT = parseInt(process.env.PORT || "7777")
 const HOST = process.env.HOST || "localhost"
-const OPENCODE_URL = process.env.OPENCODE_URL || "http://localhost:4096"
+const OPENCODE_URL = process.env.OPENCODE_URL || "http://localhost:57129"
 
 const server = new MonitorServer(PORT, HOST, OPENCODE_URL)
 

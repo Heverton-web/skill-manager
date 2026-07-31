@@ -10,6 +10,7 @@ import {
   readdirSync,
 } from "fs"
 import { join, dirname, basename } from "path"
+import { homedir } from "os"
 import { fileURLToPath } from "url"
 import { EventEmitter } from "events"
 import { SessionTracker } from "./session-tracker.js"
@@ -24,8 +25,17 @@ function addCORS(res) {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type")
 }
 
+function readBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = []
+    req.on("data", (c) => chunks.push(c))
+    req.on("end", () => resolve(Buffer.concat(chunks).toString()))
+    req.on("error", reject)
+  })
+}
+
 export class MonitorServer {
-  constructor(port = 7777, host = "localhost", openCodeUrl = "http://localhost:4096") {
+  constructor(port = 7777, host = "localhost", openCodeUrl = "http://localhost:57129") {
     this.port = port
     this.host = host
     this.openCodeUrl = process.env.OPENCODE_URL || openCodeUrl
@@ -37,6 +47,8 @@ export class MonitorServer {
     this.dirWatcher = null
     this.fileWatchers = new Map()
     this.sessionTracker = new SessionTracker()
+    this._pollTimer = null
+    this._statusBroadcastTimer = null
   }
 
   setDataDir(dir) {
@@ -181,49 +193,28 @@ export class MonitorServer {
           return
         }
 
-        if (req.url === "/api/tools" && req.method === "GET") {
-          this._proxyToOpenCode(req, res, "/agent")
+        if (req.url === "/api/session" && req.method === "GET") {
+          this._handleGetSessions(req, res)
           return
         }
 
-        if (req.url === "/api/mcp" && req.method === "GET") {
-          this._proxyToOpenCode(req, res, "/mcp")
+        if (req.url === "/api/tools" && req.method === "GET") {
+          this._handleGetTools(req, res)
           return
         }
 
         if (req.url === "/api/compact" && req.method === "POST") {
-          const sessionId = this.sessionTracker.getState().sessionId
-          if (!sessionId) {
-            res.writeHead(400, { "Content-Type": "application/json" })
-            res.end(JSON.stringify({ error: "No active session" }))
-            return
-          }
-          this._proxyToOpenCode(req, res, `/session/${sessionId}/compact`)
+          this._handleCompact(req, res)
           return
         }
 
         if (req.url === "/api/clear" && req.method === "POST") {
-          const sessionId = this.sessionTracker.getState().sessionId
-          if (!sessionId) {
-            res.writeHead(400, { "Content-Type": "application/json" })
-            res.end(JSON.stringify({ error: "No active session" }))
-            return
-          }
-          this._proxyToOpenCode(req, res, `/session/${sessionId}/command`, {
-            method: "POST",
-            body: JSON.stringify({ command: "clear", arguments: "", agent: "build" }),
-          })
+          this._handleClear(req, res)
           return
         }
 
         if (req.url === "/api/summarize" && req.method === "POST") {
-          const sessionId = this.sessionTracker.getState().sessionId
-          if (!sessionId) {
-            res.writeHead(400, { "Content-Type": "application/json" })
-            res.end(JSON.stringify({ error: "No active session" }))
-            return
-          }
-          this._proxyToOpenCode(req, res, `/session/${sessionId}/summarize`)
+          this._handleSummarize(req, res)
           return
         }
 
@@ -237,9 +228,152 @@ export class MonitorServer {
 
     this.server.listen(this.port, this.host, () => {
       console.log(`Monitor rodando em http://${this.host}:${this.port}`)
+      this._startPolling()
     })
 
     return this
+  }
+
+  _startPolling() {
+    this._pollSession()
+    this._pollTimer = setInterval(() => this._pollSession(), 3000)
+    this._statusBroadcastTimer = setInterval(() => this._broadcastStatus(), 2000)
+  }
+
+  _broadcastStatus() {
+    if (this.clients.size === 0) return
+    const state = this.sessionTracker.getState()
+    const data = JSON.stringify({ type: "session-status", ...state })
+    for (const client of this.clients) {
+      client.write(`data: ${data}\n\n`)
+    }
+  }
+
+  async _pollSession() {
+    try {
+      const response = await fetch(`${this.openCodeUrl}/api/session`)
+      if (!response.ok) return
+      const data = await response.json()
+      const sessions = data?.data
+      if (!Array.isArray(sessions) || sessions.length === 0) return
+
+      this.sessionTracker.updateFromAllSessions(sessions)
+
+      const currentId = this.sessionTracker.getState().sessionId
+      let session = null
+
+      if (currentId) {
+        session = sessions.find((s) => s.id === currentId)
+      }
+      if (!session) {
+        session = sessions.find((s) => s.id) || sessions[0]
+      }
+
+      if (session) {
+        this.sessionTracker.updateFromAPISession(session)
+      }
+    } catch {
+      // OpenCode offline
+    }
+  }
+
+  async _handleCompact(req, res) {
+    const sessionId = this.sessionTracker.getState().sessionId
+    if (!sessionId) {
+      res.writeHead(200, { "Content-Type": "application/json" })
+      res.end(JSON.stringify({ ok: true, message: "Nenhuma sessao ativa para compactar" }))
+      return
+    }
+    await this._proxyToOpenCode(req, res, `/api/session/${sessionId}/compact`, { method: "POST" })
+  }
+
+  async _handleClear(req, res) {
+    const sessionId = this.sessionTracker.getState().sessionId
+    if (!sessionId) {
+      res.writeHead(200, { "Content-Type": "application/json" })
+      res.end(JSON.stringify({ ok: true, message: "Nenhuma sessao ativa para limpar" }))
+      return
+    }
+    await this._proxyToOpenCode(req, res, `/api/session/${sessionId}/clear`, { method: "POST" })
+  }
+
+  async _handleSummarize(req, res) {
+    const sessionId = this.sessionTracker.getState().sessionId
+    if (!sessionId) {
+      res.writeHead(200, { "Content-Type": "application/json" })
+      res.end(JSON.stringify({ ok: true, message: "Nenhuma sessao ativa para resumir" }))
+      return
+    }
+    await this._proxyToOpenCode(req, res, `/api/session/${sessionId}/summarize`, { method: "POST" })
+  }
+
+  async _handleGetSessions(req, res) {
+    try {
+      const response = await fetch(`${this.openCodeUrl}/api/session`)
+      if (!response.ok) {
+        res.writeHead(response.status, { "Content-Type": "application/json" })
+        res.end(await response.text())
+        return
+      }
+      const data = await response.json()
+      res.writeHead(200, { "Content-Type": "application/json" })
+      res.end(JSON.stringify(data))
+    } catch (err) {
+      res.writeHead(502, { "Content-Type": "application/json" })
+      res.end(JSON.stringify({ error: "OpenCode server unreachable", detail: err.message }))
+    }
+  }
+
+  _handleGetTools(req, res) {
+    const configDir = join(homedir(), ".config", "opencode")
+    const result = { mcp: [], skills: [], agents: [], usedTools: [] }
+
+    try {
+      const configPath = join(configDir, "opencode.json")
+      if (existsSync(configPath)) {
+        const config = JSON.parse(readFileSync(configPath, "utf-8"))
+        if (config.mcp) {
+          for (const [name, mcp] of Object.entries(config.mcp)) {
+            result.mcp.push({ name, type: mcp.type || "local", enabled: mcp.enabled !== false })
+          }
+        }
+      }
+    } catch {}
+
+    for (const dir of ["skill", "skills"]) {
+      const skillsDir = join(configDir, dir)
+      if (!existsSync(skillsDir)) continue
+      try {
+        this._scanSkillsDir(skillsDir, dir, result.skills)
+      } catch {}
+    }
+
+    const seen = new Set()
+    result.skills = result.skills.filter((s) => {
+      if (seen.has(s.name)) return false
+      seen.add(s.name)
+      return true
+    })
+
+    const usedTools = this.sessionTracker.getState().usedTools || []
+    result.usedTools = usedTools
+
+    res.writeHead(200, { "Content-Type": "application/json" })
+    res.end(JSON.stringify(result))
+  }
+
+  _scanSkillsDir(dir, source, result) {
+    const entries = readdirSync(dir, { withFileTypes: true })
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue
+      const fullPath = join(dir, entry.name)
+      const skillFile = join(fullPath, "SKILL.md")
+      if (existsSync(skillFile)) {
+        result.push({ name: entry.name, source, hasSkillFile: true })
+      } else {
+        this._scanSkillsDir(fullPath, source, result)
+      }
+    }
   }
 
   _handleAPIEvents(req, res) {
@@ -331,20 +465,30 @@ export class MonitorServer {
         method: options.method || req.method,
         headers: { "Content-Type": "application/json" },
       }
-      if (options.body) fetchOptions.body = options.body
 
-      const response = await fetch(url.toString(), fetchOptions)
+      const response = await fetch(url.toString(), { ...fetchOptions, signal: AbortSignal.timeout(5000) })
       const data = await response.text()
 
       res.writeHead(response.status, { "Content-Type": "application/json" })
       res.end(data)
     } catch (err) {
-      res.writeHead(502, { "Content-Type": "application/json" })
-      res.end(JSON.stringify({ error: "OpenCode server unreachable", detail: err.message }))
+      const detail = err.name === "TimeoutError" ? "OpenCode timeout (5s)" : err.message
+      res.writeHead(200, { "Content-Type": "application/json" })
+      res.end(JSON.stringify({ ok: false, error: "OpenCode indisponivel", detail }))
     }
   }
 
   stop() {
+    if (this._pollTimer) {
+      clearInterval(this._pollTimer)
+      this._pollTimer = null
+    }
+
+    if (this._statusBroadcastTimer) {
+      clearInterval(this._statusBroadcastTimer)
+      this._statusBroadcastTimer = null
+    }
+
     if (this.dirWatcher) {
       this.dirWatcher.close()
       this.dirWatcher = null

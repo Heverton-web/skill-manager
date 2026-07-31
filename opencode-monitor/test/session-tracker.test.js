@@ -128,4 +128,50 @@ describe("SessionTracker", () => {
     })
     assert.strictEqual(tracker.getState().sessionStatus, "idle")
   })
+
+  it("updateFromAPISession sets tokens and model from API data", () => {
+    tracker.updateFromAPISession({
+      id: "ses_abc123",
+      agent: "build",
+      model: { id: "mimo-v2.5-free", providerID: "opencode", variant: "default" },
+      cost: 0.042,
+      tokens: {
+        input: 254145,
+        output: 38076,
+        reasoning: 6209,
+        cache: { read: 11028480, write: 0 }
+      },
+      time: { created: 1785450753889, updated: 1785452784142 }
+    })
+
+    const state = tracker.getState()
+    assert.strictEqual(state.sessionId, "ses_abc123")
+    assert.strictEqual(state.agent, "build")
+    assert.strictEqual(state.lastModel, "opencode/mimo-v2.5-free")
+    assert.strictEqual(state.totalCost, 0.042)
+    assert.strictEqual(state.inputTokens, 254145)
+    assert.strictEqual(state.outputTokens, 38076)
+    assert.strictEqual(state.reasoningTokens, 6209)
+    assert.strictEqual(state.cacheRead, 11028480)
+    assert.strictEqual(state.totalTokens, 254145 + 38076 + 6209)
+    assert.strictEqual(state.contextUsed, 254145)
+  })
+
+  it("track chat.message event", () => {
+    tracker.processEvent({
+      type: "chat.message",
+      properties: {
+        sessionID: "sess-2",
+        agent: "build",
+        model: { id: "mimo-v2.5-free", providerID: "opencode" },
+        parts: [{ type: "text", text: "hello" }]
+      }
+    })
+
+    const state = tracker.getState()
+    assert.strictEqual(state.sessionId, "sess-2")
+    assert.strictEqual(state.agent, "build")
+    assert.strictEqual(state.messageCount, 1)
+    assert.strictEqual(state.lastModel, "opencode/mimo-v2.5-free")
+  })
 })
