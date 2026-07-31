@@ -54,7 +54,6 @@ function Convert-Livro {
     param([string]$LivroPath, [string]$SlugName)
     
     $mdFile = Join-Path $LivroPath "livro_final.md"
-    $pdfFile = Join-Path $LivroPath "livro_final.pdf"
     $templateFile = Join-Path (Get-Location) $TemplatePath
     
     if (-not (Test-Path $mdFile)) {
@@ -68,6 +67,11 @@ function Convert-Livro {
     # Extrair titulo
     $titleMatch = [regex]::Match($content, '^#\s+(.+)$', 'Multiline')
     $title = if ($titleMatch.Success) { $titleMatch.Groups[1].Value } else { $SlugName }
+    
+    # Gerar nome do PDF a partir do titulo (sanitizado e truncado)
+    $pdfName = $title -replace '[<>:"/\\|?*,]', '' -replace '\s+', '_' -replace ':', '_'
+    if ($pdfName.Length -gt 60) { $pdfName = $pdfName.Substring(0, 60) }
+    $pdfFile = Join-Path $LivroPath "$pdfName.pdf"
     
     # Escapar $ solitarios (nao-double) para evitar erros de TeX math
     $content = $content -replace '(?<!\\)\$(?!\$)', '\\$'
@@ -83,13 +87,13 @@ function Convert-Livro {
     try {
         $pandocArgs = @(
             "_temp_convert.md",
-            "-o", "livro_final.pdf",
+            "-o", "$pdfName.pdf",
             "--pdf-engine=typst",
             "--toc", "--toc-depth=3",
             "--number-sections",
             "--template=$templateFile",
             "-V", "title=$title",
-            "-V", "author=Fabrica Agentica de Livros",
+            "-V", "author=Heverton Eduardo Peres",
             "-V", "subtitle=",
             "--wrap=preserve",
             "--resource-path=$LivroPath",

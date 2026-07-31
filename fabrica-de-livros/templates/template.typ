@@ -35,8 +35,8 @@
   first-line-indent: 1.25cm,
 )
 
-// Definicao do horizontal rule (Pandoc gera #horizontalrule)
-#let horizontalrule() = {
+// Definicao do horizontal rule (Pandoc gera #horizontalrule como texto)
+#let horizontalrule = {
   v(1em)
   line(length: 100%, stroke: 0.5pt + gray)
   v(1em)
