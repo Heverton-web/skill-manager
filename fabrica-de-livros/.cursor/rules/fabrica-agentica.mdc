@@ -1,9 +1,14 @@
 ---
-description: Regras, squad e fluxo da Fábrica Agêntica de Livros — instruções de orquestrador para qualquer agente de codificação aberto neste diretório.
+description: Regras, squad e fluxo da Fábrica Agêntica de Publicações (Livro, TCC, Artigo Científico, E-book) — instruções de orquestrador para qualquer agente de codificação aberto neste diretório.
 alwaysApply: true
 ---
 
-# FÁBRICA AGÊNTICA DE LIVROS — Orquestrador Central (Diretor de Planta)
+# FÁBRICA AGÊNTICA DE PUBLICAÇÕES — Orquestrador Central (Diretor de Planta)
+
+> **V4 (multi-formato):** a fábrica que nasceu produzindo só livros técnicos (V3)
+> agora produz também TCC, Artigo Científico e E-book, a partir de uma única
+> Fase 0 interativa (`/esbocar`). Ver seção 1.5 para o mapa de módulos por tipo
+> de obra e `PLANO_V4_MULTI_FORMATO.md` para o planejamento original.
 
 > Este arquivo é a única fonte da verdade das regras do projeto e é compartilhado,
 > por hardlink (mesmo conteúdo físico, sem cópia), com os arquivos de instrução de
@@ -28,6 +33,29 @@ abaixo de forma determinística.
 - **REGRA 3 (Autonomia Total Agêntica):** após o operador definir o TEMA na mensagem/pergunta inicial, toda a esteira da fábrica (agentes, subagentes e MCPs) funcionará 100% autônoma, sem paradas ou interações no chat. O squad realiza auto-validações internas de qualidade antes de avançar cada etapa.
 - **REGRA 4 (Auto-Correção Interna):** desvios estruturais ou falhas de formatação detectados por um agente/skill/subagente devem ser corrigidos internamente pelo squad antes da compilação final.
 
+## 1.5 Módulos por Tipo de Obra (V4)
+
+A Fase 0 (`/esbocar`) decide o `tipo_obra` (`livro` ou `tcc`) e se `gerar_artigos`/
+`gerar_ebooks` derivam obras adicionais do mesmo tema. Cada tipo tem seu próprio
+spec, skills de redação e template Typst/EPUB — mas **um único** `CLAUDE.md`
+(ver seção 6: múltiplos `CLAUDE.md` quebrariam o hardlink multi-IDE).
+
+| Tipo | Spec | Comando | Redator | Compilador | Template |
+|---|---|---|---|---|---|
+| Livro | `SPEC.md` | `/criar-livro` | `redator-eita` (EITA-V2, `[N]`) | `compilador-abnt` | `templates/template.typ` |
+| TCC | `SPEC_TCC.md` | `/criar-tcc` | `redator-academico` (ACAD, autor-data) | `compilador-tcc` | `templates/template_tcc.typ` |
+| Artigo Científico | `SPEC_ARTIGO.md` | `/criar-artigo` | `redator-academico` (IMRaD, autor-data) | `compilador-artigo` | `templates/template_artigo.typ` |
+| E-book | `SPEC_EBOOK.md` | `/criar-ebook` | `redator-ebook` (reescrita de tom, sem ABNT) | `scripts/gerar-epub.py` | Pandoc→EPUB nativo |
+
+- **Artigo e E-book nunca pesquisam do zero** — reaproveitam o dossiê/capítulos
+  já produzidos para o livro-mãe (`scripts/fatiar-obra.py` particiona o
+  `sumario_macro.json` em recortes; RAG do dossiê-mãe via
+  `scripts/indexar-dossie.py <slug-livro-mae> --buscar ...`).
+- **Fluxo full:** `/produzir-obra-completa <tema>` dispara `/esbocar` e encadeia
+  automaticamente tudo o que o esboço pediu.
+- `docs/normas-abnt-referencia.md` resume as normas ABNT (NBR 14724/6022/12820/
+  6029/6023/10520/6024/6027/6028) e onde cada uma se aplica.
+
 ## 2. O Squad (Skills)
 
 Implementadas como Claude Code Skills nativas em `.claude/skills/`:
@@ -38,15 +66,43 @@ Implementadas como Claude Code Skills nativas em `.claude/skills/`:
 | `pesquisador` | 1 (Nó 0A) | Varredura web/técnica via `WebSearch`/`WebFetch` |
 | `arquiteto` | 1 (Nó 0B) | Desenha o sumário macro (Partes/Capítulos) e marcos EITA |
 | `estrategista` | 2 (Nó 1-2) | Decompõe o capítulo em 3 pilares lógicos de ensino |
-| `redator-eita` | 2 (Nó 2/4) | Expande o texto aplicando o framework EITA |
-| `compilador-abnt` | 3 (Nós 5-9) | Merge final, pré/pós-textuais, referências, normas ABNT |
+| `redator-eita` | 2 (Nó 2/4) | Expande o texto aplicando o framework EITA (livro comercial) |
+| `redator-academico` | 2 (V4) | Expande seções de TCC/Artigo com o framework ACAD, tom impessoal e citação autor-data |
+| `redator-ebook` | 2 (V4) | Readapta tom de capítulos já escritos do livro-mãe para e-book comercial leve |
+| `revisor-tecnico` | 2.5 (Nó 4.5) | Peer review autônomo da obra: sobreposição entre capítulos, terminologia, truncamento, CI de código e diagramas |
+| `compilador-abnt` | 3 (Nós 5-10) | Merge final, pré/pós-textuais, referências, normas ABNT, capa gráfica, CIP e PDF (livro) |
+| `compilador-tcc` | 3 (V4) | Merge de seções de TCC, resumo/abstract, folha de aprovação, PDF via `template_tcc.typ` |
+| `compilador-artigo` | 3 (V4) | Merge das 4 seções IMRaD, resumo/abstract, PDF via `template_artigo.typ` |
 
 ### Subagentes de Execução Paralela
 Implementados em `.claude/agents/`:
 | Subagente | Função |
 |---|---|
 | `subagente-pesquisador` | Varredura e inteligência técnica prévia |
-| `subagente-redator-capitulo` | Manufatura autônoma paralela por capítulo (Estratégia + Redação EITA + Auto-Validação) |
+| `subagente-redator-capitulo` | Manufatura autônoma paralela por capítulo de livro (Estratégia + Redação EITA + Diagrama Mermaid + CI de Código + Auto-Validação) |
+| `subagente-redator-secao-tcc` | Manufatura autônoma paralela por seção de TCC (Estratégia ACAD + Redação Acadêmica + CI de citação autor-data) |
+| `subagente-redator-artigo` | Manufatura autônoma de 1 Artigo Científico completo via RAG do dossiê-mãe (nunca pesquisa) |
+| `subagente-adaptador-ebook` | Adaptação de tom + geração de EPUB de 1 e-book derivado (nunca pesquisa nem gera conteúdo novo) |
+| `subagente-revisor-tecnico` | Correção paralela, em lotes, dos capítulos/seções reprovados na auditoria da Fase 2.5 |
+
+### Motor Determinístico da Esteira (scripts)
+
+Toda avaliação objetiva da fábrica é feita por script, não por impressão do agente.
+Os agentes leem o JSON produzido por eles e agem sobre a evidência.
+
+| Script | Upgrade | Função |
+|---|---|---|
+| `scripts/indexar-dossie.py` | 6 — RAG local | Indexa o dossiê em blocos (TF-IDF puro) e responde busca por relevância, evitando carregar o dossiê inteiro no contexto |
+| `scripts/pool-capitulos.py` | 4 — Concorrência | Planeja o despacho dos capítulos (ou artigos/ebooks, via `--manifesto`) em lotes, rastreia tentativas e calcula backoff exponencial |
+| `scripts/renderizar-diagramas.py` | 2 — Diagramas | Renderiza blocos ```mermaid em PNG (cache por hash) e valida a sintaxe dos diagramas |
+| `scripts/validar-codigo.py` | 3 — CI de código | Valida a sintaxe de cada bloco de código (python, js, ts, bash, powershell, json, yaml, toml, xml) sem executar nada |
+| `scripts/auditar-obra.py` | 1 — Peer review | Audita os requisitos automatizáveis por tipo de obra (`--tipo livro\|tcc\|artigo\|ebook`), detecta sobreposição entre capítulos, grafia inconsistente e truncamento |
+| `scripts/metadados_livro.py` | 5 — Capa/CIP | Deriva paleta, ficha catalográfica (Cutter, ISBN, CDD, assuntos) e sinopse da contracapa (livro); resumo/abstract (TCC/artigo) |
+| `scripts/parametros_obra.py` | V4 | Lê `esboco/config_obra.json`, tabela de tamanhos P/M/G, regex de citação por tipo (numérica vs. autor-data) |
+| `scripts/validar-abnt-tcc.py` | V4 | Valida elementos pré-textuais do TCC no documento compilado (resumo, abstract, numeração sem saltos) |
+| `scripts/fatiar-obra.py` | V4 | Particiona o `sumario_macro.json` do livro-mãe em N artigos ou N ebooks |
+| `scripts/gerar-epub.py` | V4 | Converte um ebook derivado para EPUB reflowable via Pandoc (com ou sem capa) |
+| `scripts/pdf_typst.py` | V3 | Helper Pandoc→`.typ`→Typst reaproveitado pelos compiladores mega-livro |
 
 ### Economia Severa de Tokens & Qualidade
 | Skill | Trigger / Função |
@@ -91,20 +147,37 @@ Registrados em `.mcp.json`:
 
 ## 4. Templates
 
-Ver `templates/payload_estado.json` (payload de estado inter-agentes) e
-`templates/template_eita.md` (molde pedagógico E-I-T-A).
+- `templates/payload_estado.json` — payload de estado inter-agentes.
+- `templates/template_eita.md` — molde pedagógico E-I-T-A (7 seções, diagrama Mermaid
+  obrigatório na seção Ilustra, código validável na seção Técnica).
+- `templates/template.typ` — template Typst ABNT: capa gráfica com paleta por obra,
+  folha de rosto, ficha catalográfica (CIP), sumário, figuras com legenda e contracapa.
+- `templates/template_tcc.typ` — template Typst NBR 14724: capa sóbria, folha de
+  rosto, folha de aprovação, resumo (PT) + abstract (EN), sumário. Sem `--number-sections`.
+- `templates/template_artigo.typ` — template Typst NBR 6022 compacto: sem capa/sumário,
+  título+autor+resumo+abstract no topo, seções em fluxo contínuo (sem pagebreak).
 
-## 5. Fluxo Operacional (100% Autônomo)
+## 5. Fluxo Operacional (100% Autônomo após a Fase 0)
 
-Ponto de entrada padrão: comando `/criar-livro <tema>`
-(`.claude/commands/criar-livro.md`), especificado em detalhe em `SPEC.md`. O fluxo
-abaixo descreve o mesmo processo em nível conceitual.
+Ponto de entrada recomendado (V4): `/esbocar <tema>` (`.claude/commands/esbocar.md`)
+— única rodada de perguntas, depois autonomia total (REGRA 3). A partir do esboço,
+`/produzir-obra-completa <slug>` dispara tudo encadeado/paralelo, ou os comandos
+individuais `/criar-livro`, `/criar-tcc`, `/criar-artigo`, `/criar-ebook` rodam cada
+tipo separadamente. O fluxo abaixo descreve o caminho de **livro** em nível
+conceitual (`SPEC.md`); TCC/Artigo/E-book têm o mesmo espírito com as diferenças
+da seção 1.5 (ver `SPEC_TCC.md`/`SPEC_ARTIGO.md`/`SPEC_EBOOK.md`).
 
 1. **Input**: operador informa o tema central do livro (única interação necessária).
-2. **Fase 1**: `pesquisador`/`subagente-pesquisador` varre fontes → `arquiteto` gera a planta baixa do sumário macro.
-3. **Fase 2** (Manufatura Tática Autônoma & Paralela): o Orquestrador instancia múltiplos `subagente-redator-capitulo` para processar os capítulos em paralelo (estrategista + redator-eita + auto-validação de qualidade interna).
-4. **Fase 3**: `compilador-abnt` faz o merge final, inclui prefácio, conclusão, sumário dinâmico, referências e normas ABNT em `output/<livro>/livro_final.md`.
-5. **Fase 3, passo final — Exportação em PDF (Nó 10)**: executa Pandoc+Typst via `compilar-para-pdf.py <slug>` ou `scripts/converter-md-pdf.ps1 -Slug <slug>` para produzir `output/<livro>/livro_final.pdf` com formatação ABNT profissional (margens ABNT, Times New Roman 12pt, sumário automático, paginação). CloudConvert fica como fallback opcional se configurado.
+2. **Fase 1**: `pesquisador`/`subagente-pesquisador` varre fontes → `indexar-dossie.py --indexar` monta o índice RAG → `arquiteto` gera a planta baixa do sumário macro.
+3. **Fase 2** (Manufatura Tática Autônoma & Paralela **em lotes**): o Orquestrador consulta `pool-capitulos.py --plano --lote 4` e instancia `subagente-redator-capitulo` lote a lote (estrategista + redator-eita + diagrama Mermaid + CI de código + auto-validação). Falha de subagente é retentada com backoff exponencial (máx. 3 tentativas por capítulo).
+4. **Fase 2.5** (Peer Review): `auditar-obra.py` + `validar-codigo.py` + validação de diagramas produzem evidência; a skill `revisor-tecnico` (e, em lotes, `subagente-revisor-tecnico`) corrige sobreposição entre capítulos, terminologia inconsistente, truncamento, código quebrado e diagramas inválidos. Parecer em `output/<livro>/revisao/parecer_revisao.md`.
+5. **Fase 3**: `compilador-abnt` faz o merge final, inclui prefácio, conclusão, sumário dinâmico, referências e normas ABNT em `output/<livro>/livro_final.md`.
+6. **Fase 3, passo final — Exportação em PDF (Nó 10)**: `compilar-para-pdf.py <slug> --paginas-exatas` (ou `scripts/converter-md-pdf.ps1 -Slug <slug>`) renderiza os diagramas Mermaid em PNG, deriva capa gráfica e ficha catalográfica, e compila **Pandoc → `.typ` → Typst** para produzir `output/<livro>/livro_final.pdf` (margens ABNT, Times New Roman 12pt, sumário automático, paginação). CloudConvert fica como fallback opcional se configurado.
+
+> **Nota técnica (V3):** não use `pandoc --pdf-engine=typst` em livros com figuras — o Pandoc
+> reescreve os caminhos das imagens em forma absoluta e o Typst os rejeita no Windows
+> (`path contains invalid component "C:"`). O caminho oficial é gerar o `.typ` na pasta do
+> livro e chamar `typst compile --root <pasta do livro>`.
 
 Todo estado de execução (fase atual, coordenadas de parte/capítulo, payload) deve ser
 persistido via o MCP `db_state` a cada transição de nó.
@@ -153,6 +226,13 @@ Derivado de [drona23/claude-token-efficient](https://github.com/drona23/claude-t
 6. **Leitura seletiva**: leia arquivos existentes antes de escrever. Não releia a menos que tenham mudado. Pule arquivos >100KB a menos que estritamente necessário.
 7. **Saída sem fluff**: sem emojis ou travessões desnecessários. Minucioso no raciocínio, conciso na saída.
 8. **Precisão técnica**: nunca adivinhe APIs, versões, flags, commit SHAs ou nomes de pacotes. Verifique lendo código ou documentação antes de afirmar.
+9. **RAG antes de dossiê inteiro**: nenhum agente carrega `dossie_*.md` completo no contexto.
+   Consulte por bloco: `python scripts/indexar-dossie.py <slug> --buscar "<termos>" --topo 4`.
+10. **Lotes em vez de fan-out total**: a Fase 2 despacha no máximo 4 subagentes por vez
+    (`scripts/pool-capitulos.py`), com retentativa e backoff exponencial — protege contra
+    rate-limit (TPM/RPM) e contra estouro de contexto do Orquestrador.
+11. **Evidência determinística**: veredito de qualidade vem de script (`auditar-obra.py`,
+    `validar-codigo.py`), não de leitura integral dos capítulos pelo agente.
 
 ## RTK SCRATCHPAD
 

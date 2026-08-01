@@ -34,13 +34,40 @@ e explicar".
 
 ### 3. ILUSTRA
 **Objetivo:** Analogia física, metáfora industrial ou exemplo concreto que ancore
-o conceito na intuição do leitor.
+o conceito na intuição do leitor — sempre acompanhado de **um diagrama visual**.
 
 **Regras:**
 - Deve ser concreta e verificável, não decorativa.
 - A analogia deve ser tão clara que o leitor pense "agora entendi".
 - Use exemplos do cotidiano do desenvolvedor (mercado, código, equipes).
 - Se a analogia for de outra área (física, biologia, etc.), explique a conexão.
+- **OBRIGATÓRIO (R11): no mínimo 1 bloco ```mermaid válido** nesta seção,
+  representando o conceito do capítulo (fluxo, arquitetura, sequência, estado ou
+  hierarquia). Diagrama em ASCII art **não** satisfaz o requisito.
+
+**Regras do diagrama Mermaid:**
+- Tipos aceitos: `flowchart`, `sequenceDiagram`, `stateDiagram-v2`, `classDiagram`,
+  `erDiagram`, `mindmap`, `gantt`, `journey`.
+- Primeira linha do bloco deve declarar a legenda:
+  `%% legenda: <descrição objetiva do diagrama>`
+  (o pipeline usa essa linha como legenda da figura no PDF; não escreva "Figura N"
+  na legenda — a numeração é automática).
+- Rótulos em PT-BR, sem acento em identificadores de nó (só no texto entre colchetes).
+- Máximo de 12 nós: diagrama denso demais não ensina.
+- O diagrama é renderizado em PNG pelo pipeline
+  (`scripts/renderizar-diagramas.py`); se a sintaxe estiver inválida, ele aparece
+  como bloco de código no PDF e a auditoria reprova o capítulo.
+
+```markdown
+```mermaid
+%% legenda: Ciclo de vida de uma requisição no coletor de telemetria
+flowchart LR
+  A[Servico instrumentado] --> B[Coletor]
+  B --> C{Amostragem}
+  C -->|mantem| D[(Backend)]
+  C -->|descarta| E[Descarte]
+```
+```
 
 **Transformação implícita:** o leitor passa de "parece abstrato" para "faz total
 sentido".
@@ -55,6 +82,17 @@ diagrama, passo a passo de implementação. É o núcleo de valor do capítulo.
 - Passos numerados ou sequenciais.
 - Mínimo de 60% do conteúdo do capítulo deve estar nesta seção.
 - Citações `[N]` obrigatórias para técnicas, benchmarks e estatísticas.
+- **OBRIGATÓRIO (R12): no mínimo 1 bloco de código** nesta seção.
+- **Todo bloco de código DEVE declarar a linguagem** na cerca
+  (```python, ```javascript, ```typescript, ```bash, ```json, ```yaml, ```sql...).
+  Bloco sem linguagem não é validável e reprova na auditoria.
+- **CI de código (R12):** o código passa por validação de sintaxe automática
+  (`python scripts/validar-codigo.py <slug> --capitulo <n>`). Escreva código que
+  compila de verdade — sem `...` no meio da lógica, sem chaves desbalanceadas,
+  sem imports fantasma. Trechos deliberadamente parciais devem ser fechados como
+  função/classe completa, com corpo mínimo válido (`pass`, `return null`).
+- Placeholders de credencial são permitidos como string literal
+  (`API_KEY = "<seu-token>"`), nunca como sintaxe solta.
 
 **Transformação implícita:** o leitor passa de "não sei fazer" para "consigo
 implementar".
@@ -106,10 +144,10 @@ houver) e desafio final para o leitor.
 ...
 
 ## 3. Ilustra
-...
+(Analogia + 1 diagrama ```mermaid obrigatório com `%% legenda:`)
 
 ## 4. Técnica
-...
+(Código com linguagem declarada, validado por CI de sintaxe)
 
 ## 5. Aplica
 ...

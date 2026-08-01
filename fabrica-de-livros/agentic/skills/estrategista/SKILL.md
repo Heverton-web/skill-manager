@@ -35,8 +35,13 @@ ensinar, na ordem em que ensinar, e da profundidade de cada pilar.
 2. Refine os 3 pilares lógicos previstos em pilares definitivos, cada um com:
    - Nome do pilar (conceito nuclear a ensinar).
    - Escopo (o que entra e o que fica de fora, explicitamente).
-   - Ponto de ancoragem cognitiva esperado (onde o `Skill_Diretor_Arte` deverá atuar
-     depois, na Fase 3).
+   - Ponto de ancoragem cognitiva esperado (`ancora_visual`): especifique aqui o
+     **diagrama Mermaid** que o `redator-eita` deverá desenhar na seção Ilustra —
+     tipo (`flowchart`, `sequenceDiagram`, `stateDiagram-v2`, `erDiagram`...) e o que
+     o diagrama precisa mostrar. Exemplo: `"flowchart LR do caminho de uma requisição
+     do cliente até o cache semântico, com o ponto de decisão de invalidação"`.
+   - `entrega_tecnica`: qual artefato de código a seção Técnica deve trazer para este
+     pilar (linguagem + o que o código faz). É o insumo do CI de código (R12).
 3. Monte o draft estratégico do capítulo seguindo o payload de estado
    (`templates/payload_estado.json`), preenchendo `payload_estrategico.pilares`:
 
@@ -50,13 +55,15 @@ ensinar, na ordem em que ensinar, e da profundidade de cada pilar.
       {
         "nome": "string",
         "escopo": "string",
-        "ancora_visual": "string",
+        "ancora_visual": "string (tipo de diagrama Mermaid + o que ele mostra)",
+        "entrega_tecnica": "string (linguagem + artefato de código a produzir)",
         "evolucao_leitor": "string (de X para Y — o que o leitor ganha ao dominar este pilar)"
       },
       {
         "nome": "string",
         "escopo": "string",
-        "ancora_visual": "string",
+        "ancora_visual": "string (tipo de diagrama Mermaid + o que ele mostra)",
+        "entrega_tecnica": "string (linguagem + artefato de código a produzir)",
         "evolucao_leitor": "string"
       },
       {

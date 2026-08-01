@@ -25,6 +25,9 @@ import subprocess
 from pathlib import Path
 from datetime import date
 
+sys.path.insert(0, str(Path(__file__).parent / "scripts"))
+from pdf_typst import executar as _executar_typst
+
 # Caminhos dos executaveis (duplicados de compilar-para-pdf.py intencionalmente
 # pois o nome com hifen impede importacao direta via Python)
 PANDOC = r"C:\Users\trcnologia\AppData\Local\Microsoft\WinGet\Packages\JohnMacFarlane.Pandoc_Microsoft.Winget.Source_8wekyb3d8bbwe\pandoc-3.10\pandoc.exe"
@@ -350,10 +353,8 @@ conceitos, ferramentas, técnicas avançadas e padrões de orquestração.
         ]
 
         print(f"  Executando Pandoc+Typst (timeout: 600s)...")
-        resultado = subprocess.run(
-            comando,
-            capture_output=True, text=True, timeout=600
-        )
+        resultado = _executar_typst(comando, pdf_path, dir_compilado, TYPST,
+                                    timeout=600)
 
         if pdf_path.exists() and pdf_path.stat().st_size > 0:
             tamanho_kb = pdf_path.stat().st_size / 1024

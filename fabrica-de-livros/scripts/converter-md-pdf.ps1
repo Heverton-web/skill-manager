@@ -5,8 +5,13 @@
 param(
     [string]$Slug,
     [string]$OutputDir = "fabrica-de-livros\output",
-    [string]$TemplatePath = "fabrica-de-livros\templates\template.typ"
+    [string]$TemplatePath = "fabrica-de-livros\templates\template.typ",
+    [switch]$SemDiagramas,   # pula a renderizacao dos blocos ```mermaid
+    [switch]$SemCapa         # desativa capa/contracapa graficas
 )
+
+# Raiz do projeto (pasta acima de scripts\)
+$ProjetoRaiz = Split-Path $PSScriptRoot -Parent
 
 # Auto-detectar executaveis
 function Find-Executable {
@@ -37,6 +42,38 @@ function Test-Dependencies {
     Write-Host "OK Dependencias verificadas" -ForegroundColor Green
 }
 
+# Upgrade 2 - Renderiza blocos ```mermaid em PNG. Retorna o MD a usar.
+function Invoke-Diagramas {
+    param([string]$LivroPath, [string]$SlugName, [string]$MdFile)
+    if ($SemDiagramas) { return $MdFile }
+    $python = Find-Executable -Name "python"
+    $renderizador = Join-Path $ProjetoRaiz "scripts\renderizar-diagramas.py"
+    if ((-not $python) -or (-not (Test-Path $renderizador))) { return $MdFile }
+    $conteudo = Get-Content $MdFile -Raw -Encoding UTF8
+    if ($conteudo -notmatch '(?im)^\s*```\s*mermaid') { return $MdFile }
+
+    $saida = Join-Path $LivroPath "_livro_render.md"
+    & $python $renderizador $SlugName "--md" $MdFile "--saida" $saida | Out-Null
+    if (Test-Path $saida) { return $saida }
+    return $MdFile
+}
+
+# Upgrade 5 - Variaveis de capa grafica / ficha catalografica (CIP)
+function Get-VariaveisVisuais {
+    param([string]$SlugName)
+    $extras = @()
+    $python = Find-Executable -Name "python"
+    $meta = Join-Path $ProjetoRaiz "scripts\metadados_livro.py"
+    if ($python -and (Test-Path $meta)) {
+        $linhas = & $python $meta $SlugName "--pandoc-args" 2>$null
+        if ($LASTEXITCODE -eq 0 -and $linhas) {
+            $extras += @($linhas | Where-Object { $_ -and $_.Trim() -ne "" })
+        }
+    }
+    if ($SemCapa) { $extras += @("-V", "sem_capa_grafica=1") }
+    return $extras
+}
+
 # Contar paginas do PDF (estimativa via regex)
 function Get-PdfPageCount {
     param([string]$PdfPath)
@@ -52,7 +89,11 @@ function Get-PdfPageCount {
 
 function Convert-Livro {
     param([string]$LivroPath, [string]$SlugName)
-    
+
+    # Absolutiza o caminho: dentro de Push-Location um caminho relativo deixaria de
+    # resolver (Test-Path/Join-Path passariam a olhar para a pasta do livro).
+    $LivroPath = (Resolve-Path $LivroPath).Path
+
     $mdFile = Join-Path $LivroPath "livro_final.md"
     $templateFile = Join-Path (Get-Location) $TemplatePath
     
@@ -61,12 +102,25 @@ function Convert-Livro {
         return $false
     }
     
+    # Renderizar diagramas Mermaid (Upgrade 2) e usar o MD resultante
+    $mdUsado = Invoke-Diagramas -LivroPath $LivroPath -SlugName $SlugName -MdFile $mdFile
+
     # Ler conteudo e escapar dollar signs que nao sao math
-    $content = Get-Content $mdFile -Raw -Encoding UTF8
-    
-    # Extrair titulo
-    $titleMatch = [regex]::Match($content, '^#\s+(.+)$', 'Multiline')
-    $title = if ($titleMatch.Success) { $titleMatch.Groups[1].Value } else { $SlugName }
+    $content = Get-Content $mdUsado -Raw -Encoding UTF8
+
+    # Extrair titulo: prioriza titulo_obra do sumario_macro.json (o primeiro "# " do
+    # livro_final.md costuma ser "Prefacio", nao o titulo da obra)
+    $title = $null
+    $python = Find-Executable -Name "python"
+    $meta = Join-Path $ProjetoRaiz "scripts\metadados_livro.py"
+    if ($python -and (Test-Path $meta)) {
+        $t = & $python $meta $SlugName "--titulo" 2>$null
+        if ($LASTEXITCODE -eq 0 -and $t) { $title = ($t | Select-Object -First 1).Trim() }
+    }
+    if (-not $title) {
+        $titleMatch = [regex]::Match($content, '^#\s+(.+)$', 'Multiline')
+        $title = if ($titleMatch.Success) { $titleMatch.Groups[1].Value } else { $SlugName }
+    }
     
     # Gerar nome do PDF a partir do titulo (sanitizado e truncado)
     $pdfName = $title -replace '[<>:"/\\|?*,]', '' -replace '\s+', '_' -replace ':', '_'
@@ -82,13 +136,15 @@ function Convert-Livro {
     
     Write-Host "  $SlugName..." -ForegroundColor Cyan -NoNewline
     
-    # Rodar do diretorio do livro + resource-path
+    # Rodar do diretorio do livro + resource-path.
+    # Pipeline: Pandoc -> .typ (preserva caminhos relativos das figuras) -> typst compile.
+    # NAO usar --pdf-engine=typst: o Pandoc reescreve os caminhos das imagens em forma
+    # absoluta e o Typst recusa ("path contains invalid component C:").
     Push-Location $LivroPath
     try {
         $pandocArgs = @(
             "_temp_convert.md",
-            "-o", "$pdfName.pdf",
-            "--pdf-engine=typst",
+            "-o", "_livro_compilado.typ",
             "--toc", "--toc-depth=3",
             "--number-sections",
             "--template=$templateFile",
@@ -99,9 +155,20 @@ function Convert-Livro {
             "--resource-path=$LivroPath",
             "--from=markdown-citations"
         )
-        
+        $pandocArgs += Get-VariaveisVisuais -SlugName $SlugName
+
+
         # Capturar stderr separado
         $stderr = & $PandocPath @pandocArgs 2>&1 | ForEach-Object { $_.ToString() }
+
+        $typFile = Join-Path $LivroPath "_livro_compilado.typ"
+        if (Test-Path $typFile) {
+            $stderr += & $TypstPath compile --root $LivroPath "_livro_compilado.typ" "$pdfName.pdf" 2>&1 |
+                ForEach-Object { $_.ToString() }
+            Remove-Item $typFile -Force -ErrorAction SilentlyContinue
+        } else {
+            $stderr += "pandoc nao gerou _livro_compilado.typ"
+        }
         Pop-Location
         
         # Limpar arquivo temporario
@@ -121,9 +188,9 @@ function Convert-Livro {
             return $true
         } else {
             Write-Host " FALHA" -ForegroundColor Red
-            if ($stderr) { 
-                $errLines = $stderr | Select-Object -Last 3
-                if ($errLines) { Write-Host "    $($errLines -join '; ')" -ForegroundColor DarkGray }
+            if ($stderr) {
+                $errLines = $stderr | Where-Object { $_ -and $_.Trim() -ne "" } | Select-Object -Last 8
+                foreach ($l in $errLines) { Write-Host "    $l" -ForegroundColor DarkGray }
             }
             return $false
         }

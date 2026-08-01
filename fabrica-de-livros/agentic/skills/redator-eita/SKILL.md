@@ -31,10 +31,11 @@ detalhes completos.
 (Teoria fundamental, definições, causa raiz. Citações [N] obrigatórias.)
 
 ## 3. Ilustra
-(Analogia ou metáfora que ancora o conceito. Concreta e verificável.)
+(Analogia ou metáfora que ancora o conceito + 1 diagrama ```mermaid OBRIGATÓRIO.)
 
 ## 4. Técnica
-(Código, arquitetura, passo a passo. Mínimo 60% do capítulo. Citações [N] obrigatórias.)
+(Código com linguagem declarada na cerca, arquitetura, passo a passo. Mínimo 60% do
+capítulo. Citações [N] obrigatórias.)
 
 ## 5. Aplica
 (Cenário corporativo real, métricas, armadilhas. Conexão com o mercado.)
@@ -60,6 +61,50 @@ amador a profissional — mas nunca ler essa frase.
   mas a "Ilustra" e "Aplica" devem ser acessíveis para um iniciante.
 - Nunca seja explícito sobre a transformação.
 
+## Diagrama Mermaid na seção Ilustra (R11)
+
+A seção 3 DEVE conter no mínimo um bloco ```mermaid válido, com a legenda declarada
+na primeira linha do bloco:
+
+```mermaid
+%% legenda: Fluxo de decisão do roteador de modelos
+flowchart TD
+  A[Requisicao] --> B{Custo aceitavel?}
+  B -->|sim| C[Modelo denso]
+  B -->|nao| D[Modelo leve]
+```
+
+Regras:
+- Tipos aceitos: `flowchart`, `sequenceDiagram`, `stateDiagram-v2`, `classDiagram`,
+  `erDiagram`, `mindmap`, `gantt`, `journey`.
+- Identificadores de nó sem acento; texto dos rótulos em PT-BR pode ter acento.
+- Máximo de 12 nós.
+- Não escreva "Figura N" na legenda: a numeração é automática no PDF.
+- O pipeline (`scripts/renderizar-diagramas.py`) converte o bloco em PNG de alta
+  resolução na compilação. Diagrama com sintaxe inválida reprova o capítulo na
+  auditoria da Fase 2.5.
+
+## Código validável na seção Técnica (R12)
+
+- Todo bloco de código DECLARA a linguagem na cerca (```python, ```javascript,
+  ```bash, ```json, ```yaml, ```typescript, ```sql...).
+- O código passa por CI de sintaxe:
+  `python scripts/validar-codigo.py <slug> --capitulo <n>`.
+- Escreva código sintaticamente completo: sem `...` no meio da lógica, sem chaves
+  desbalanceadas. Recortes parciais devem fechar a função/classe com corpo mínimo.
+- Credenciais somente como string literal (`TOKEN = "<seu-token>"`).
+
+## Consulta ao dossiê por RAG (economia de contexto)
+
+Não carregue o dossiê inteiro. Busque apenas os blocos relevantes ao capítulo:
+
+```bash
+python scripts/indexar-dossie.py <slug> --buscar "<3 a 6 termos do capítulo>" --topo 4
+```
+
+Cada bloco retornado traz a linha `FONTES:` com as URLs — use essas URLs (e somente
+essas) para montar as referências ABNT da seção 7.
+
 ## Citações inline (Nó 7 — Rastreabilidade)
 
 O redator DEVE incluir citações numeradas `[N]` no corpo do texto, vinculando
@@ -74,8 +119,17 @@ afirmações técnicas a fontes do dossiê de pesquisa.
 
 ## Procedimento
 1. Carregue `output/<livro>/capitulos/cap_<capitulo>_draft.json`.
-2. Para cada pilar em `payload_estrategico.pilares`, escreva uma seção que percorra
-   as 7 seções do template EITA-V2.
-3. Grave o capítulo em `output/<livro>/capitulos/cap_<capitulo>.md`.
-4. Atualize o estado do payload para `"estado_execucao": "concluido"` e grave em
+2. Consulte o dossiê por RAG com os termos dos pilares (comando acima) e colete as
+   fontes que sustentarão as citações `[N]`.
+3. Para cada pilar em `payload_estrategico.pilares`, escreva uma seção que percorra
+   as 7 seções do template EITA-V2 — incluindo o diagrama Mermaid (seção 3) e o
+   código com linguagem declarada (seção 4).
+4. Grave o capítulo em `output/<livro>/capitulos/cap_<capitulo>.md`.
+5. Rode o CI de código e a validação de diagramas do seu capítulo:
+   ```bash
+   python scripts/validar-codigo.py <slug> --capitulo <n>
+   python scripts/renderizar-diagramas.py <slug> --capitulos --validar
+   ```
+   Corrija tudo que falhar (REGRA 4) antes de encerrar.
+6. Atualize o estado do payload para `"estado_execucao": "concluido"` e grave em
    `output/<livro>/capitulos/cap_<capitulo>_estado.json`.

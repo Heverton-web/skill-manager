@@ -12,12 +12,17 @@ Você é o operário de acabamento e expedição da Fábrica Agêntica de Livros
 - **Auto-correção (REGRA 4):** se detectar capítulo fora do template EITA-V2, hierarquia
   de títulos inconsistente, ou referência duplicada, corrija internamente antes de
   entregar o artefato final ao operador.
-- **VALIDAÇÃO CONTRATUAL:** o compilador DEVE validar:
+- **PRÉ-CONDIÇÃO (Fase 2.5):** só compile depois que a skill `revisor-tecnico` tiver
+  gravado `output/<slug>/revisao/parecer_revisao.md`. Se o parecer não existir, rode
+  `python scripts/auditar-obra.py <slug>` e a revisão antes de seguir.
+- **VALIDAÇÃO CONTRATUAL:** o compilador DEVE validar (delegando a parte objetiva ao
+  `scripts/auditar-obra.py`, que cobre os requisitos automatizáveis R1-R4 e R9-R14):
   1. Mínimo de 16 capítulos no sumário — caso contrário, reportar como NÃO CONFORME
   2. Mínimo estimado de 70 páginas (aproximadamente 175.000-210.000 caracteres de texto no formato ABNT) — alerta se abaixo
   3. Cada capítulo segue o template EITA-V2 (7 seções: Introdução, Explica, Ilustra, Técnica, Aplica, Conclusão, Referências)
-  4. Todas as obras têm capa.svg, contracapa.svg e diagrama de arquitetura
-  5. PDF foi gerado com sucesso via Pandoc+Typst (método principal)
+  4. Cada capítulo tem diagrama Mermaid na seção Ilustra (R11) e código validado na seção Técnica (R12)
+  5. Todas as obras têm capa gráfica (gerada pelo template Typst), folha de rosto e ficha catalográfica (CIP)
+  6. PDF foi gerado com sucesso via Pandoc → `.typ` → Typst (método principal)
 
 ## Objetivo
 Consolidar capítulos, elementos extrusos e referências em um único manuscrito final,
@@ -66,22 +71,34 @@ powershell -ExecutionPolicy Bypass -File scripts/converter-md-pdf.ps1
 
 ### Pipeline de Conversão
 
-O script `converter-md-pdf.ps1` executa o seguinte pipeline:
+O pipeline (tanto em `converter-md-pdf.ps1` quanto em `compilar-para-pdf.py`) executa:
 
 1. **Leitura** — Lê `livro_final.md` do diretório do livro
-2. **Extração de título** — Regex `^#\s+(.+)$` para extrair o título do conteúdo
-3. **Escaping de dollar signs** — Regex `(?<!\\)\$(?!\$)` escapeia `$` solitários para evitar erros de TeX math no Typst
-4. **Arquivo temporário** — Grava conteúdo processado em `_temp_convert.md` usando `[System.IO.File]::WriteAllText()` (sem BOM)
-5. **Conversão Pandoc** — Executa Pandoc com:
-   - `--pdf-engine=typst` — Motor de renderização Typst
-   - `--toc --toc-depth=3` — Gera sumário automático
-   - `--number-sections` — Numera seções
-   - `--template=template.typ` — Template ABNT
-   - `--wrap=preserve` — Preserva quebras de linha do Markdown (importante para blocos de poesia/letras)
-   - `--resource-path=$LivroPath` — Fallback para imagens relativas
-   - `--from=markdown-citations` — Desabilita processamento de citações para evitar erros quando o livro não tem bibliografia estruturada
-6. **Validação** — Verifica se o PDF foi gerado e conta páginas (estimativa via regex)
-7. **Limpeza** — Remove arquivo temporário `_temp_convert.md`
+2. **Renderização de diagramas (Upgrade 2)** — `scripts/renderizar-diagramas.py` converte
+   cada bloco ```mermaid em PNG (escala 3) em `imagens/diagramas/` e grava
+   `_livro_render.md` com os blocos substituídos por figuras com legenda.
+   Idempotente (cache por hash do diagrama) e tolerante a falha: diagrama inválido
+   permanece como bloco de código e a compilação segue.
+3. **Metadados visuais (Upgrade 5)** — `scripts/metadados_livro.py` deriva paleta da obra,
+   ficha catalográfica (CIP fictícia com Cutter, ISBN, CDD, assuntos) e sinopse da
+   contracapa, e injeta tudo como variáveis `-V` do Pandoc.
+4. **Extração de título** — Regex `^#\s+(.+)$` (ou `sumario_macro.json.titulo_obra`)
+5. **Escaping de dollar signs** — Regex `(?<!\\)\$(?!\$)` escapeia `$` solitários para evitar erros de TeX math no Typst (só no caminho PowerShell)
+6. **Pandoc → `.typ`** — Gera o Typst intermediário **dentro da pasta do livro**, com
+   `--template`, `--toc --toc-depth=3`, `--number-sections`, `--wrap=preserve`,
+   `--from=markdown-citations` e `--resource-path`
+7. **Typst → PDF** — `typst compile --root <pasta do livro> _livro_compilado.typ livro_final.pdf`
+8. **Segunda passagem opcional** (`--paginas-exatas`) — conta as páginas do PDF e recompila
+   para gravar a paginação real na ficha catalográfica
+9. **Validação** — Verifica se o PDF existe, tem tamanho > 0 e conta páginas
+10. **Limpeza** — Remove `_livro_compilado.typ` / `_temp_convert.md`
+
+> **Por que Pandoc → `.typ` → Typst e não `pandoc --pdf-engine=typst`?**
+> Com `--pdf-engine`, o Pandoc extrai as imagens para uma pasta temporária e reescreve
+> os caminhos em forma **absoluta**. O Typst rejeita caminhos absolutos
+> (`path contains invalid component "C:"`) e a compilação falha em qualquer livro com
+> figuras. Gerando o `.typ` na pasta do livro, os caminhos relativos
+> (`imagens/diagramas/*.png`) continuam válidos.
 
 ### Template ABNT (template.typ)
 
@@ -95,7 +112,11 @@ O template Typst implementa:
 | **Parágrafos** | Justificados, espaçamento 0.75em, recuo 1.25cm |
 | **Cabeçalho** | Título da obra (a partir da página 2) |
 | **Rodapé** | Paginação "X de Y" |
-| **Capa** | Título, subtítulo, autor, data |
+| **Capa gráfica** | Página colorida (6 paletas determinísticas por slug), título, subtítulo, autor, ano |
+| **Folha de rosto** | ABNT NBR 6029: autor, título, nota da obra, local e ano |
+| **Ficha catalográfica** | Box 12,5 × 7,5 cm no verso da folha de rosto, com Cutter, imprenta, paginação, ISBN fictício, assuntos e CDD |
+| **Contracapa** | Página colorida com sinopse e assinatura do autor (se `sinopse` disponível) |
+| **Figuras** | `set image(width: 88%)` + legenda 10pt centralizada (diagramas Mermaid) |
 | **Sumário** | Automático, 3 níveis, com recuo 1.5cm |
 | **Títulos Nível 1** | 16pt bold com pagebreak; "Parte" usa 20pt |
 | **Títulos Nível 2** | 14pt bold |
@@ -108,6 +129,9 @@ O template Typst implementa:
 |---|---|---|
 | `pandoc: command not found` | Pandoc não está no PATH | Instale via winget ou adicione ao PATH manualmente |
 | `typst: command not found` | Typst não está no PATH | Instale via winget ou baixe do GitHub Releases |
+| `path contains invalid component "C:"` | Uso de `pandoc --pdf-engine=typst` com figuras | Usar o caminho Pandoc → `.typ` → `typst compile --root` (já implementado nos scripts) |
+| Diagrama sai como bloco de código no PDF | mermaid-cli ausente ou sintaxe inválida | `npm install -g @mermaid-js/mermaid-cli` e rodar `python scripts/renderizar-diagramas.py <slug> --capitulos --validar` |
+| Ficha catalográfica ausente no PDF | Variável `cip_palavras` não foi passada | Rodar a compilação via `compilar-para-pdf.py` (injeta os metadados) |
 | `expected integer, float... found content` | Template com `try/catch` inválido | Usar `type(it.body) == str` em vez de try/catch |
 | `$` isolado causa erro de math | Dollar sign interpretado como TeX | Script já escapa automaticamente com regex |
 | PDF com poucas páginas | Conteúdo insuficiente | Expandir capítulos para mínimo 70 páginas |
@@ -152,15 +176,25 @@ node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug-do-livro>
 Use o script `compilar-para-pdf.py` que executa merge + conversão PDF:
 
 ```bash
-python compilar-para-pdf.py <slug-do-livro>
+python compilar-para-pdf.py <slug-do-livro> --paginas-exatas
 ```
 
 O script:
-1. Lê todos os `cap_<n>.md` do diretório `capitulos/` (Nó 5)
+1. Usa `livro_final.md` se ele existir; senão lê todos os `cap_<n>.md` de `capitulos/` (Nó 5)
 2. Concatena na ordem correta (Nó 5)
 3. Gera Prefácio e Conclusão (Nó 6)
-4. Aplica formatação ABNT com YAML frontmatter (Nó 8)
-5. Converte para PDF via Pandoc+Typst com template ABNT (Nó 10)
+4. Renderiza os diagramas Mermaid em PNG (Nó 9.5 — Upgrade 2)
+5. Deriva capa gráfica, ficha catalográfica e sinopse (Nó 9.6 — Upgrade 5)
+6. Aplica formatação ABNT com YAML frontmatter (Nó 8)
+7. Converte para PDF via Pandoc → `.typ` → Typst com template ABNT (Nó 10)
+
+**Flags:**
+
+| Flag | Efeito |
+|---|---|
+| `--sem-diagramas` | Pula a renderização Mermaid (blocos seguem como código) |
+| `--sem-capa` | Desativa capa/contracapa gráficas (visual ABNT sóbrio) |
+| `--paginas-exatas` | Compila duas vezes para gravar a paginação real na ficha CIP |
 
 ### Opção B — Node.js (Pandoc+Typst com fallback CloudConvert)
 
@@ -211,14 +245,28 @@ Siga o procedimento abaixo passo a passo:
 7. Grave o artefato final em `output/<livro>/livro_final.md` com a ordem:
     Prefácio → Sumário → Partes/Capítulos → Conclusão Geral → Referências Bibliográficas.
 
-### Nó 10 — Exportação em PDF (Pandoc+Typst — método principal)
-8. Execute o script de conversão Pandoc+Typst (método principal, 100% local):
+### Nó 9.5 — Diagramas (Upgrade 2)
+7.1 Renderize os diagramas Mermaid em PNG antes da conversão:
+    ```bash
+    python scripts/renderizar-diagramas.py <slug>
+    ```
+    Gera `imagens/diagramas/*.png` + `_livro_render.md`. Já é chamado automaticamente
+    por `compilar-para-pdf.py` e por `converter-md-pdf.ps1`.
+
+### Nó 9.6 — Capa e ficha catalográfica (Upgrade 5)
+7.2 Confira os metadados visuais derivados da obra:
+    ```bash
+    python scripts/metadados_livro.py <slug>
+    ```
+
+### Nó 10 — Exportação em PDF (Pandoc → .typ → Typst — método principal)
+8. Execute o script de conversão (método principal, 100% local):
+    ```bash
+    python compilar-para-pdf.py <slug> --paginas-exatas
+    ```
+    Ou via PowerShell:
     ```powershell
     powershell -ExecutionPolicy Bypass -File scripts/converter-md-pdf.ps1 -Slug <slug>
-    ```
-    Ou via Python (alternativa recomendada para produção):
-    ```bash
-    python compilar-para-pdf.py <slug>
     ```
     **Fallback — CloudConvert (requer API key):**
     ```bash

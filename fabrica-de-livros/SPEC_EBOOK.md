@@ -1,0 +1,78 @@
+# SPEC_EBOOK — Produção Autônoma de E-books (padrão de mercado, sem ABNT)
+
+Especifica o processo disparado por `/criar-ebook <slug-do-livro-mae>`. Diferente
+de todos os outros tipos de obra da fábrica, o e-book **não segue norma ABNT** —
+segue padrões de mercado (Amazon KDP, Hotmart, Kiwify) e **não gera conteúdo
+novo**: reescreve o tom de capítulos já compilados do livro-mãe.
+
+## 1. Requisitos Contratuais
+
+| # | Requisito | Critério | Verificação |
+|---|---|---|---|
+| R-EBK-1 | Formato EPUB reflowable | Gerado via Pandoc | `gerar-epub.py` |
+| R-EBK-2 | Capa 1:1,6 | `imagens/capa.png` (ex. 1600×2560px) | `gerar-epub.py` (aviso se ausente, não bloqueia) |
+| R-EBK-3 | Sumário clicável | TOC nativo do EPUB (`--toc`) | `gerar-epub.py` |
+| R-EBK-4 | CTA final | Seção "Próximos Passos" presente | `redator-ebook` (procedimento) |
+| R-EBK-5 | Reaproveitamento do livro-mãe | Conteúdo adaptado, não pesquisado de novo | `subagente-adaptador-ebook` (nunca chama `subagente-pesquisador`) |
+| R-EBK-6 | Sem exigência ABNT | Sem citação numérica/autor-data obrigatória, sem ficha CIP | `auditar-obra.py --tipo ebook` (não verifica R-REF/R-CIT/R-NUM) |
+
+## 2. Diferenças vs. Livro/TCC/Artigo
+
+| | Livro/TCC/Artigo | E-book |
+|---|---|---|
+| Conteúdo | Gerado do zero (pesquisa + redação) | Reescrito a partir de capítulos já prontos |
+| Norma | ABNT (NBR 6029/14724/6022) | Nenhuma — padrão de mercado |
+| Formato final | PDF (Pandoc→Typst) | **EPUB** (Pandoc nativo) |
+| Citação | `[N]` ou autor-data, obrigatória | Nenhuma exigida |
+| Estrutura | Fixa (EITA-V2/ACAD/IMRaD) | Livre, parágrafos curtos, CTA final |
+
+## 3. Layout de Diretórios
+
+```
+output/<slug-livro-mae>/
+├── capitulos/cap_1..N.md            ← fonte (livro-mae ja compilado)
+└── ebooks/
+    ├── estrutura_ebooks.json        ← manifesto: titulo, capitulos-fonte, status, caminho .epub
+    ├── ebook_1/
+    │   ├── sumario_macro.json       ← capitulos_fonte_livro_mae
+    │   ├── ebook_metadados.json     ← titulo, autor
+    │   ├── capitulos/cap_1..M.md    ← versao adaptada (tom leve) + CTA
+    │   ├── imagens/capa.png         ← opcional (1:1,6)
+    │   ├── livro_final.md
+    │   └── ebook_1.epub
+    └── ebook_2/ ...
+```
+
+## 4. Fatiamento (scripts/fatiar-obra.py --ebooks)
+
+- Se `qtd_ebooks` for igual ao número de Partes do livro-mãe: 1 ebook por Parte.
+- Caso contrário: fatiamento linear dos capítulos em `qtd_ebooks` grupos
+  contíguos (mesmo algoritmo dos artigos).
+
+## 5. Fluxo de Execução
+
+```
+[Pre-condicao: livro-mae com capitulos ja compilados]
+        │
+        ▼
+[fatiar-obra.py --ebooks --qtd N]
+        │
+        ▼
+[subagente-adaptador-ebook em lotes de 4]
+   (redator-ebook: tom leve + CTA → merge → auditoria minima)
+        │
+        ▼
+[gerar-epub.py — EPUB reflowable, capa opcional]
+        │
+        ▼
+[Relatório consolidado: N EPUBs]
+```
+
+## 6. Casos de borda
+
+| Situação | Comportamento |
+|---|---|
+| Livro-mãe sem capítulos compilados | Comando aborta, orienta rodar `/criar-livro` primeiro |
+| Capa ausente | EPUB gerado sem imagem de capa; pendência reportada (não bloqueia) |
+| Capítulo-fonte com citação `[N]` | `redator-ebook` remove ou converte em atribuição narrativa leve |
+| `qtd_ebooks` igual ao nº de Partes | 1 ebook por Parte (mapeamento natural) |

@@ -12,6 +12,10 @@ output/
 # Config local
 .skill-manager-config.json
 
+# Bytecode Python (scripts da esteira)
+__pycache__/
+*.pyc
+
 # Sistema
 .DS_Store
 Thumbs.db

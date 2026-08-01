@@ -1,5 +1,15 @@
 // Template ABNT para Livros - Fabrica Agentica de Livros
-// Compativel com Pandoc + Typst
+// Compativel com Pandoc + Typst (testado em typst 0.15 / pandoc 3.10)
+//
+// Variaveis Pandoc suportadas (-V chave=valor):
+//   title, subtitle, author            -> capa, folha de rosto e cabecalho
+//   paleta                             -> indigo | grafite | vinho | floresta | ambar | oceano
+//   cip_sobrenome, cip_nome            -> ficha catalografica (autoria invertida)
+//   cip_cutter, cip_ano, cip_paginas   -> ficha catalografica
+//   cip_palavras, cip_cdd, cip_isbn    -> ficha catalografica
+//   cip_local, cip_editora             -> imprenta da folha de rosto e da CIP
+//   sinopse                            -> texto da contracapa
+//   sem_capa_grafica                   -> "1" desativa capa/contracapa graficas
 
 #set document(
   title: "$title$",
@@ -7,6 +17,23 @@
   date: datetime.today(),
 )
 
+// ── Paleta cromatica da obra ──────────────────────────────────────
+#let paletas = (
+  indigo:    (primaria: rgb("#1b2559"), secundaria: rgb("#3d55a5"), destaque: rgb("#f0b429"), clara: rgb("#eef1fa")),
+  grafite:   (primaria: rgb("#22262b"), secundaria: rgb("#4a5259"), destaque: rgb("#59c1bd"), clara: rgb("#eef0f1")),
+  vinho:     (primaria: rgb("#5b1420"), secundaria: rgb("#8c2b3c"), destaque: rgb("#e0a458"), clara: rgb("#f8eef0")),
+  floresta:  (primaria: rgb("#123324"), secundaria: rgb("#2c6e49"), destaque: rgb("#d8f3a3"), clara: rgb("#eef5ef")),
+  ambar:     (primaria: rgb("#432818"), secundaria: rgb("#99582a"), destaque: rgb("#ffe6a7"), clara: rgb("#f8f1e7")),
+  oceano:    (primaria: rgb("#03254c"), secundaria: rgb("#1167b1"), destaque: rgb("#7fd6f7"), clara: rgb("#e9f3fa")),
+)
+
+#let chave-paleta = {
+  let p = "$paleta$"
+  if p == "" or not p in paletas { "indigo" } else { p }
+}
+#let cor = paletas.at(chave-paleta)
+
+// ── Pagina, tipografia e paragrafos (ABNT) ────────────────────────
 #set page(
   paper: "a4",
   margin: (top: 3cm, bottom: 2cm, left: 3cm, right: 2cm),
@@ -58,27 +85,44 @@
   radius: 2pt,
 )
 
+// Figuras (diagramas Mermaid renderizados) — nunca extrapolam a mancha grafica
+#set image(width: 88%, fit: "contain")
+#show figure: it => {
+  set par(first-line-indent: 0cm)
+  v(0.6cm)
+  align(center, it)
+  v(0.6cm)
+}
+#show figure.caption: it => {
+  set text(size: 10pt, fill: luma(70))
+  it
+}
+
 // Estilo de titulos - nivel 1 (com suporte a Parte)
 #show heading.where(level: 1): it => {
   set par(first-line-indent: 0cm)
   let isParte = type(it.body) == str and it.body.starts-with("Parte")
   pagebreak()
   if isParte {
-    set text(size: 20pt, weight: "bold")
+    set text(size: 20pt, weight: "bold", fill: cor.primaria)
     v(3cm)
     it
+    v(0.3cm)
+    line(length: 40%, stroke: 2pt + cor.destaque)
     v(2cm)
   } else {
-    set text(size: 16pt, weight: "bold")
+    set text(size: 16pt, weight: "bold", fill: cor.primaria)
     v(2cm)
     it
+    v(0.2cm)
+    line(length: 25%, stroke: 1.5pt + cor.destaque)
     v(1cm)
   }
 }
 
 // Estilo de titulos - nivel 2
 #show heading.where(level: 2): it => {
-  set text(size: 14pt, weight: "bold")
+  set text(size: 14pt, weight: "bold", fill: cor.secundaria)
   set par(first-line-indent: 0cm)
   v(1cm)
   it
@@ -94,33 +138,138 @@
   v(0.5cm)
 }
 
-// Capa
-#{
-  set page(header: none, footer: none)
-  set par(first-line-indent: 0cm)
-  align(center + horizon)[
-    #v(4cm)
-    #text(size: 28pt, weight: "bold")["$title$"]
-    #{
-      let sub = "$subtitle$"
-      if sub != "" [
-        #v(0.5cm)
-        #text(size: 16pt)[#sub]
-      ]
-    }
-    #v(2cm)
-    #text(size: 14pt)["$author$"]
-    #v(1cm)
-    #text(size: 12pt, fill: gray)[#datetime.today().display("[day] de [month repr:long] de [year]")]
+#let capa-grafica-ativa = "$sem_capa_grafica$" != "1"
+
+// ── CAPA GRAFICA (Upgrade 5) ──────────────────────────────────────
+#if capa-grafica-ativa {
+  page(fill: cor.primaria, margin: 0cm, header: none, footer: none, numbering: none)[
+    #set par(first-line-indent: 0cm, justify: false, leading: 0.55em)
+    #place(top + right, dx: -2.2cm, rect(width: 0.35cm, height: 100%, fill: cor.secundaria))
+    #place(top + left, rect(width: 100%, height: 1.2cm, fill: cor.destaque))
+    #place(bottom + left, rect(width: 100%, height: 4.5cm, fill: cor.secundaria))
+    #place(bottom + left, dy: -4.5cm, rect(width: 100%, height: 0.15cm, fill: cor.destaque))
+
+    #place(top + left, dx: 2.5cm, dy: 6.5cm, block(width: 14.5cm)[
+      #text(size: 34pt, weight: "bold", fill: white)[$title$]
+      $if(subtitle)$
+      #v(0.8cm)
+      #line(length: 5cm, stroke: 3pt + cor.destaque)
+      #v(0.6cm)
+      #text(size: 15pt, fill: cor.destaque)[$subtitle$]
+      $endif$
+    ])
+
+    #place(bottom + left, dx: 2.5cm, dy: -1.6cm, block(width: 15cm)[
+      #text(size: 15pt, weight: "bold", fill: white)[$author$]
+      #v(0.2cm)
+      #text(size: 10pt, fill: cor.clara)[#datetime.today().display("[year]")]
+    ])
   ]
-  pagebreak()
 }
 
-// Sumario
-#outline(title: [Sumario], indent: 1.5cm, depth: 3)
+// ── FOLHA DE ROSTO (ABNT NBR 6029) ────────────────────────────────
+#page(header: none, footer: none, numbering: none)[
+  #set par(first-line-indent: 0cm, justify: false)
+  #align(center)[
+    #text(size: 13pt, weight: "bold")[$author$]
+    #v(3.5cm)
+    #text(size: 20pt, weight: "bold")[$title$]
+    $if(subtitle)$
+    #v(0.5cm)
+    #text(size: 13pt)[$subtitle$]
+    $endif$
+  ]
+  #v(4cm)
+  #align(right, block(width: 8.5cm)[
+    #set text(size: 10.5pt)
+    #set par(justify: true, first-line-indent: 0cm)
+    Obra técnica de literatura especializada, produzida e diagramada conforme as
+    normas ABNT para publicação editorial.
+  ])
+  #v(1fr)
+  #align(center)[
+    #set text(size: 11pt)
+    $if(cip_local)$$cip_local$$else$Brasil$endif$
+    #linebreak()
+    $if(cip_ano)$$cip_ano$$else$#datetime.today().display("[year]")$endif$
+  ]
+]
 
-// Conteudo principal
+// ── VERSO DA FOLHA DE ROSTO: FICHA CATALOGRAFICA (CIP) ────────────
+$if(cip_palavras)$
+#page(header: none, footer: none, numbering: none)[
+  #set par(first-line-indent: 0cm, justify: false)
+  #v(1fr)
+  #align(center)[
+    #text(size: 9.5pt, weight: "bold")[Dados Internacionais de Catalogação na Publicação (CIP)]
+    #v(0.3cm)
+    #block(
+      width: 12.5cm, height: 7.5cm,
+      stroke: 0.7pt + black, inset: 10pt,
+    )[
+      #set text(size: 9pt)
+      #set par(justify: false, first-line-indent: 0cm, leading: 0.62em)
+      #set align(left)
+      #grid(
+        columns: (1.5cm, 1fr), gutter: 0pt, align: (left + top, left + top),
+        [$if(cip_cutter)$$cip_cutter$$endif$],
+        [
+          $if(cip_sobrenome)$#upper[$cip_sobrenome$], $cip_nome$$else$$author$$endif$
+          #pad(left: 0.8cm)[
+            $title$$if(subtitle)$ : $subtitle$$endif$ \/ $author$. --
+            $if(cip_local)$$cip_local$$else$Brasil$endif$ : $if(cip_editora)$$cip_editora$$else$Edição do Autor$endif$,
+            $if(cip_ano)$$cip_ano$$else$#datetime.today().display("[year]")$endif$.
+          ]
+          #pad(left: 0.8cm)[$if(cip_paginas)$$cip_paginas$ p.$else$_ p.$endif$ ; 21 cm.]
+          $if(cip_isbn)$
+          #v(0.15cm)
+          #pad(left: 0.8cm)[ISBN $cip_isbn$]
+          $endif$
+          #v(0.15cm)
+          #pad(left: 0.8cm)[$cip_palavras$]
+          #v(0.3cm)
+          #align(right)[$if(cip_cdd)$CDD $cip_cdd$$endif$]
+        ],
+      )
+    ]
+    #v(0.25cm)
+    #block(width: 12.5cm)[
+      #set text(size: 7.5pt, fill: luma(90))
+      #set par(justify: false, first-line-indent: 0cm)
+      Ficha catalográfica gerada automaticamente pela Fábrica Agêntica de Livros
+      para fins de diagramação — dados fictícios, sem registro de bibliotecário responsável.
+    ]
+  ]
+  #v(2cm)
+]
+$endif$
+
+// ── SUMARIO ───────────────────────────────────────────────────────
+#outline(title: [Sumário], indent: 1.5cm, depth: 3)
+
+// ── CONTEUDO PRINCIPAL ────────────────────────────────────────────
 $body$
 
-// Referencias Bibliograficas (se existirem)
+// ── CONTRACAPA ────────────────────────────────────────────────────
+$if(sinopse)$
+#if capa-grafica-ativa {
+  page(fill: cor.primaria, margin: 0cm, header: none, footer: none, numbering: none)[
+    #set par(first-line-indent: 0cm, justify: true, leading: 0.7em)
+    #place(top + left, rect(width: 100%, height: 1.2cm, fill: cor.destaque))
+    #place(bottom + left, rect(width: 100%, height: 2.5cm, fill: cor.secundaria))
+    #place(top + left, dx: 2.5cm, dy: 4cm, block(width: 14.5cm)[
+      #text(size: 18pt, weight: "bold", fill: cor.destaque)[$title$]
+      #v(1cm)
+      #text(size: 11.5pt, fill: white)[$sinopse$]
+      #v(1.2cm)
+      #line(length: 4cm, stroke: 2pt + cor.destaque)
+      #v(0.5cm)
+      #text(size: 11pt, weight: "bold", fill: white)[$author$]
+    ])
+  ]
+} else {
+  pagebreak()
+}
+$else$
 #pagebreak()
+$endif$

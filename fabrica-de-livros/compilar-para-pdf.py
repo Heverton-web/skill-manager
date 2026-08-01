@@ -3,8 +3,18 @@
 Compila livro_final.md com conteudo real dos capitulos e converte para PDF.
 Usa Pandoc + Typst com template ABNT para gerar PDF profissional.
 
-Uso: python compilar-para-pdf.py [slug1 slug2 ...]
+Pipeline (V3):
+  1. Renderiza os diagramas Mermaid dos capitulos em PNG (Upgrade 2)
+  2. Deriva capa grafica, ficha catalografica e sinopse (Upgrade 5)
+  3. Converte para PDF via Pandoc + Typst com template ABNT
+
+Uso: python compilar-para-pdf.py [slug1 slug2 ...] [opcoes]
      (omita slugs para processar todos os livros cadastrados)
+
+Opcoes:
+  --sem-diagramas   pula a renderizacao Mermaid (usa o markdown como esta)
+  --sem-capa        desativa capa/contracapa graficas (visual ABNT sobrio)
+  --paginas-exatas  compila duas vezes para gravar a paginacao real na ficha CIP
 """
 
 import os
@@ -12,6 +22,16 @@ import re
 import sys
 import subprocess
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent / "scripts"))
+try:
+    import metadados_livro
+except ImportError:  # pragma: no cover
+    metadados_livro = None
+try:
+    import parametros_obra
+except ImportError:  # pragma: no cover
+    parametros_obra = None
 
 # ── CARREGAR 50 LIVROS DAS SÉRIES E-N ──────────────────────────
 try:
@@ -73,6 +93,32 @@ DIR_PROJETO = Path(__file__).parent
 PANDOC = r"C:\Users\trcnologia\AppData\Local\Microsoft\WinGet\Packages\JohnMacFarlane.Pandoc_Microsoft.Winget.Source_8wekyb3d8bbwe\pandoc-3.10\pandoc.exe"
 TYPST = r"C:\Users\trcnologia\AppData\Local\Microsoft\WinGet\Packages\Typst.Typst_Microsoft.Winget.Source_8wekyb3d8bbwe\typst-x86_64-pc-windows-msvc\typst.exe"
 TEMPLATE = DIR_PROJETO / "templates" / "template.typ"
+TEMPLATE_TCC = DIR_PROJETO / "templates" / "template_tcc.typ"
+TEMPLATE_ARTIGO = DIR_PROJETO / "templates" / "template_artigo.typ"
+RENDERIZADOR = DIR_PROJETO / "scripts" / "renderizar-diagramas.py"
+
+# Flags globais (definidas em main() a partir da linha de comando)
+RENDERIZAR_DIAGRAMAS = True
+CAPA_GRAFICA = True
+PAGINAS_EXATAS = False
+TIPO_OVERRIDE = None  # --tipo livro|tcc|artigo (None = auto-detectar por slug)
+
+
+def resolver_tipo(slug):
+    """Tipo de obra do slug: --tipo tem prioridade; senao le config_obra.json."""
+    if TIPO_OVERRIDE:
+        return TIPO_OVERRIDE
+    if parametros_obra is not None:
+        return parametros_obra.carregar_config(slug).get("tipo_obra", "livro")
+    return "livro"
+
+
+def template_para_tipo(tipo):
+    if tipo == "tcc" and TEMPLATE_TCC.exists():
+        return TEMPLATE_TCC
+    if tipo == "artigo" and TEMPLATE_ARTIGO.exists():
+        return TEMPLATE_ARTIGO
+    return TEMPLATE
 
 SLUGS = [
     # Serie Agentes CLI
@@ -129,10 +175,15 @@ SLUGS.extend(SLUGS_ZP)
 
 
 def copiar_pdf_com_nome_slug(slug, dir_livro):
-    """Copia livro_final.pdf para <slug>.pdf no mesmo diretorio."""
+    """Copia livro_final.pdf para <nome>.pdf no mesmo diretorio.
+
+    `slug` pode ser um caminho aninhado (ex.: "livro/artigos/artigo_1" para
+    artigos/ebooks derivados) — usa so o ultimo componente como nome de arquivo.
+    """
     import shutil
+    nome = Path(slug).name
     origem = dir_livro / "livro_final.pdf"
-    destino = dir_livro / f"{slug}.pdf"
+    destino = dir_livro / f"{nome}.pdf"
     if origem.exists():
         shutil.copy2(origem, destino)
         tamanho_kb = destino.stat().st_size / 1024
@@ -149,10 +200,132 @@ def extrair_frontmatter(texto):
     return '', texto
 
 
+def renderizar_diagramas(slug, dir_livro, md_path):
+    """Upgrade 2: converte blocos ```mermaid em PNG e devolve o MD com figuras.
+
+    Nao destrutivo e tolerante a falha: se o mermaid-cli nao estiver disponivel
+    ou o renderizador falhar, devolve o markdown original.
+    """
+    if not RENDERIZAR_DIAGRAMAS or not RENDERIZADOR.exists():
+        return md_path
+    try:
+        conteudo = md_path.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return md_path
+    if "```mermaid" not in conteudo.lower():
+        return md_path
+
+    saida = dir_livro / "_livro_render.md"
+    try:
+        resultado = subprocess.run(
+            [sys.executable, str(RENDERIZADOR), slug,
+             "--md", str(md_path), "--saida", str(saida)],
+            capture_output=True, text=True, timeout=900,
+        )
+    except Exception as e:  # noqa: BLE001
+        print(f"  [AVISO] Renderizacao de diagramas ignorada: {e}")
+        return md_path
+
+    if saida.exists() and saida.stat().st_size > 0:
+        for linha in resultado.stdout.strip().split("\n")[-2:]:
+            if linha.strip():
+                print(f"  {linha.strip()}")
+        return saida
+    print("  [AVISO] Diagramas nao renderizados; blocos mermaid seguem como codigo")
+    return md_path
+
+
+def variaveis_visuais(slug, dir_livro, paginas=None, tipo=None):
+    """Metadados injetados no template: capa/CIP comercial (livro) ou
+    resumo/abstract/folha de aprovacao (TCC/artigo) — Upgrade 5 + Fase B/C (V4)."""
+    tipo = tipo or "livro"
+    args = []
+    if tipo == "tcc" and metadados_livro is not None:
+        try:
+            dados = metadados_livro.coletar_tcc(slug, dir_livro=dir_livro)
+            return metadados_livro.variaveis_pandoc_tcc(dados)
+        except Exception as e:  # noqa: BLE001
+            print(f"  [AVISO] Metadados de TCC indisponiveis: {e}")
+            return []
+    if tipo == "artigo" and metadados_livro is not None and hasattr(metadados_livro, "coletar_artigo"):
+        try:
+            dados = metadados_livro.coletar_artigo(slug, dir_livro=dir_livro)
+            return metadados_livro.variaveis_pandoc_artigo(dados)
+        except Exception as e:  # noqa: BLE001
+            print(f"  [AVISO] Metadados de artigo indisponiveis: {e}")
+            return []
+    if metadados_livro is not None:
+        try:
+            dados = metadados_livro.coletar(slug, paginas=paginas, dir_livro=dir_livro)
+            args += metadados_livro.variaveis_pandoc(dados)
+        except Exception as e:  # noqa: BLE001
+            print(f"  [AVISO] Metadados de capa/CIP indisponiveis: {e}")
+    if not CAPA_GRAFICA:
+        args += ["-V", "sem_capa_grafica=1"]
+    return args
+
+
+def comando_pandoc(md_path, saida, dir_livro, titulo, extras, tipo=None):
+    """Comando Pandoc que gera o Typst intermediario (sem --pdf-engine: ver
+    converter_via_typst para o motivo)."""
+    tipo = tipo or "livro"
+    template = template_para_tipo(tipo)
+    comando = [
+        PANDOC,
+        str(md_path),
+        "-o", str(saida),
+        "--template", str(template),
+        "--toc",
+        "--toc-depth", "3",
+    ]
+    # TCC/Artigo ja trazem numeracao progressiva manual (NBR 6024) escrita pelo
+    # redator-academico — "--number-sections" duplicaria a numeracao.
+    if tipo == "livro":
+        comando.append("--number-sections")
+    comando += [
+        "--from", "markdown-citations",
+        "--wrap", "preserve",
+        "-V", f"title={titulo}",
+        "-V", "author=Heverton Eduardo Peres",
+        "-V", "subtitle=",
+        "--resource-path", str(dir_livro),
+    ]
+    return comando + extras
+
+
+def converter_via_typst(md_path, pdf_path, dir_livro, titulo, extras, timeout=300, tipo=None):
+    """Pandoc -> .typ -> typst compile.
+
+    Caminho principal desde a V3. O modo `pandoc --pdf-engine=typst` extrai as
+    imagens para uma pasta temporaria e reescreve os caminhos em forma ABSOLUTA,
+    o que o Typst rejeita no Windows ("path contains invalid component C:").
+    Gerando o .typ intermediario dentro da pasta do livro, os caminhos relativos
+    das figuras (imagens/diagramas/*.png) continuam validos.
+    """
+    typ_path = dir_livro / "_livro_compilado.typ"
+    resultado = subprocess.run(
+        comando_pandoc(md_path, typ_path, dir_livro, titulo, extras, tipo=tipo),
+        capture_output=True, text=True, timeout=timeout,
+    )
+    if not typ_path.exists() or typ_path.stat().st_size == 0:
+        return False, f"pandoc nao gerou .typ: {(resultado.stderr or '').strip()[-300:]}"
+
+    resultado = subprocess.run(
+        [TYPST, "compile", "--root", str(dir_livro), str(typ_path), str(pdf_path)],
+        capture_output=True, text=True, timeout=timeout,
+    )
+    if pdf_path.exists() and pdf_path.stat().st_size > 0:
+        typ_path.unlink(missing_ok=True)
+        return True, ""
+    erro = (resultado.stderr or resultado.stdout or "").strip()
+    return False, erro[-600:] or "typst nao gerou PDF"
+
+
 def converter_md_direto(slug, dir_livro, md_path, pdf_path):
     """Converte livro_final.md pre-compilado diretamente para PDF via Pandoc+Typst."""
-    print(f"  Convertendo MD pre-compilado -> PDF...")
-    
+    tipo = resolver_tipo(slug)
+    print(f"  Convertendo MD pre-compilado -> PDF... (tipo_obra={tipo})")
+
     # Extrair titulo do sumario
     titulo = slug
     sumario_path = dir_livro / "sumario_macro.json"
@@ -164,42 +337,32 @@ def converter_md_direto(slug, dir_livro, md_path, pdf_path):
                 titulo = sumario.get('titulo_obra', slug)
             except:
                 pass
-    
+
+    md_render = renderizar_diagramas(slug, dir_livro, md_path)
+    extras = variaveis_visuais(slug, dir_livro, tipo=tipo)
+
     try:
-        comando = [
-            PANDOC,
-            str(md_path),
-            "-o", str(pdf_path),
-            "--pdf-engine", TYPST,
-            "--template", str(TEMPLATE),
-            "--toc",
-            "--toc-depth", "3",
-            "--number-sections",
-            "--from", "markdown-citations",
-            "--wrap", "preserve",
-            "-V", f"title={titulo}",
-            "-V", "author=Heverton Eduardo Peres",
-            "-V", "subtitle=",
-            "--resource-path", str(dir_livro),
-        ]
+        ok, erro = converter_via_typst(md_render, pdf_path, dir_livro, titulo, extras, tipo=tipo)
 
-        resultado = subprocess.run(
-            comando,
-            capture_output=True, text=True, timeout=300  # 5 min para mega-livro
-        )
+        if ok and PAGINAS_EXATAS and tipo == "livro" and metadados_livro is not None:
+            paginas = metadados_livro.contar_paginas_pdf(pdf_path)
+            if paginas:
+                print(f"  Segunda passagem: gravando {paginas} paginas na ficha CIP")
+                converter_via_typst(md_render, pdf_path, dir_livro, titulo,
+                                    variaveis_visuais(slug, dir_livro, paginas, tipo=tipo),
+                                    tipo=tipo)
 
-        if pdf_path.exists() and pdf_path.stat().st_size > 0:
+        if ok:
             tamanho_kb = pdf_path.stat().st_size / 1024
             print(f"  [OK] PDF gerado: {pdf_path.name} ({tamanho_kb:.1f} KB)")
             copiar_pdf_com_nome_slug(slug, dir_livro)
             return True
-        else:
-            print(f"  [FALHA] PDF nao foi criado")
-            if resultado.stderr:
-                erros = resultado.stderr.strip().split('\n')[-5:]
-                for err in erros:
-                    print(f"  STDERR: {err}")
-            return False
+
+        print(f"  [FALHA] PDF nao foi criado")
+        for linha in erro.split("\n")[-5:]:
+            if linha.strip():
+                print(f"  STDERR: {linha.strip()}")
+        return False
 
     except subprocess.TimeoutExpired:
         print(f"  [ERRO] Timeout - conversao excedeu 300s")
@@ -302,32 +465,17 @@ lang: pt-BR
         f.write(md_final)
 
     # Converter para PDF via Pandoc + Typst
-    print(f"  Convertendo MD -> PDF (Pandoc + Typst)...")
+    tipo = resolver_tipo(slug)
+    print(f"  Convertendo MD -> PDF (Pandoc + Typst)... (tipo_obra={tipo})")
+
+    md_compilado = renderizar_diagramas(slug, dir_livro, md_compilado)
+    extras = variaveis_visuais(slug, dir_livro, tipo=tipo)
 
     try:
-        comando = [
-            PANDOC,
-            str(md_compilado),
-            "-o", str(pdf_path),
-            "--pdf-engine", TYPST,
-            "--template", str(TEMPLATE),
-            "--toc",
-            "--toc-depth", "3",
-            "--number-sections",
-            "--from", "markdown-citations",
-            "--wrap", "preserve",
-            "-V", f"title={titulo}",
-            "-V", "author=Heverton Eduardo Peres",
-            "-V", "subtitle=",
-            "--resource-path", str(dir_livro),
-        ]
+        ok, erro = converter_via_typst(md_compilado, pdf_path, dir_livro, titulo,
+                                       extras, timeout=180, tipo=tipo)
 
-        resultado = subprocess.run(
-            comando,
-            capture_output=True, text=True, timeout=180
-        )
-
-        if pdf_path.exists() and pdf_path.stat().st_size > 0:
+        if ok:
             tamanho_kb = pdf_path.stat().st_size / 1024
             print(f"  [OK] PDF gerado: {pdf_path.name} ({tamanho_kb:.1f} KB)")
             copiar_pdf_com_nome_slug(slug, dir_livro)
@@ -339,11 +487,9 @@ lang: pt-BR
             return True
         else:
             print(f"  [FALHA] PDF nao foi criado")
-            if resultado.stderr:
-                # Mostrar apenas os ultimos erros relevantes
-                erros = resultado.stderr.strip().split('\n')[-5:]
-                for err in erros:
-                    print(f"  STDERR: {err}")
+            for linha in erro.split("\n")[-5:]:
+                if linha.strip():
+                    print(f"  STDERR: {linha.strip()}")
             return False
 
     except subprocess.TimeoutExpired:
@@ -355,7 +501,17 @@ lang: pt-BR
 
 
 def main():
-    slugs_alvo = sys.argv[1:] if len(sys.argv) > 1 else []
+    global RENDERIZAR_DIAGRAMAS, CAPA_GRAFICA, PAGINAS_EXATAS, TIPO_OVERRIDE
+
+    argumentos = sys.argv[1:]
+    RENDERIZAR_DIAGRAMAS = "--sem-diagramas" not in argumentos
+    CAPA_GRAFICA = "--sem-capa" not in argumentos
+    PAGINAS_EXATAS = "--paginas-exatas" in argumentos
+    if "--tipo" in argumentos:
+        i = argumentos.index("--tipo")
+        TIPO_OVERRIDE = argumentos[i + 1] if i + 1 < len(argumentos) else None
+        argumentos = argumentos[:i] + argumentos[i + 2:]
+    slugs_alvo = [a for a in argumentos if not a.startswith("--")]
 
     # Verificar pre-requisitos
     for cmd, nome in [(PANDOC, "Pandoc"), (TYPST, "Typst")]:
@@ -370,8 +526,13 @@ def main():
     # Verificar se temos slugs validos
     if slugs_alvo:
         slugs = [s for s in SLUGS if s in slugs_alvo]
+        # Obras novas (criadas por /criar-livro) ainda nao estao no catalogo
+        # estatico: aceita qualquer slug que exista em output/.
+        for alvo in slugs_alvo:
+            if alvo not in slugs and (DIR_RAIZ / alvo).is_dir():
+                slugs.append(alvo)
         if not slugs:
-            print(f"Slug(s) nao encontrado(s). Disponiveis: {', '.join(SLUGS)}")
+            print(f"Slug(s) nao encontrado(s) no catalogo nem em {DIR_RAIZ}")
             sys.exit(1)
     else:
         slugs = SLUGS
@@ -380,6 +541,8 @@ def main():
     print(f"  Pandoc: {PANDOC}")
     print(f"  Typst: {TYPST}")
     print(f"  Template: {TEMPLATE}")
+    print(f"  Diagramas Mermaid: {'ativos' if RENDERIZAR_DIAGRAMAS else 'desativados'}")
+    print(f"  Capa grafica: {'ativa' if CAPA_GRAFICA else 'desativada'}")
 
     sucessos = 0
     falhas = 0
