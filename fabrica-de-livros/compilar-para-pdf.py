@@ -260,6 +260,10 @@ def variaveis_visuais(slug, dir_livro, paginas=None, tipo=None):
             args += metadados_livro.variaveis_pandoc(dados)
         except Exception as e:  # noqa: BLE001
             print(f"  [AVISO] Metadados de capa/CIP indisponiveis: {e}")
+    # Capa em imagem (padrao visual da serie): sobrepoe a capa tipografica do template
+    capa_img = dir_livro / "imagens" / "capa_livro.png"
+    if CAPA_GRAFICA and capa_img.exists():
+        args += ["-V", "capa_imagem=imagens/capa_livro.png"]
     if not CAPA_GRAFICA:
         args += ["-V", "sem_capa_grafica=1"]
     return args

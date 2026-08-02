@@ -1,0 +1,249 @@
+#!/usr/bin/env python3
+"""Gera capa grafica para os e-books derivados do livro-mae (1:1,6, 1600x2560px)
+e para o proprio livro-mae (A4, 1600x2263px) — mesmo padrao visual da serie.
+
+Zera a pendencia R-EBK-2 (capa ausente) do fluxo gerar-epub.py. Deterministico
+(seed fixa), usa apenas Pillow + fontes do Windows — sem servicos externos.
+
+Uso:
+    python scripts/gerar-capa-ebooks.py <slug-livro-mae>               # capas dos ebooks
+    python scripts/gerar-capa-ebooks.py <slug-livro-mae> --ebook 3     # um ebook so
+    python scripts/gerar-capa-ebooks.py <slug-livro-mae> --livro-mae   # capa A4 do livro-mae
+"""
+
+import argparse
+import json
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+DIR_PROJETO = Path(__file__).resolve().parent.parent
+DIR_OUTPUT = DIR_PROJETO / "output"
+FONT_DIR = Path(r"C:\Windows\Fonts")
+
+LARGURA, ALTURA = 1600, 2560        # proporcao 1:1,6 (padrao de e-commerce de ebooks)
+LARGURA_A4, ALTURA_A4 = 1600, 2263  # proporcao A4 (1:1,414) para a capa do livro-mae
+
+# Paletas (fundo superior, fundo inferior, cor de destaque, cor de texto)
+PALETAS = [
+    ("#0b1020", "#1b2a4a", "#5b8def", "#f4f7ff"),  # 1 - azul profundo
+    ("#14081d", "#2d1145", "#b06df0", "#faf5ff"),  # 2 - roxo
+    ("#04140f", "#0e3328", "#2ecc9a", "#eafff7"),  # 3 - verde esmeralda
+    ("#1a0d04", "#3d2107", "#f0933b", "#fff6ea"),  # 4 - laranja/cobre
+    ("#140d2e", "#32206b", "#7c6cf0", "#f1eeff"),  # 5 - indigo
+    ("#1d0505", "#4a1210", "#e05d5d", "#fff0f0"),  # 6 - vermelho vinho
+    ("#061a20", "#0d3b48", "#37c3d6", "#eafcff"),  # 7 - ciano petroleo
+    ("#101418", "#26313c", "#8fa8c0", "#f2f7fc"),  # 8 - grafite aço
+]
+
+FONTES = {
+    "bold": FONT_DIR / "arialbd.ttf",
+    "regular": FONT_DIR / "arial.ttf",
+    "light": FONT_DIR / "calibril.ttf",
+}
+
+
+def fonte(nome, tamanho):
+    caminho = FONTES[nome]
+    if caminho.exists():
+        return ImageFont.truetype(str(caminho), tamanho)
+    return ImageFont.load_default()
+
+
+def hex_para_rgb(hexstr):
+    hexstr = hexstr.lstrip("#")
+    return tuple(int(hexstr[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def interpolar(c1, c2, t):
+    return tuple(int(a + (b - a) * t) for a, b in zip(c1, c2))
+
+
+def pintar_fundo_gradiente(draw, c_topo, c_base, largura=LARGURA, altura=ALTURA):
+    for y in range(altura):
+        cor = interpolar(c_topo, c_base, y / altura)
+        draw.line([(0, y), (largura, y)], fill=cor)
+
+
+def pintar_orbes(imagem, c_destaque, raio_base=560, alpha=46,
+                 largura=LARGURA, altura=ALTURA):
+    """Dois 'orbes' translucidos para dar profundidade sem depender de blur caro."""
+    fator = altura / ALTURA
+    for (cx, cy, raio, a) in [
+        (largura * 0.82, altura * 0.20, raio_base * fator, alpha),
+        (largura * 0.10, altura * 0.78, raio_base * 0.8 * fator, alpha - 12),
+    ]:
+        orbe = Image.new("RGBA", (largura, altura), (0, 0, 0, 0))
+        od = ImageDraw.Draw(orbe)
+        cor_rgba = c_destaque + (a,)
+        od.ellipse([cx - raio, cy - raio, cx + raio, cy + raio], fill=cor_rgba)
+        imagem.alpha_composite(orbe)
+
+
+def pintar_lombada_decorativa(draw, c_destaque, largura=LARGURA, altura=ALTURA):
+    """Faixa lateral esquerda fina com padrao de 4 blocos (as 4 camadas)."""
+    sx = largura / LARGURA
+    sy = altura / ALTURA
+    x, y0 = 90 * sx, altura * 0.24
+    passo = 96 * sy
+    for i in range(6):
+        altura_bloco = (26 + (i % 3) * 10) * sy
+        cor = interpolar(c_destaque, (255, 255, 255), 0.35 if i % 2 else 0.0)
+        draw.rounded_rectangle(
+            [x, y0 + i * passo, x + 14 * sx, y0 + i * passo + altura_bloco],
+            radius=7 * sy, fill=cor)
+
+
+def quebrar_titulo(texto, fonte_t, max_largura):
+    linhas = []
+    for paragrafo in texto.split("\n"):
+        palavras = paragrafo.split()
+        linha_atual = ""
+        for palavra in palavras:
+            teste = (linha_atual + " " + palavra).strip()
+            if fonte_t.getlength(teste) <= max_largura or not linha_atual:
+                linha_atual = teste
+            else:
+                linhas.append(linha_atual)
+                linha_atual = palavra
+        if linha_atual:
+            linhas.append(linha_atual)
+    return linhas
+
+
+def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA,
+               subtitulo=None, rodape=None, nome_arquivo="capa.png"):
+    c_topo, c_base, c_destaque, c_texto = [
+        hex_para_rgb(x) for x in PALETAS[(indice - 1) % len(PALETAS)]
+    ]
+    if subtitulo is None:
+        subtitulo = "Guia prático para operar, medir e liderar o AIDD"
+    sx = largura / LARGURA
+    sy = altura / ALTURA
+
+    imagem = Image.new("RGBA", (largura, altura), c_topo + (255,))
+    draw = ImageDraw.Draw(imagem)
+
+    pintar_fundo_gradiente(draw, c_topo, c_base, largura, altura)
+    pintar_orbes(imagem, c_destaque, largura=largura, altura=altura)
+    pintar_lombada_decorativa(draw, c_destaque, largura, altura)
+
+    # Moldura fina
+    cor_moldura = interpolar(c_destaque, (255, 255, 255), 0.6)
+    draw.rounded_rectangle([40 * sx, 40 * sy, largura - 40 * sx, altura - 40 * sy],
+                           radius=24 * sy, outline=cor_moldura, width=4)
+
+    margem = 150 * sx
+    area_titulo_x = margem
+    area_titulo_w = largura - 2 * margem
+
+    # Selo da serie (topo)
+    f_selo = fonte("bold", int(44 * sy))
+    draw.text((margem, 220 * sy), "SÉRIE AI DRIVEN DEVELOPMENT", font=f_selo,
+              fill=interpolar(c_destaque, (255, 255, 255), 0.5))
+    draw.line([(margem, 310 * sy), (margem + 260 * sx, 310 * sy)], fill=c_destaque, width=8)
+
+    # Titulo principal
+    f_titulo = fonte("bold", int(128 * sy))
+    linhas = quebrar_titulo(titulo, f_titulo, area_titulo_w)
+    if len(linhas) > 4:
+        f_titulo = fonte("bold", int(104 * sy))
+        linhas = quebrar_titulo(titulo, f_titulo, area_titulo_w)
+    y = 430 * sy
+    altura_linha = 150 * sy
+    for linha in linhas[:5]:
+        draw.text((area_titulo_x, y), linha, font=f_titulo, fill=c_texto)
+        y += altura_linha
+
+    # Divisa
+    y += 20 * sy
+    draw.line([(margem, y), (margem + 200 * sx, y)], fill=c_destaque, width=8)
+    y += 70 * sy
+
+    # Subtitulo
+    f_sub = fonte("light", int(52 * sy))
+    draw.text((area_titulo_x, y), subtitulo, font=f_sub,
+              fill=interpolar(c_texto, (0, 0, 0), 0.25))
+    y += 90 * sy
+
+    # Camadas
+    f_camadas = fonte("bold", int(44 * sy))
+    camadas = "TELA  ·  HARNESS  ·  LLM  ·  TOOLS"
+    draw.text((area_titulo_x, y), camadas, font=f_camadas,
+              fill=interpolar(c_destaque, (255, 255, 255), 0.35))
+
+    # Rodape: autor
+    f_autor = fonte("regular", int(56 * sy))
+    nome = rodape or f"{autor}  ·  Volume {indice}"
+    draw.text((margem, altura - 340 * sy), nome, font=f_autor, fill=c_texto)
+
+    destino = DIR_OUTPUT / slug_ebook / "imagens"
+    destino.mkdir(parents=True, exist_ok=True)
+    caminho = destino / nome_arquivo
+    imagem.convert("RGB").save(caminho, "PNG")
+    return caminho
+
+
+def gerar_capa_livro_mae(slug_livro_mae):
+    """Capa A4 do livro-mae: mesma composicao da serie, titulo real da obra."""
+    dir_obra = DIR_OUTPUT / slug_livro_mae
+    sumario = {}
+    sum_path = dir_obra / "sumario_macro.json"
+    if sum_path.exists():
+        try:
+            sumario = json.loads(sum_path.read_text(encoding="utf-8"))
+        except ValueError:
+            sumario = {}
+    titulo = sumario.get("titulo_obra") or slug_livro_mae
+    autor = "Heverton Eduardo Peres"
+    caminho = gerar_capa(
+        1, titulo, autor, slug_livro_mae,
+        largura=LARGURA_A4, altura=ALTURA_A4,
+        rodape=f"{autor}  ·  Livro-Mãe da Série",
+        nome_arquivo="capa_livro.png",
+    )
+    print(f"  [OK] livro-mae: capa A4 {caminho.relative_to(DIR_PROJETO)} "
+          f"({LARGURA_A4}x{ALTURA_A4}px)")
+    return 0
+
+
+def main():
+    ap = argparse.ArgumentParser(
+        description="Gera capas graficas da serie (ebooks 1:1,6 e livro-mae A4)")
+    ap.add_argument("slug_livro_mae")
+    ap.add_argument("--ebook", type=int, default=None,
+                    help="indice do ebook (default: todos)")
+    ap.add_argument("--livro-mae", action="store_true",
+                    help="gera apenas a capa A4 do livro-mae (imagens/capa_livro.png)")
+    args = ap.parse_args()
+
+    if args.livro_mae:
+        return gerar_capa_livro_mae(args.slug_livro_mae)
+
+    base = DIR_OUTPUT / args.slug_livro_mae / "ebooks"
+    manifesto = json.loads((base / "estrutura_ebooks.json").read_text(encoding="utf-8"))
+
+    alvos = manifesto["ebooks"] if args.ebook is None else [
+        e for e in manifesto["ebooks"] if e["indice"] == args.ebook]
+    if not alvos:
+        print(f"[ERRO] Nenhum ebook encontrado (ebook={args.ebook})")
+        return 1
+
+    for e in alvos:
+        i = e["indice"]
+        dir_ebook = base / f"ebook_{i}"
+        meta = {}
+        meta_path = dir_ebook / "ebook_metadados.json"
+        if meta_path.exists():
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        titulo = meta.get("titulo") or e.get("titulo") or f"E-book {i}"
+        autor = meta.get("autor", "Heverton Eduardo Peres")
+        caminho = gerar_capa(i, titulo, autor, f"{args.slug_livro_mae}/ebooks/ebook_{i}")
+        print(f"  [OK] ebook_{i}: capa {caminho.relative_to(DIR_PROJETO)}")
+
+    print("CONCLUIDO: capas 1:1,6 geradas (1600x2560px)")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

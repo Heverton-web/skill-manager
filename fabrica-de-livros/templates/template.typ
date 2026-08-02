@@ -9,6 +9,7 @@
 //   cip_palavras, cip_cdd, cip_isbn    -> ficha catalografica
 //   cip_local, cip_editora             -> imprenta da folha de rosto e da CIP
 //   sinopse                            -> texto da contracapa
+//   capa_imagem                        -> PNG full-bleed como pagina-capa (padrao da serie)
 //   sem_capa_grafica                   -> "1" desativa capa/contracapa graficas
 
 #set document(
@@ -142,6 +143,12 @@
 
 // ── CAPA GRAFICA (Upgrade 5) ──────────────────────────────────────
 #if capa-grafica-ativa {
+  $if(capa_imagem)$
+  // Capa em imagem PNG (padrao visual da serie): pagina inteira, sem margens
+  page(fill: rgb("#0b1020"), margin: 0cm, header: none, footer: none, numbering: none)[
+    #image("$capa_imagem$", width: 100%, height: 100%, fit: "cover")
+  ]
+  $else$
   page(fill: cor.primaria, margin: 0cm, header: none, footer: none, numbering: none)[
     #set par(first-line-indent: 0cm, justify: false, leading: 0.55em)
     #place(top + right, dx: -2.2cm, rect(width: 0.35cm, height: 100%, fill: cor.secundaria))
@@ -165,6 +172,7 @@
       #text(size: 10pt, fill: cor.clara)[#datetime.today().display("[year]")]
     ])
   ]
+  $endif$
 }
 
 // ── FOLHA DE ROSTO (ABNT NBR 6029) ────────────────────────────────
@@ -220,7 +228,7 @@ $if(cip_palavras)$
             $if(cip_local)$$cip_local$$else$Brasil$endif$ : $if(cip_editora)$$cip_editora$$else$Edição do Autor$endif$,
             $if(cip_ano)$$cip_ano$$else$#datetime.today().display("[year]")$endif$.
           ]
-          #pad(left: 0.8cm)[$if(cip_paginas)$$cip_paginas$ p.$else$_ p.$endif$ ; 21 cm.]
+          #pad(left: 0.8cm)[$if(cip_paginas)$$cip_paginas$ p. ; 21 cm.$else$; 21 cm.$endif$]
           $if(cip_isbn)$
           #v(0.15cm)
           #pad(left: 0.8cm)[ISBN $cip_isbn$]
