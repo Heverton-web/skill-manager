@@ -26,8 +26,10 @@ de concorrência (`scripts/pool-capitulos.py`), nunca todos de uma vez.
    Guarde as URLs da linha `FONTES:` — são as únicas fontes autorizadas para as
    referências deste capítulo.
 2. Invoque a skill `estrategista` para decompor o capítulo em 3 pilares lógicos de ensino,
-   gerando `cap_<n>_draft.json` (com `ancora_visual` = especificação do diagrama Mermaid e
-   `entrega_tecnica` = artefato de código de cada pilar).
+   gerando `cap_<n>_draft.json` (com `ancora_visual` = especificação do diagrama Mermaid,
+   `entrega_tecnica` = artefato de código de cada pilar, `conceito_denso` = flag do
+   pilar que exige dupla camada de analogia, e `callback_capitulo_anterior` = conceito
+   nomeado de um capítulo anterior a retomar — `null` só no Capítulo 1).
 3. Invoque a skill `redator-eita` para escrever o capítulo nas 7 seções do EITA-V2 e salvar
    `cap_<n>.md`, incluindo obrigatoriamente:
    - **1+ diagrama ```mermaid** na seção 3 (Ilustra), com `%% legenda:` na primeira linha (R11).
@@ -47,6 +49,22 @@ de concorrência (`scripts/pool-capitulos.py`), nunca todos de uma vez.
      reescreva as transições.
    - **Citações numeradas `[N]`:** toda afirmação factual, dado ou estatística tem citação
      vinculada a uma fonte real do dossiê — e todo `[N]` do corpo existe na seção 7.
+   - **Sem citações empilhadas:** nenhuma sequência `[N][N]` sem prosa entre elas —
+     cada citação vem depois de uma frase que já explica a ideia (evita tom de
+     revisão de literatura).
+   - **Motivo condutor reaproveitado:** a seção Ilustra usa o mesmo vocabulário do
+     `motivo_condutor` de `sumario_macro.json` (não uma metáfora nova e isolada do
+     capítulo) — e, se `conceito_denso=true` no pilar, há 2 analogias complementares.
+   - **Cena de contraste na seção Aplica:** existe um "Erro Comum vs. Prática
+     Correta" narrado em 2ª pessoa (situação → erro → diagnóstico → correção),
+     não apenas uma lista de armadilhas.
+   - **Persona do leitor:** a `persona_leitor` do `motivo_condutor` é reforçada
+     em 2ª pessoa 1-2 vezes no capítulo (nem ausente, nem em toda página).
+   - **Callback nomeado:** a Introdução cita explicitamente "Capítulo N" + o
+     conceito de `callback_capitulo_anterior` (exceto no Capítulo 1).
+   - **Ritmo de frase:** evite parágrafos inteiros só de frases longas — varie
+     com frases curtas de impacto (o script `auditar-obra.py` sinaliza ritmo
+     monótono como alerta de estilo não bloqueante).
 5. Se encontrar desvios, corrija autonomamente o capítulo (REGRA 4) e revalide. Máximo de
    3 rodadas internas.
 6. Registre o desfecho no pool de concorrência:

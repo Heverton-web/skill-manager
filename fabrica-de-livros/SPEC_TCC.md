@@ -56,12 +56,15 @@ Especifica o processo disparado por `/criar-tcc <tema-ou-slug>` — variação d
 
 ## 4. Contratos de dados
 
-- `output/<slug>/esboco/config_obra.json` — `tipo_obra="tcc"`, `min_referencias_por_capitulo`.
-- `output/<slug>/sumario_macro.json` — schema com 1 parte, seções ACAD.
-- `output/<slug>/capitulos/cap_<n>.md` — seção com numeração progressiva + citação autor-data.
-- `output/<slug>/tcc_metadados.json` — `resumo`, `palavras_chave`, `abstract_en`,
+TCC vive em `output/tccs/<slug>/` (V4.1: raízes separadas por tipo de obra no topo
+de `output/`). `config_obra.json` fica na raiz da obra, sem subpasta `esboco/`.
+
+- `output/tccs/<slug>/config_obra.json` — `tipo_obra="tcc"`, `min_referencias_por_capitulo`.
+- `output/tccs/<slug>/sumario_macro.json` — schema com 1 parte, seções ACAD.
+- `output/tccs/<slug>/capitulos/cap_<n>.md` — seção com numeração progressiva + citação autor-data.
+- `output/tccs/<slug>/tcc_metadados.json` — `resumo`, `palavras_chave`, `abstract_en`,
   `keywords_en`, `instituicao`, `curso`, `orientador`, `local`, `ano`.
-- `output/<slug>/revisao/relatorio_abnt_tcc.json` — saída de `validar-abnt-tcc.py`.
+- `output/tccs/<slug>/revisao/relatorio_abnt_tcc.json` — saída de `validar-abnt-tcc.py`.
 
 ## 5. Casos de borda
 

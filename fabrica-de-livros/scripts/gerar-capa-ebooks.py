@@ -241,18 +241,19 @@ def main():
     if args.livro_mae:
         return gerar_capa_livro_mae(args.slug_livro_mae)
 
-    base = DIR_OUTPUT / args.slug_livro_mae / "ebooks"
-    manifesto = json.loads((base / "estrutura_ebooks.json").read_text(encoding="utf-8"))
+    dir_mae = DIR_OUTPUT / args.slug_livro_mae
+    derivados = json.loads((dir_mae / "derivados.json").read_text(encoding="utf-8"))
+    ebooks = derivados.get("ebooks", {}).get("itens", [])
 
-    alvos = manifesto["ebooks"] if args.ebook is None else [
-        e for e in manifesto["ebooks"] if e["indice"] == args.ebook]
+    alvos = ebooks if args.ebook is None else [
+        e for e in ebooks if e["indice"] == args.ebook]
     if not alvos:
         print(f"[ERRO] Nenhum ebook encontrado (ebook={args.ebook})")
         return 1
 
     for e in alvos:
         i = e["indice"]
-        dir_ebook = base / f"ebook_{i}"
+        dir_ebook = DIR_OUTPUT / e["diretorio"]
         meta = {}
         meta_path = dir_ebook / "ebook_metadados.json"
         if meta_path.exists():
@@ -260,8 +261,8 @@ def main():
         titulo = meta.get("titulo") or e.get("titulo") or f"E-book {i}"
         autor = meta.get("autor", "Heverton Eduardo Peres")
         subtitulo = meta.get("subtitulo") or e.get("subtitulo") or ""
-        selo = meta.get("selo_serie") or manifesto.get("selo_serie")
-        caminho = gerar_capa(i, titulo, autor, f"{args.slug_livro_mae}/ebooks/ebook_{i}",
+        selo = meta.get("selo_serie") or derivados.get("selo_serie")
+        caminho = gerar_capa(i, titulo, autor, e["diretorio"],
                              subtitulo=subtitulo, selo=selo)
         thumb = gerar_thumbnail(caminho)
         print(f"  [OK] ebook_{i}: capa {caminho.relative_to(DIR_PROJETO)} + thumbnail {thumb.name}")

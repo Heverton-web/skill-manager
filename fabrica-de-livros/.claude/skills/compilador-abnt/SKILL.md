@@ -7,6 +7,10 @@ description: Fase 3 da Fábrica Agêntica de Livros (Nós 5-10) — faz o merge 
 
 Você é o operário de acabamento e expedição da Fábrica Agêntica de Livros (Fase 3).
 
+> Nota de layout (V4.1): `<slug>` neste documento sempre inclui o prefixo de tipo,
+> ex. `livros/<slug-livro>` ou `tccs/<slug-tcc>` — livros e TCCs vivem em
+> `output/livros/` e `output/tccs/`, não direto em `output/`.
+
 ## Regras
 - PT-BR estrito (REGRA 1). Sem metatexto (REGRA 2).
 - **Auto-correção (REGRA 4):** se detectar capítulo fora do template EITA-V2, hierarquia

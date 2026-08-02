@@ -26,22 +26,34 @@ novo**: reescreve o tom de capítulos já compilados do livro-mãe.
 | Citação | `[N]` ou autor-data, obrigatória | Nenhuma exigida |
 | Estrutura | Fixa (EITA-V2/ACAD/IMRaD) | Livre, parágrafos curtos, CTA final |
 
-## 3. Layout de Diretórios
+## 3. Layout de Diretórios (V4.1)
+
+E-books vivem no TOPO de `output/` (`output/ebooks/`), não aninhados dentro da
+pasta do livro-mãe — a referência cruzada é o campo `slug_livro_mae` dentro do
+`sumario_macro.json` de cada ebook, e o manifesto oficial fica em
+`output/livros/<slug-livro-mae>/derivados.json` (seção `ebooks`).
 
 ```
-output/<slug-livro-mae>/
+output/livros/<slug-livro-mae>/
 ├── capitulos/cap_1..N.md            ← fonte (livro-mae ja compilado)
-└── ebooks/
-    ├── estrutura_ebooks.json        ← manifesto: titulo, capitulos-fonte, status, caminho .epub
-    ├── ebook_1/
-    │   ├── sumario_macro.json       ← capitulos_fonte_livro_mae
-    │   ├── ebook_metadados.json     ← titulo, autor
-    │   ├── capitulos/cap_1..M.md    ← versao adaptada (tom leve) + CTA
-    │   ├── imagens/capa.png         ← opcional (1:1,6)
-    │   ├── livro_final.md
-    │   └── ebook_1.epub
-    └── ebook_2/ ...
+└── derivados.json                   ← manifesto: ebooks.itens[] (titulo, slug,
+                                        diretorio, capitulos-fonte, status, caminho .epub)
+
+output/ebooks/
+├── <slug-livro-mae>--eb-01-<slug-titulo>/
+│   ├── sumario_macro.json       ← capitulos_fonte_livro_mae + slug_livro_mae
+│   ├── ebook_metadados.json     ← titulo, autor
+│   ├── capitulos/cap_1..M.md    ← versao adaptada (tom leve) + CTA
+│   ├── imagens/capa.png         ← opcional (1:1,6)
+│   ├── livro_final.md
+│   └── <slug-livro-mae>--eb-01-<slug-titulo>.epub
+└── <slug-livro-mae>--eb-02-<slug-titulo>/ ...
 ```
+
+O prefixo `<slug-livro-mae>--` no nome da pasta evita colisão entre ebooks de
+livros diferentes e mantém os ebooks do mesmo livro agrupados alfabeticamente
+ao listar `output/ebooks/`. `gerar-epub.py` nomeia o `.epub` a partir do nome da
+própria pasta — sem passo manual de renomeação.
 
 ## 4. Fatiamento (scripts/fatiar-obra.py --ebooks)
 

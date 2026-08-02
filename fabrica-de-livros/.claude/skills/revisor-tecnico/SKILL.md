@@ -28,7 +28,7 @@ python scripts/validar-codigo.py <slug>
 python scripts/renderizar-diagramas.py <slug> --capitulos --validar
 ```
 Artefatos lidos depois:
-- `output/<slug>/revisao/relatorio_auditoria.json` — requisitos automatizáveis (R1-R4, R9-R14), sobreposição, terminologia
+- `output/<slug>/revisao/relatorio_auditoria.json` — requisitos automatizáveis (R1-R4, R9-R14), sobreposição, terminologia, e `alertas_estilo` (citações empilhadas, recorrência do motivo condutor — não bloqueante, ver Passo 3.1)
 - `output/<slug>/validacao/relatorio_codigo.json` — sintaxe de cada bloco de código
 - `output/<slug>/validacao/relatorio_diagramas.json` — sintaxe dos diagramas Mermaid
 
@@ -55,6 +55,26 @@ Amostre 3 capítulos distantes entre si (início, meio, fim) e verifique:
 - Densidade crescente conforme a obra avança (arco do `arquiteto`).
 - Mesma pessoa verbal e mesmo grau de formalidade em todos.
 Se um capítulo destoar, ajuste as transições dele — não reescreva o capítulo todo.
+
+### Passo 3.1 — Alertas de estilo (não bloqueantes)
+Leia `relatorio_auditoria.json.alertas_estilo` (quando `tipo_obra=livro`). São
+recomendações de forma de comunicação — **nunca** bloqueiam a liberação da Fase 3
+nem entram no veredito CONFORME/NÃO CONFORME, mas devem ser corrigidas quando o
+custo for baixo (REGRA 4, auto-correção oportunista):
+- `capitulos_com_citacao_empilhada`: reescreva o trecho inserindo uma frase de
+  transição entre as citações, ou mova o dado excedente para a seção Técnica.
+- `capitulos_sem_recorrencia_motivo_condutor`: o capítulo não reaproveita o
+  vocabulário do `motivo_condutor` fora da seção Ilustra — ajuste 1-2 transições
+  (Explica/Técnica/Aplica/Conclusão) para usar o mesmo vocabulário do motivo
+  condutor da obra, sem reescrever o capítulo inteiro.
+- `capitulos_sem_callback_capitulo_anterior`: a Introdução não nomeia
+  explicitamente um capítulo/conceito anterior (exceto Capítulo 1, que não
+  tem callback) — adicione 1 frase citando "Capítulo N" e o conceito retomado.
+- `capitulos_ritmo_monotono`: frases uniformemente longas (baixo coeficiente
+  de variação) sugerem tom de relatório — quebre 1-2 frases longas em frases
+  curtas de impacto, sem reescrever o parágrafo inteiro.
+Se o volume de capítulos afetados for grande, registre como recomendação no
+parecer (Passo 5) em vez de reescrever tudo — o objetivo é não travar a esteira.
 
 ### Passo 4 — Reauditoria e veredito
 ```bash
@@ -85,6 +105,10 @@ CONFORME | CONFORME COM RESSALVAS | NÃO CONFORME
 
 ## Não conformidades residuais
 (lista objetiva ou "nenhuma")
+
+## Recomendações de estilo (não bloqueantes)
+(citações empilhadas e/ou capítulos sem recorrência do motivo condutor —
+lista objetiva com os capítulos afetados, ou "nenhuma")
 ```
 
 Atualize o estado no MCP `db_state`: `fase_atual="fase_2_5_revisao"`,

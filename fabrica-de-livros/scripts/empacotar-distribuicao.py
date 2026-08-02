@@ -41,15 +41,8 @@ Para licenciamento e permissoes, contate o autor.
 """
 
 
-def carregar_manifesto_ebooks(slug):
-    caminho = DIR_OUTPUT / slug / "ebooks" / "estrutura_ebooks.json"
-    if not caminho.exists():
-        return None
-    return json.loads(caminho.read_text(encoding="utf-8"))
-
-
-def carregar_manifesto_artigos(slug):
-    caminho = DIR_OUTPUT / slug / "artigos" / "estrutura_artigos.json"
+def carregar_derivados(slug):
+    caminho = DIR_OUTPUT / slug / "derivados.json"
     if not caminho.exists():
         return None
     return json.loads(caminho.read_text(encoding="utf-8"))
@@ -110,16 +103,15 @@ def empacotar(slug):
         print(f"[ERRO] livro_final.pdf nao encontrado em {dir_obra}")
         return 1
 
-    manifesto = carregar_manifesto_ebooks(slug) or {}
-    ebooks_previstos = manifesto.get("ebooks", [])
+    derivados = carregar_derivados(slug) or {}
+    ebooks_previstos = derivados.get("ebooks", {}).get("itens", [])
     if not ebooks_previstos:
-        print(f"  [INFO] sem ebooks/estrutura_ebooks.json para {slug} — pacote so com livro/artigos")
+        print(f"  [INFO] sem ebooks em derivados.json para {slug} — pacote so com livro/artigos")
 
-    manifesto_artigos = carregar_manifesto_artigos(slug)
-    artigos = (manifesto_artigos or {}).get("artigos", [])
+    artigos = derivados.get("artigos", {}).get("itens", [])
 
     config = {}
-    config_path = dir_obra / "esboco" / "config_obra.json"
+    config_path = dir_obra / "config_obra.json"
     if config_path.exists():
         config = json.loads(config_path.read_text(encoding="utf-8"))
 
@@ -150,28 +142,29 @@ def empacotar(slug):
     artigos_copiados = []
     for a in artigos:
         i = a["indice"]
-        dir_art = dir_obra / "artigos" / f"artigo_{i}"
-        pdf_art = dir_art / f"artigo_{i}.pdf"
+        dir_art = DIR_OUTPUT / a["diretorio"]
+        pdf_art = dir_art / "livro_final.pdf"
         if pdf_art.exists():
             shutil.copy2(pdf_art, dest_artigos / f"artigo_{i}.pdf")
             artigos_copiados.append(a)
             print(f"  [OK] artigos/artigo_{i}.pdf ({pdf_art.stat().st_size // 1024} KB)")
         else:
-            falhas.append(f"artigos/artigo_{i}/artigo_{i}.pdf")
+            falhas.append(f"{a['diretorio']}/livro_final.pdf")
             print(f"  [AVISO] artigos/artigo_{i}.pdf ausente — pacote incompleto!")
 
     # 2. EPUBs + capas (+ thumbnails, se geradas por scripts/gerar-capa-ebooks.py)
     ebooks_copiados = []
     for e in ebooks_previstos:
         i = e["indice"]
-        dir_eb = dir_obra / "ebooks" / f"ebook_{i}"
-        epub = dir_eb / f"ebook_{i}.epub"
-        if epub.exists():
+        dir_eb = DIR_OUTPUT / e["diretorio"]
+        epubs_encontrados = list(dir_eb.glob("*.epub"))
+        epub = epubs_encontrados[0] if epubs_encontrados else None
+        if epub and epub.exists():
             shutil.copy2(epub, dest_ebooks / f"ebook_{i}.epub")
             ebooks_copiados.append(e)
             print(f"  [OK] ebooks/ebook_{i}.epub ({epub.stat().st_size // 1024} KB)")
         else:
-            falhas.append(f"ebooks/ebook_{i}.epub")
+            falhas.append(f"{e['diretorio']}/*.epub")
             print(f"  [AVISO] ebooks/ebook_{i}.epub ausente — pacote incompleto!")
         capa = dir_eb / "imagens" / "capa.png"
         if capa.exists():
@@ -188,7 +181,7 @@ def empacotar(slug):
             print(f"  [AVISO] thumbnail do ebook_{i} ausente (nao bloqueia o pacote)")
 
     # 3. README + LICENSE (lista apenas arquivos efetivamente copiados)
-    tema = config.get("tema") or manifesto.get("slug_livro_mae", slug)
+    tema = config.get("tema") or derivados.get("slug_livro_mae", slug)
     readme = montar_readme(slug, tema, config.get("tamanho_obra", "G"),
                            pdf_orig.stat().st_size // 1024, ebooks_copiados,
                            artigos_copiados)

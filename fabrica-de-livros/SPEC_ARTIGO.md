@@ -16,28 +16,39 @@ o dossiê e o sumário macro já produzidos para um livro-mãe (Fase 1 já execu
 | R-ART-6 | Resumo/Abstract + palavras-chave (PT+EN) | NBR 6028 | Presença em `artigo_metadados.json` |
 | R-ART-7 | PDF final | Pandoc → `.typ` → Typst, `template_artigo.typ` | `compilar-para-pdf.py --tipo artigo` |
 
-## 2. Layout de Diretórios
+## 2. Layout de Diretórios (V4.1)
+
+Artigos vivem no TOPO de `output/` (`output/artigos/`), não aninhados dentro da
+pasta do livro-mãe — isso permite listar todos os artigos de qualquer livro em
+um só lugar. A referência cruzada para o livro-mãe é o campo `slug_livro_mae`
+dentro do `sumario_macro.json` de cada artigo, e o manifesto oficial de todos os
+derivados de um livro fica em `output/livros/<slug-livro-mae>/derivados.json`.
 
 ```
-output/<slug-livro-mae>/
+output/livros/<slug-livro-mae>/
 ├── pesquisa/indice_dossie.json      ← reaproveitado (RAG), nao duplicado
 ├── sumario_macro.json               ← livro-mae, usado so para fatiar
-└── artigos/
-    ├── estrutura_artigos.json       ← manifesto: titulo, capitulos-fonte, status
-    ├── artigo_1/
-    │   ├── sumario_macro.json       ← schema IMRaD (1 parte, 4 secoes)
-    │   ├── config_obra.json         ← tipo_obra=artigo, min_referencias_por_capitulo
-    │   ├── artigo_metadados.json    ← resumo, palavras_chave, abstract_en, keywords_en
-    │   ├── capitulos/cap_1..4.md    ← Introducao/Metodologia/Resultados/Conclusao
-    │   ├── livro_final.md
-    │   └── livro_final.pdf
-    └── artigo_2/ ...
+└── derivados.json                   ← manifesto: artigos.itens[] (titulo, slug,
+                                        diretorio, capitulos-fonte, status) + ebooks.itens[]
+
+output/artigos/
+├── <slug-livro-mae>--art-01-<slug-titulo>/
+│   ├── sumario_macro.json       ← schema IMRaD (1 parte, 4 secoes) + slug_livro_mae
+│   ├── config_obra.json         ← tipo_obra=artigo, min_referencias_por_capitulo
+│   ├── artigo_metadados.json    ← resumo, palavras_chave, abstract_en, keywords_en
+│   ├── capitulos/cap_1..4.md    ← Introducao/Metodologia/Resultados/Conclusao
+│   ├── livro_final.md
+│   └── livro_final.pdf
+└── <slug-livro-mae>--art-02-<slug-titulo>/ ...
 ```
 
 O identificador de "slug" usado em todos os scripts (`auditar-obra.py`,
-`compilar-para-pdf.py`, `pool-capitulos.py`) para um artigo é o caminho aninhado
-`<slug-livro-mae>/artigos/artigo_<n>` — todos os scripts resolvem caminhos por
-`output/<slug>/...`, e `Path` trata caminhos com `/` normalmente.
+`compilar-para-pdf.py`, `pool-capitulos.py`) para um artigo é o caminho completo
+`artigos/<slug-livro-mae>--art-<NN>-<slug-titulo>` — todos os scripts resolvem
+caminhos por `output/<slug>/...`, e `Path` trata caminhos com `/` normalmente. O
+prefixo `<slug-livro-mae>--` evita colisão de nomes entre artigos de livros
+diferentes e mantém os artigos do mesmo livro agrupados alfabeticamente ao
+listar `output/artigos/`.
 
 ## 3. Fatiamento (scripts/fatiar-obra.py)
 

@@ -159,6 +159,11 @@ Mensagem objetiva (REGRA 2) informando: caminho de `livro_final.md`, status de `
 
 ## 5. Contratos de dados usados no processo
 
+Livro vive em `output/livros/<slug>/` (V4.1: raízes separadas por tipo de obra no
+topo de `output/` — ver seção 1.5 do `CLAUDE.md`). `config_obra.json` (quando a
+obra nasceu via `/esbocar`) fica na raiz da obra, sem subpasta `esboco/`. Nos
+caminhos abaixo, `<slug>` já denota `livros/<slug>`.
+
 - `templates/payload_estado.json` — payload genérico de estado inter-agentes.
 - `output/<slug>/sumario_macro.json` — schema do `arquiteto` (coordenadas de partes e capítulos).
 - `output/<slug>/capitulos/cap_<n>_draft.json` — draft pedagógico do capítulo (3 pilares EITA).

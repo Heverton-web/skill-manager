@@ -177,9 +177,16 @@ da seção 1.5 (ver `SPEC_TCC.md`/`SPEC_ARTIGO.md`/`SPEC_EBOOK.md`).
 1. **Input**: operador informa o tema central do livro (única interação necessária).
 2. **Fase 1**: `pesquisador`/`subagente-pesquisador` varre fontes → `indexar-dossie.py --indexar` monta o índice RAG → `arquiteto` gera a planta baixa do sumário macro.
 3. **Fase 2** (Manufatura Tática Autônoma & Paralela **em lotes**): o Orquestrador consulta `pool-capitulos.py --plano --lote 4` e instancia `subagente-redator-capitulo` lote a lote (estrategista + redator-eita + diagrama Mermaid + CI de código + auto-validação). Falha de subagente é retentada com backoff exponencial (máx. 3 tentativas por capítulo).
-4. **Fase 2.5** (Peer Review): `auditar-obra.py` + `validar-codigo.py` + validação de diagramas produzem evidência; a skill `revisor-tecnico` (e, em lotes, `subagente-revisor-tecnico`) corrige sobreposição entre capítulos, terminologia inconsistente, truncamento, código quebrado e diagramas inválidos. Parecer em `output/<livro>/revisao/parecer_revisao.md`.
-5. **Fase 3**: `compilador-abnt` faz o merge final, inclui prefácio, conclusão, sumário dinâmico, referências e normas ABNT em `output/<livro>/livro_final.md`.
-6. **Fase 3, passo final — Exportação em PDF (Nó 10)**: `compilar-para-pdf.py <slug> --paginas-exatas` (ou `scripts/converter-md-pdf.ps1 -Slug <slug>`) renderiza os diagramas Mermaid em PNG, deriva capa gráfica e ficha catalográfica, e compila **Pandoc → `.typ` → Typst** para produzir `output/<livro>/livro_final.pdf` (margens ABNT, Times New Roman 12pt, sumário automático, paginação). CloudConvert fica como fallback opcional se configurado.
+4. **Fase 2.5** (Peer Review): `auditar-obra.py` + `validar-codigo.py` + validação de diagramas produzem evidência; a skill `revisor-tecnico` (e, em lotes, `subagente-revisor-tecnico`) corrige sobreposição entre capítulos, terminologia inconsistente, truncamento, código quebrado e diagramas inválidos. Parecer em `output/livros/<slug>/revisao/parecer_revisao.md`.
+5. **Fase 3**: `compilador-abnt` faz o merge final, inclui prefácio, conclusão, sumário dinâmico, referências e normas ABNT em `output/livros/<slug>/livro_final.md`.
+6. **Fase 3, passo final — Exportação em PDF (Nó 10)**: `compilar-para-pdf.py livros/<slug> --paginas-exatas` (ou `scripts/converter-md-pdf.ps1 -Slug livros/<slug>`) renderiza os diagramas Mermaid em PNG, deriva capa gráfica e ficha catalográfica, e compila **Pandoc → `.typ` → Typst** para produzir `output/livros/<slug>/livro_final.pdf` (margens ABNT, Times New Roman 12pt, sumário automático, paginação). CloudConvert fica como fallback opcional se configurado.
+
+> **Estrutura de `output/` (V4.1):** separada por tipo de obra no topo —
+> `output/livros/<slug>/`, `output/tccs/<slug>/`, `output/artigos/<slug-livro-mae>--art-NN-.../`,
+> `output/ebooks/<slug-livro-mae>--eb-NN-.../`. Artigos e e-books derivados NAO ficam
+> aninhados dentro da pasta do livro-mãe; a referência cruzada é o campo
+> `slug_livro_mae` no `sumario_macro.json` de cada um, e o manifesto
+> `output/livros/<slug>/derivados.json` no livro-mãe lista os que ele gerou.
 
 > **Nota técnica (V3):** não use `pandoc --pdf-engine=typst` em livros com figuras — o Pandoc
 > reescreve os caminhos das imagens em forma absoluta e o Typst os rejeita no Windows

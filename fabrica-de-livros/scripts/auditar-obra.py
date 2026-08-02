@@ -23,7 +23,9 @@ Fase A (V4) — tipos de obra alem de livro:
     python scripts/auditar-obra.py <slug> --tipo tcc
     python scripts/auditar-obra.py <slug> --tipo artigo --min-refs 5
     (se omitido, --tipo/--min-refs/--tamanho sao lidos de
-     output/<slug>/esboco/config_obra.json; sem esboco, assume livro/V3)
+     output/<slug>/config_obra.json; sem esse arquivo, assume livro/V3.
+     <slug> inclui o prefixo de tipo, ex. livros/<slug-livro>,
+     artigos/<slug-artigo>, ebooks/<slug-ebook>, tccs/<slug-tcc>)
 
 Relatorio: output/<slug>/revisao/relatorio_auditoria.json
 """
@@ -31,6 +33,7 @@ Relatorio: output/<slug>/revisao/relatorio_auditoria.json
 import argparse
 import json
 import re
+import statistics
 import sys
 import unicodedata
 from collections import defaultdict
@@ -41,7 +44,7 @@ import parametros_obra as PO
 DIR_PROJETO = Path(__file__).resolve().parent.parent
 DIR_OUTPUT = DIR_PROJETO / "output"
 
-# Defaults V3 (livro, sem esboco/config_obra.json) — ver parametros_obra.py para
+# Defaults V3 (livro, sem config_obra.json) — ver parametros_obra.py para
 # os minimos de TCC/artigo/tamanho de livro (P/M/G).
 MIN_CAPITULOS = PO.MIN_CAPITULOS_V3
 MIN_CARACTERES = PO.MIN_CARACTERES_V3
@@ -59,6 +62,7 @@ SECOES_EITA = [
 RE_CODIGO = re.compile(r"^[ \t]*```.*?^[ \t]*```[ \t]*$", re.DOTALL | re.MULTILINE)
 RE_MERMAID = re.compile(r"^[ \t]*```[ \t]*mermaid", re.MULTILINE | re.IGNORECASE)
 RE_CITACAO = re.compile(r"\[\d{1,3}\]")
+RE_CITACAO_EMPILHADA = re.compile(r"(?:\[\d{1,3}\][ \t]*){2,}")
 RE_HR = re.compile(r"^[ \t]*(-{3,}|\*{3,}|_{3,})[ \t]*$", re.MULTILINE)
 RE_PENDENCIA = re.compile(
     r"(\bTODO\b|\bFIXME\b|\bTBD\b|lorem ipsum|\[inserir|\[completar|"
@@ -66,6 +70,15 @@ RE_PENDENCIA = re.compile(
 
 # Termos tecnicos candidatos: palavras com maiuscula interna, siglas, hifenizados
 RE_TERMO = re.compile(r"\b[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9]*(?:[-\.][A-Za-zÀ-ÿ0-9]+)*\b")
+
+# Callback nomeado a capitulo anterior: "Capitulo N" (N != proprio) ou frase generica
+RE_CALLBACK_NUMERADO = re.compile(r"[Cc]ap[íi]tulo\s+(\d+)")
+RE_CALLBACK_GENERICO = re.compile(r"\bcap[íi]tulos?\s+anterior(?:es)?\b", re.IGNORECASE)
+
+# Heuristica de ritmo de frase: quebra em fim de frase seguido de maiuscula/aspas
+RE_FRASE = re.compile(r"(?<=[\.\!\?])\s+(?=[A-ZÀ-Ý\"“])")
+RITMO_CV_MINIMO = 0.35   # coeficiente de variacao abaixo disso = ritmo monotono
+RITMO_MEDIA_MINIMA = 18  # so alerta se, alem de monotono, a frase media for longa
 
 
 def sem_acento(texto):
@@ -117,7 +130,41 @@ def paragrafos_relevantes(texto, minimo_palavras=40):
     return saida
 
 
-def auditar_capitulo(caminho):
+def tem_callback_capitulo_anterior(corpo_sem_titulo, numero_proprio):
+    """Heuristico (estilo, nao bloqueante): ha mencao nomeada a um capitulo
+    anterior distinto do proprio, ou a frase generica "capitulo(s) anterior(es)"?
+    """
+    if RE_CALLBACK_GENERICO.search(corpo_sem_titulo):
+        return True
+    for m in RE_CALLBACK_NUMERADO.finditer(corpo_sem_titulo):
+        try:
+            if int(m.group(1)) != int(numero_proprio):
+                return True
+        except ValueError:
+            continue
+    return False
+
+
+def ritmo_de_frase(texto):
+    """Media e coeficiente de variacao do comprimento (em palavras) das frases.
+
+    Heuristico simples (nao um parser gramatical): usado apenas como sinal de
+    estilo nao bloqueante — baixa variacao + frases longas sugere tom de
+    relatorio/revisao de literatura em vez de mentor com ritmo variado.
+    """
+    limpo = RE_CODIGO.sub("", texto)
+    limpo = re.sub(r"^#{1,6}.*$", "", limpo, flags=re.MULTILINE)
+    frases = [f for f in RE_FRASE.split(limpo) if len(f.split()) >= 3]
+    comprimentos = [len(f.split()) for f in frases]
+    if len(comprimentos) < 8:
+        return None
+    media = statistics.mean(comprimentos)
+    desvio = statistics.pstdev(comprimentos)
+    coef_variacao = round(desvio / media, 3) if media else 0.0
+    return {"media_palavras_por_frase": round(media, 1), "coeficiente_variacao": coef_variacao}
+
+
+def auditar_capitulo(caminho, vocabulario=None):
     texto = caminho.read_text(encoding="utf-8", errors="replace")
     numero = re.search(r"cap_(\d+)", caminho.stem).group(1)
     corpo_sem_codigo = RE_CODIGO.sub("", texto)
@@ -164,6 +211,32 @@ def auditar_capitulo(caminho):
     orfas = sorted(numeros_inline - numeros_refs)
     nao_citadas = sorted(numeros_refs - numeros_inline)
 
+    # Alerta de estilo (nao bloqueante) — citacoes empilhadas sem prosa entre elas
+    citacoes_empilhadas = [
+        m.group(0).strip() for m in RE_CITACAO_EMPILHADA.finditer(corpo_texto)
+        if len(RE_CITACAO.findall(m.group(0))) >= 2
+    ]
+
+    # Alerta de estilo (nao bloqueante) — recorrencia do motivo condutor fora da Ilustra
+    vocabulario_fora_ilustra = None
+    if vocabulario:
+        corpo_fora_ilustra = "\n".join(
+            s["corpo"] for num, s in secoes.items() if num != 3
+        )
+        alvo = sem_acento(corpo_fora_ilustra).lower()
+        vocabulario_fora_ilustra = sum(
+            alvo.count(sem_acento(termo).lower()) for termo in vocabulario
+        )
+
+    # Alerta de estilo (nao bloqueante) — callback nomeado a capitulo anterior
+    corpo_sem_titulo = re.sub(r"\A#[^\n]*\n", "", corpo_sem_codigo, count=1)
+    callback_presente = (
+        int(numero) == 1 or tem_callback_capitulo_anterior(corpo_sem_titulo, numero)
+    )
+
+    # Alerta de estilo (nao bloqueante) — ritmo de frase (heuristico)
+    ritmo = ritmo_de_frase(corpo_sem_codigo)
+
     return {
         "capitulo": numero,
         "arquivo": caminho.name,
@@ -181,6 +254,10 @@ def auditar_capitulo(caminho):
         "ultima_linha": ultima[-90:],
         "refs_orfas": orfas,
         "refs_nao_citadas": nao_citadas,
+        "citacoes_empilhadas": citacoes_empilhadas,
+        "vocabulario_fora_ilustra": vocabulario_fora_ilustra,
+        "callback_presente": callback_presente,
+        "ritmo_frase": ritmo,
         "_texto": texto,
     }
 
@@ -454,11 +531,49 @@ def montar_requisitos_academico(capitulos, tipo, min_refs, caracteres_obra=None)
     return requisitos
 
 
+def montar_alertas_estilo(capitulos, vocabulario):
+    """Recomendacoes NAO bloqueantes de forma de comunicacao (nao afetam o veredito).
+
+    Cobre as sugestoes de melhorias/relatorio-tom-de-comunicacao.md (4.6) e da
+    rodada 2 de sugestoes: citacoes empilhadas (tom de revisao de literatura),
+    ausencia de recorrencia do motivo condutor fora da Ilustra, ausencia de
+    callback nomeado a capitulo anterior, e ritmo de frase monotono.
+    """
+    capitulos_citacao_empilhada = [
+        {"capitulo": c["capitulo"], "ocorrencias": c["citacoes_empilhadas"]}
+        for c in capitulos if c.get("citacoes_empilhadas")
+    ]
+    capitulos_sem_motivo_condutor = []
+    if vocabulario:
+        capitulos_sem_motivo_condutor = [
+            c["capitulo"] for c in capitulos
+            if c.get("vocabulario_fora_ilustra") == 0
+        ]
+    capitulos_sem_callback = [
+        c["capitulo"] for c in capitulos if c.get("callback_presente") is False
+    ]
+    capitulos_ritmo_monotono = [
+        {"capitulo": c["capitulo"], **c["ritmo_frase"]}
+        for c in capitulos
+        if c.get("ritmo_frase")
+        and c["ritmo_frase"]["coeficiente_variacao"] < RITMO_CV_MINIMO
+        and c["ritmo_frase"]["media_palavras_por_frase"] >= RITMO_MEDIA_MINIMA
+    ]
+    return {
+        "motivo_condutor_avaliado": bool(vocabulario),
+        "vocabulario_motivo_condutor": vocabulario or [],
+        "capitulos_com_citacao_empilhada": capitulos_citacao_empilhada,
+        "capitulos_sem_recorrencia_motivo_condutor": capitulos_sem_motivo_condutor,
+        "capitulos_sem_callback_capitulo_anterior": capitulos_sem_callback,
+        "capitulos_ritmo_monotono": capitulos_ritmo_monotono,
+    }
+
+
 def main():
     ap = argparse.ArgumentParser(description="Auditoria contratual da obra (Fase 2.5)")
     ap.add_argument("slug")
     ap.add_argument("--tipo", choices=("livro", "tcc", "artigo", "ebook"), default=None,
-                    help="por padrao, lido de output/<slug>/esboco/config_obra.json")
+                    help="por padrao, lido de output/<slug>/config_obra.json")
     ap.add_argument("--min-refs", type=int, default=None,
                     help="override do minimo de referencias (padrao: config_obra.json)")
     ap.add_argument("--tamanho", choices=("P", "M", "G"), default=None,
@@ -488,8 +603,16 @@ def main():
         print(f"[ERRO] Nenhum cap_*.md em {dir_caps}")
         return 1
 
+    vocabulario_motivo_condutor = []
     if tipo == "livro":
-        capitulos = [auditar_capitulo(c) for c in caminhos]
+        sumario_path = dir_livro / "sumario_macro.json"
+        if sumario_path.exists():
+            try:
+                sumario = json.loads(sumario_path.read_text(encoding="utf-8"))
+                vocabulario_motivo_condutor = (sumario.get("motivo_condutor") or {}).get("vocabulario") or []
+            except (json.JSONDecodeError, OSError):
+                vocabulario_motivo_condutor = []
+        capitulos = [auditar_capitulo(c, vocabulario_motivo_condutor) for c in caminhos]
     else:
         capitulos = [auditar_secao_academica(c, tipo, min_refs) for c in caminhos]
 
@@ -513,6 +636,8 @@ def main():
     nao_conformes = [r for r in requisitos if not r["conforme"]]
     veredito = "CONFORME" if not nao_conformes else "NAO CONFORME"
 
+    alertas_estilo = montar_alertas_estilo(capitulos, vocabulario_motivo_condutor) if tipo == "livro" else None
+
     relatorio = {
         "slug": args.slug,
         "tipo_obra": tipo,
@@ -523,6 +648,7 @@ def main():
         "requisitos": requisitos,
         "sobreposicao_entre_capitulos": sobreposicao,
         "inconsistencia_terminologica": terminologia,
+        "alertas_estilo": alertas_estilo,
         "capitulos": [{k: v for k, v in c.items() if k != "_texto"} for c in capitulos],
     }
 
@@ -556,6 +682,39 @@ def main():
             print(f"    {t['termo_normalizado']}: {formas}")
     else:
         print("  [OK] Terminologia consistente")
+
+    if alertas_estilo:
+        empilhadas = alertas_estilo["capitulos_com_citacao_empilhada"]
+        sem_motivo = alertas_estilo["capitulos_sem_recorrencia_motivo_condutor"]
+        if empilhadas:
+            total = sum(len(c["ocorrencias"]) for c in empilhadas)
+            print(f"  [ESTILO] {total} citacao(oes) empilhada(s) (tom de revisao de literatura) em "
+                  + ", ".join(f"cap {c['capitulo']}" for c in empilhadas))
+        else:
+            print("  [OK] Nenhuma citacao empilhada detectada")
+        if alertas_estilo["motivo_condutor_avaliado"]:
+            if sem_motivo:
+                print(f"  [ESTILO] motivo condutor da obra some fora da secao Ilustra em: "
+                      + ", ".join(f"cap {c}" for c in sem_motivo))
+            else:
+                print("  [OK] Motivo condutor recorrente em todos os capitulos")
+        else:
+            print("  [INFO] sumario_macro.json sem motivo_condutor — recomendacao de estilo nao avaliada")
+
+        sem_callback = alertas_estilo["capitulos_sem_callback_capitulo_anterior"]
+        if sem_callback:
+            print(f"  [ESTILO] sem callback nomeado a capitulo anterior em: "
+                  + ", ".join(f"cap {c}" for c in sem_callback))
+        else:
+            print("  [OK] Callback ao capitulo anterior presente em todos os capitulos aplicaveis")
+
+        ritmo_monotono = alertas_estilo["capitulos_ritmo_monotono"]
+        if ritmo_monotono:
+            print(f"  [ESTILO] ritmo de frase monotono (possivel tom de relatorio) em: "
+                  + ", ".join(f"cap {c['capitulo']} (media={c['media_palavras_por_frase']}, "
+                              f"cv={c['coeficiente_variacao']})" for c in ritmo_monotono))
+        else:
+            print("  [OK] Ritmo de frase variado em todos os capitulos avaliados")
 
     print(f"\n  VEREDITO: {veredito}")
     print(f"  Relatorio: {destino.relative_to(DIR_PROJETO)}")

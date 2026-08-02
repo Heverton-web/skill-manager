@@ -65,26 +65,63 @@ ou "se tornando um especialista". Ele deve PERCEBER isso sozinho ao longo da lei
 ## Objetivo
 Transformar o dossiê de pesquisa em uma planta baixa validável: distribuição exata de
 Partes e Capítulos, com os marcos estruturais obrigatórios (Introdução de impacto e
-Conclusão sintética) injetados.
+Conclusão sintética) injetados, além do **motivo condutor** que dá unidade narrativa
+à obra inteira (ver seção abaixo).
+
+## Motivo Condutor da Obra (unidade narrativa, só para `tipo_obra = "livro"`)
+
+A obra inteira deve ser ancorada em **uma única metáfora-mestra**, escolhida uma vez
+na Fase 1 e reutilizada por todos os capítulos — nunca uma metáfora nova e isolada
+por capítulo. É esse fio narrativo único (não a citação ou o dado) que faz o leitor
+lembrar o conceito do Capítulo 2 quando chega no Capítulo 9.
+
+**Como escolher:** extraia do dossiê um domínio concreto e físico compatível com o
+tema (ex.: "a fábrica e o chão de fábrica", "o organismo vivo", "a orquestra e a
+partitura", "a torre de controle de tráfego aéreo"). Evite metáforas abstratas
+demais para sustentar 10+ capítulos.
+
+**Como aplicar:** o `redator-eita` deve reutilizar o mesmo vocabulário do motivo
+condutor na seção Ilustra de **todo** capítulo (e, quando natural, também em
+Explica/Técnica/Aplica) — nunca inventar uma metáfora descartável isolada por
+capítulo (ver `templates/template_eita.md`, seção Ilustra).
+
+## Persona do Leitor (identidade recorrente, só para `tipo_obra = "livro"`)
+
+Além do cenário/metáfora, defina um **papel nomeado** que o leitor assume
+progressivamente ao longo da obra (ex.: "Engenheiro Agêntico", "Arquiteto de
+Dados", "Comandante de Operações"). É diferente do motivo condutor: o motivo
+condutor é o cenário (a fábrica); a persona é a identidade que o leitor
+incorpora dentro desse cenário (quem ele se torna). O `redator-eita` reforça
+essa identidade em 2ª pessoa ao longo dos capítulos ("Como Engenheiro
+Agêntico, você...") — sempre com moderação, nunca em toda página.
 
 ## Procedimento
 1. Leia o(s) dossiê(s) de `output/<livro>/pesquisa/`.
-2. Defina a segmentação em Partes (agrupamentos temáticos macro) e, dentro de cada
+2. Se `tipo_obra = "livro"`, defina o motivo condutor da obra (nome, descrição de
+   1-2 frases, um vocabulário de 6-10 termos, e a `persona_leitor`) antes de
+   desenhar os capítulos — ele deve orientar a escolha dos títulos e da progressão.
+3. Defina a segmentação em Partes (agrupamentos temáticos macro) e, dentro de cada
    Parte, a lista de Capítulos, cada um com:
    - `parte` (numeral romano) e `capitulo` (numeral arábico) — coordenadas EITA.
    - Título do capítulo.
    - Objetivo pedagógico em 1 frase.
    - Os 3 pilares lógicos previstos (refinados depois pelo `Skill_Estrategista`).
-3. Garanta que a obra tenha, obrigatoriamente:
+4. Garanta que a obra tenha, obrigatoriamente:
    - Uma Introdução de impacto (antes da Parte I).
    - Uma Conclusão sintética (depois da última Parte).
-4. Grave o sumário macro em `output/<livro>/sumario_macro.json` seguindo o schema:
+5. Grave o sumário macro em `output/<livro>/sumario_macro.json` seguindo o schema:
 
 ```json
 {
   "titulo_obra": "string",
   "tipo_obra": "livro | tcc",
   "tamanho_obra": "P | M | G | null",
+  "motivo_condutor": {
+    "nome": "string (ex.: 'A Fábrica Agêntica')",
+    "descricao": "string (1-2 frases do cenário/persona central)",
+    "vocabulario": ["string", "string", "string", "string", "string", "string"],
+    "persona_leitor": "string (papel nomeado que o leitor assume, ex.: 'Engenheiro Agêntico')"
+  },
   "introducao": "string (objetivo da introdução de impacto)",
   "partes": [
     {
@@ -104,7 +141,11 @@ Conclusão sintética) injetados.
 }
 ```
 
-5. Este arquivo é a fonte da verdade de coordenadas (`parte`/`capitulo`) usada no
-   payload de estado (`templates/payload_estado.json`) por todos os agentes seguintes.
-6. Se o operador pedir um "piloto" ou "teste", reduza o escopo a 1 Parte com 1
-   Capítulo, mantendo a mesma estrutura de arquivo.
+`motivo_condutor` é omitido (ou `null`) quando `tipo_obra = "tcc"` — TCC segue tom
+acadêmico impessoal (`redator-academico`), incompatível com metáfora persistente.
+
+6. Este arquivo é a fonte da verdade de coordenadas (`parte`/`capitulo`) e do
+   `motivo_condutor` usada no payload de estado (`templates/payload_estado.json`) por
+   todos os agentes seguintes.
+7. Se o operador pedir um "piloto" ou "teste", reduza o escopo a 1 Parte com 1
+   Capítulo, mantendo a mesma estrutura de arquivo (incluindo `motivo_condutor`).

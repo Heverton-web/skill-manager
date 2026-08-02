@@ -4,7 +4,8 @@ Fase A (V4) — Parametros compartilhados por tipo de obra.
 
 Modulo importado por auditar-obra.py, arquiteto (via scripts), validar-abnt-tcc.py,
 fatiar-obra.py e gerar-epub.py. Centraliza:
-  - leitura de output/<slug>/esboco/config_obra.json (schema da Fase 0 / `/esbocar`)
+  - leitura de output/<slug>/config_obra.json (schema da Fase 0 / `/esbocar`; <slug>
+    inclui o prefixo de tipo, ex. livros/<slug-livro>, tccs/<slug-tcc>)
   - tabela de tamanhos de livro (P/M/G) -> capitulos e caracteres minimos
   - padroes de citacao por tipo de obra (numerica [N] vs autor-data)
   - valores-padrao para obras V3 sem esboco/ (retrocompatibilidade)
@@ -82,7 +83,7 @@ def minimos_livro(tamanho):
 
 
 def caminho_config(slug):
-    return DIR_OUTPUT / slug / "esboco" / "config_obra.json"
+    return DIR_OUTPUT / slug / "config_obra.json"
 
 
 def carregar_config(slug):
