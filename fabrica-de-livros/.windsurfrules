@@ -32,6 +32,13 @@ abaixo de forma determinística.
   capítulo/manuscrito devem conter apenas Markdown limpo — sem "Aqui está o capítulo...".
 - **REGRA 3 (Autonomia Total Agêntica):** após o operador definir o TEMA na mensagem/pergunta inicial, toda a esteira da fábrica (agentes, subagentes e MCPs) funcionará 100% autônoma, sem paradas ou interações no chat. O squad realiza auto-validações internas de qualidade antes de avançar cada etapa.
 - **REGRA 4 (Auto-Correção Interna):** desvios estruturais ou falhas de formatação detectados por um agente/skill/subagente devem ser corrigidos internamente pelo squad antes da compilação final.
+- **REGRA 5 (Universalidade de Modelo/Harness):** nenhuma skill, subagente ou script
+  desta fábrica pode fixar um modelo LLM específico (ex.: Opus) como dependência
+  obrigatória do fluxo. Todos os `.claude/agents/*.md` declaram `model: inherit` no
+  frontmatter — o subagente herda o modelo da sessão do Orquestrador, nunca um
+  modelo fixo. Isso garante que a esteira produza o mesmo resultado estrutural
+  independentemente do modelo (Sonnet/Opus/Haiku ou outro) ou do harness agêntico
+  usado (ver seção 6, portabilidade multi-IDE).
 
 ## 1.5 Módulos por Tipo de Obra (V4)
 
