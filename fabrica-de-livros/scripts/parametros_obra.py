@@ -33,7 +33,7 @@ TIPOS_VALIDOS = ("livro", "tcc", "artigo", "ebook")
 TAMANHOS = {
     "P": {"partes": 1, "capitulos": 4, "paginas": 40, "caracteres": 100_000},
     "M": {"partes": 3, "capitulos": 9, "paginas": 90, "caracteres": 225_000},
-    "G": {"partes": 5, "capitulos": 10, "paginas": 150, "caracteres": 375_000},
+    "G": {"partes": 5, "capitulos": 20, "paginas": 150, "caracteres": 375_000},
 }
 TAMANHO_PADRAO = "M"
 

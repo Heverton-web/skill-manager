@@ -23,15 +23,24 @@ ruído e conteúdo superficial, e entregar um dossiê estruturado que alimentar�
 
 ## Procedimento
 1. Receba o tema central (ou o tema do capítulo, se a pesquisa for pontual).
-2. Execute de 8 a 12 buscas cobrindo ângulos distintos: fundamentos, estado da arte,
+2. Execute de 12 a 18 buscas cobrindo ângulos distintos: fundamentos, estado da arte,
    artigos científicos, ferramentas/implementações de referência, casos de uso corporativos,
-   controvérsias ou limitações conhecidas.
-3. **OBRIGATÓRIO:** execute no mínimo 3 buscas específicas em fontes acadêmicas:
-   - arXiv.org (papers recentes)
+   dados/estatísticas de mercado, normas/regulação aplicável, controvérsias ou limitações
+   conhecidas.
+3. **OBRIGATÓRIO:** execute no mínimo 5 buscas específicas em fontes acadêmicas,
+   cobrindo o máximo de bases distintas possível (não repita a mesma base):
+   - arXiv.org (papers recentes, preprints)
+   - Google Scholar (varredura ampla, citações)
    - ACM Digital Library
-   - Google Scholar
    - IEEE Xplore
-   - Springer LNCS
+   - Springer Link / LNCS
+   - Semantic Scholar (síntese e grafo de citações)
+   - SciELO (produção científica em português/América Latina — obrigatório
+     quando o tema tiver literatura relevante em PT-BR)
+   - PubMed/PMC (quando o tema tocar saúde, biologia ou ciências da vida)
+   - base-search.net (agregador multidisciplinar de acesso aberto)
+   - Relatórios setoriais/institucionais de referência (ex.: DORA, Gartner,
+     McKinsey, órgãos de classe ou reguladores do setor do tema)
 4. Descarte fontes superficiais (marketing raso, conteúdo duplicado, blogs sem
    substância técnica). Priorize documentação oficial, papers, repositórios de
    referência e fontes técnicas primárias.

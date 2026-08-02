@@ -1,6 +1,7 @@
 ---
 name: subagente-redator-capitulo
 description: Subagente autônomo para manufatura tática completa de 1 capítulo em paralelo (Estratégia + Redação EITA + Diagrama Mermaid + CI de Código + Auto-Validação de Qualidade).
+model: inherit
 ---
 
 # Subagente Redator de Capítulo

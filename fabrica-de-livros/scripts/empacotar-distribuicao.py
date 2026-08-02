@@ -110,10 +110,10 @@ def empacotar(slug):
         print(f"[ERRO] livro_final.pdf nao encontrado em {dir_obra}")
         return 1
 
-    manifesto = carregar_manifesto_ebooks(slug)
-    if manifesto is None or not manifesto.get("ebooks"):
-        print(f"[ERRO] ebooks/estrutura_ebooks.json ausente ou vazio para {slug}")
-        return 1
+    manifesto = carregar_manifesto_ebooks(slug) or {}
+    ebooks_previstos = manifesto.get("ebooks", [])
+    if not ebooks_previstos:
+        print(f"  [INFO] sem ebooks/estrutura_ebooks.json para {slug} — pacote so com livro/artigos")
 
     manifesto_artigos = carregar_manifesto_artigos(slug)
     artigos = (manifesto_artigos or {}).get("artigos", [])
@@ -138,6 +138,13 @@ def empacotar(slug):
     shutil.copy2(pdf_orig, dest / "livro_final.pdf")
     print(f"  [OK] livro_final.pdf ({pdf_orig.stat().st_size // 1024} KB)")
 
+    for nome_origem, nome_destino in (("capa_livro.png", "capa.png"),
+                                       ("thumbnail_livro.png", "thumbnail.png")):
+        origem = dir_obra / "imagens" / nome_origem
+        if origem.exists():
+            shutil.copy2(origem, dest / nome_destino)
+            print(f"  [OK] {nome_destino}")
+
     # 1.5. Artigos derivados
     falhas = []
     artigos_copiados = []
@@ -153,9 +160,9 @@ def empacotar(slug):
             falhas.append(f"artigos/artigo_{i}/artigo_{i}.pdf")
             print(f"  [AVISO] artigos/artigo_{i}.pdf ausente — pacote incompleto!")
 
-    # 2. EPUBs + capas
+    # 2. EPUBs + capas (+ thumbnails, se geradas por scripts/gerar-capa-ebooks.py)
     ebooks_copiados = []
-    for e in manifesto["ebooks"]:
+    for e in ebooks_previstos:
         i = e["indice"]
         dir_eb = dir_obra / "ebooks" / f"ebook_{i}"
         epub = dir_eb / f"ebook_{i}.epub"
@@ -173,6 +180,12 @@ def empacotar(slug):
         else:
             falhas.append(f"ebooks/ebook_{i}/imagens/capa.png")
             print(f"  [AVISO] capa do ebook_{i} ausente — pacote incompleto!")
+        thumb = dir_eb / "imagens" / "thumbnail.png"
+        if thumb.exists():
+            shutil.copy2(thumb, dest_capas / f"thumbnail_ebook_{i}.png")
+            print(f"  [OK] ebooks/capas/thumbnail_ebook_{i}.png")
+        else:
+            print(f"  [AVISO] thumbnail do ebook_{i} ausente (nao bloqueia o pacote)")
 
     # 3. README + LICENSE (lista apenas arquivos efetivamente copiados)
     tema = config.get("tema") or manifesto.get("slug_livro_mae", slug)

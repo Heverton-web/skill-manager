@@ -112,12 +112,12 @@ def quebrar_titulo(texto, fonte_t, max_largura):
 
 
 def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA,
-               subtitulo=None, rodape=None, nome_arquivo="capa.png"):
+               subtitulo=None, rodape=None, nome_arquivo="capa.png",
+               selo=None, camadas=None):
     c_topo, c_base, c_destaque, c_texto = [
         hex_para_rgb(x) for x in PALETAS[(indice - 1) % len(PALETAS)]
     ]
-    if subtitulo is None:
-        subtitulo = "Guia prático para operar, medir e liderar o AIDD"
+    subtitulo = subtitulo or ""
     sx = largura / LARGURA
     sy = altura / ALTURA
 
@@ -137,11 +137,14 @@ def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA
     area_titulo_x = margem
     area_titulo_w = largura - 2 * margem
 
-    # Selo da serie (topo)
-    f_selo = fonte("bold", int(44 * sy))
-    draw.text((margem, 220 * sy), "SÉRIE AI DRIVEN DEVELOPMENT", font=f_selo,
-              fill=interpolar(c_destaque, (255, 255, 255), 0.5))
-    draw.line([(margem, 310 * sy), (margem + 260 * sx, 310 * sy)], fill=c_destaque, width=8)
+    # Selo (topo) — opcional, so aparece se a obra pertencer a uma serie nomeada
+    y_titulo_inicio = 300 * sy
+    if selo:
+        f_selo = fonte("bold", int(44 * sy))
+        draw.text((margem, 220 * sy), selo.upper(), font=f_selo,
+                  fill=interpolar(c_destaque, (255, 255, 255), 0.5))
+        draw.line([(margem, 310 * sy), (margem + 260 * sx, 310 * sy)], fill=c_destaque, width=8)
+        y_titulo_inicio = 430 * sy
 
     # Titulo principal
     f_titulo = fonte("bold", int(128 * sy))
@@ -149,7 +152,7 @@ def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA
     if len(linhas) > 4:
         f_titulo = fonte("bold", int(104 * sy))
         linhas = quebrar_titulo(titulo, f_titulo, area_titulo_w)
-    y = 430 * sy
+    y = y_titulo_inicio
     altura_linha = 150 * sy
     for linha in linhas[:5]:
         draw.text((area_titulo_x, y), linha, font=f_titulo, fill=c_texto)
@@ -160,17 +163,21 @@ def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA
     draw.line([(margem, y), (margem + 200 * sx, y)], fill=c_destaque, width=8)
     y += 70 * sy
 
-    # Subtitulo
-    f_sub = fonte("light", int(52 * sy))
-    draw.text((area_titulo_x, y), subtitulo, font=f_sub,
-              fill=interpolar(c_texto, (0, 0, 0), 0.25))
-    y += 90 * sy
+    # Subtitulo — opcional, derivado da obra (nunca texto fixo de outro livro)
+    if subtitulo:
+        f_sub = fonte("light", int(52 * sy))
+        linhas_sub = quebrar_titulo(subtitulo, f_sub, area_titulo_w)[:3]
+        for linha in linhas_sub:
+            draw.text((area_titulo_x, y), linha, font=f_sub,
+                      fill=interpolar(c_texto, (0, 0, 0), 0.25))
+            y += 66 * sy
+        y += 24 * sy
 
-    # Camadas
-    f_camadas = fonte("bold", int(44 * sy))
-    camadas = "TELA  ·  HARNESS  ·  LLM  ·  TOOLS"
-    draw.text((area_titulo_x, y), camadas, font=f_camadas,
-              fill=interpolar(c_destaque, (255, 255, 255), 0.35))
+    # Camadas/tags — opcional, so se a obra fornecer
+    if camadas:
+        f_camadas = fonte("bold", int(44 * sy))
+        draw.text((area_titulo_x, y), camadas, font=f_camadas,
+                  fill=interpolar(c_destaque, (255, 255, 255), 0.35))
 
     # Rodape: autor
     f_autor = fonte("regular", int(56 * sy))
@@ -184,8 +191,19 @@ def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA
     return caminho
 
 
+def gerar_thumbnail(caminho_capa, largura=300):
+    """Miniatura da capa (mesma proporcao, redimensionada) para catalogo/loja/preview."""
+    nome_thumb = caminho_capa.stem.replace("capa", "thumbnail") + caminho_capa.suffix
+    destino = caminho_capa.with_name(nome_thumb)
+    with Image.open(caminho_capa) as img:
+        altura = round(img.height * (largura / img.width))
+        thumb = img.resize((largura, altura), Image.LANCZOS)
+        thumb.convert("RGB").save(destino, "PNG", optimize=True)
+    return destino
+
+
 def gerar_capa_livro_mae(slug_livro_mae):
-    """Capa A4 do livro-mae: mesma composicao da serie, titulo real da obra."""
+    """Capa A4 do livro-mae: composicao generica, titulo/subtitulo/serie da propria obra."""
     dir_obra = DIR_OUTPUT / slug_livro_mae
     sumario = {}
     sum_path = dir_obra / "sumario_macro.json"
@@ -195,15 +213,18 @@ def gerar_capa_livro_mae(slug_livro_mae):
         except ValueError:
             sumario = {}
     titulo = sumario.get("titulo_obra") or slug_livro_mae
+    subtitulo = sumario.get("subtitulo") or ""
     autor = "Heverton Eduardo Peres"
     caminho = gerar_capa(
         1, titulo, autor, slug_livro_mae,
         largura=LARGURA_A4, altura=ALTURA_A4,
-        rodape=f"{autor}  ·  Livro-Mãe da Série",
+        subtitulo=subtitulo,
+        rodape=autor,
         nome_arquivo="capa_livro.png",
     )
+    thumb = gerar_thumbnail(caminho)
     print(f"  [OK] livro-mae: capa A4 {caminho.relative_to(DIR_PROJETO)} "
-          f"({LARGURA_A4}x{ALTURA_A4}px)")
+          f"({LARGURA_A4}x{ALTURA_A4}px) + thumbnail {thumb.name}")
     return 0
 
 
@@ -238,10 +259,14 @@ def main():
             meta = json.loads(meta_path.read_text(encoding="utf-8"))
         titulo = meta.get("titulo") or e.get("titulo") or f"E-book {i}"
         autor = meta.get("autor", "Heverton Eduardo Peres")
-        caminho = gerar_capa(i, titulo, autor, f"{args.slug_livro_mae}/ebooks/ebook_{i}")
-        print(f"  [OK] ebook_{i}: capa {caminho.relative_to(DIR_PROJETO)}")
+        subtitulo = meta.get("subtitulo") or e.get("subtitulo") or ""
+        selo = meta.get("selo_serie") or manifesto.get("selo_serie")
+        caminho = gerar_capa(i, titulo, autor, f"{args.slug_livro_mae}/ebooks/ebook_{i}",
+                             subtitulo=subtitulo, selo=selo)
+        thumb = gerar_thumbnail(caminho)
+        print(f"  [OK] ebook_{i}: capa {caminho.relative_to(DIR_PROJETO)} + thumbnail {thumb.name}")
 
-    print("CONCLUIDO: capas 1:1,6 geradas (1600x2560px)")
+    print("CONCLUIDO: capas 1:1,6 + thumbnails geradas")
     return 0
 
 

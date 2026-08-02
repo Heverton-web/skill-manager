@@ -49,6 +49,7 @@ MIN_REFS_CAPITULO = PO.MIN_REFS_V3
 MIN_CITACOES_CAPITULO = 3
 MIN_DIAGRAMAS_CAPITULO = 1
 MIN_BLOCOS_CODIGO_CAPITULO = 1
+MIN_CARACTERES_EBOOK = 45_000  # ~18 paginas: piso contra ebook raso/panfletario
 
 SECOES_EITA = [
     (1, "Introdução"), (2, "Explica"), (3, "Ilustra"), (4, "Técnica"),
@@ -402,7 +403,7 @@ def montar_requisitos_livro(capitulos, caracteres_obra, min_capitulos, min_carac
     ]
 
 
-def montar_requisitos_academico(capitulos, tipo, min_refs):
+def montar_requisitos_academico(capitulos, tipo, min_refs, caracteres_obra=None):
     """Requisitos verificaveis por secao/capitulo para TCC/Artigo/Ebook.
 
     Elementos pre-textuais (folha de aprovacao, resumo, abstract) sao verificados
@@ -414,6 +415,13 @@ def montar_requisitos_academico(capitulos, tipo, min_refs):
 
     prefixo = tipo.upper()
     requisitos = []
+
+    if tipo == "ebook":
+        caracteres_obra = caracteres_obra if caracteres_obra is not None else sum(c["caracteres"] for c in capitulos)
+        requisitos.append(
+            {"id": "EBOOK-LEN", "nome": f"Minimo {round(MIN_CARACTERES_EBOOK/2500)} paginas (~{MIN_CARACTERES_EBOOK:,} caracteres)".replace(",", "."),
+             "conforme": caracteres_obra >= MIN_CARACTERES_EBOOK,
+             "detalhe": f"{caracteres_obra:,} caracteres (minimo {MIN_CARACTERES_EBOOK:,}) — ebook raso, sem valor comercial".replace(",", ".")})
 
     if tipo != "ebook":
         requisitos += [
@@ -500,7 +508,7 @@ def main():
         requisitos = montar_requisitos_livro(capitulos, caracteres_obra,
                                              min_capitulos, min_caracteres, min_refs)
     else:
-        requisitos = montar_requisitos_academico(capitulos, tipo, min_refs)
+        requisitos = montar_requisitos_academico(capitulos, tipo, min_refs, caracteres_obra)
 
     nao_conformes = [r for r in requisitos if not r["conforme"]]
     veredito = "CONFORME" if not nao_conformes else "NAO CONFORME"

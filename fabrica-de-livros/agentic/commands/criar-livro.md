@@ -80,21 +80,36 @@ O operador acabou de disparar este comando com o tema central da obra em `$ARGUM
 
 ## Passo 4 — Fase 3 (Compilação + PDF)
 14. Invoque `compilador-abnt` — merge + elementos pré/pós-textuais + ABNT → `livro_final.md`.
-15. Compile o PDF (renderiza os diagramas Mermaid em PNG, monta capa gráfica e ficha
+15. Gere a capa gráfica A4 + thumbnail do livro-mãe (obrigatório, antes da
+     compilação — o template Typst embute `imagens/capa_livro.png` se existir):
+     ```bash
+     python scripts/gerar-capa-ebooks.py <slug> --livro-mae
+     ```
+16. Compile o PDF (renderiza os diagramas Mermaid em PNG, monta capa gráfica e ficha
      catalográfica, e usa o caminho Pandoc → `.typ` → Typst):
      ```bash
      python compilar-para-pdf.py <slug> --paginas-exatas
      ```
      > Alternativa PowerShell: `powershell -ExecutionPolicy Bypass -File scripts/converter-md-pdf.ps1 -Slug <slug>`
-16. Se Pandoc+Typst falhar, tente o fallback CloudConvert:
+17. Se Pandoc+Typst falhar, tente o fallback CloudConvert:
      ```bash
      node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug>
      ```
-17. VALIDE o PDF gerado (existe, tamanho > 0, contagem de páginas ≥ 70).
+18. VALIDE o PDF gerado (existe, tamanho > 0, contagem de páginas ≥ 70).
 
-## Passo 5 — Relatório de Entrega
-18. Exiba, de forma telegráfica (REGRA 2):
-     - caminhos de `livro_final.md` e `livro_final.pdf`
+## Passo 5 — Distribuição (só quando `/criar-livro` roda sozinho, sem artigos/ebooks)
+19. Se este comando não foi disparado por `/produzir-obra-completa` (que
+     empacota no seu próprio Passo 3 final, depois de artigos/ebooks), empacote
+     a obra para distribuição agora:
+     ```bash
+     python scripts/empacotar-distribuicao.py <slug>
+     ```
+     Funciona só com o livro (sem artigos/ebooks) — README/LICENSE listam apenas
+     o que existir. Resultado em `output/<slug>/distribuicao/`.
+
+## Passo 6 — Relatório de Entrega
+20. Exiba, de forma telegráfica (REGRA 2):
+     - caminhos de `livro_final.md`, `livro_final.pdf` e `distribuicao/`
      - total de capítulos, caracteres e páginas do PDF
      - diagramas renderizados e taxa de aprovação do CI de código
      - veredito da auditoria (CONFORME / COM RESSALVAS / NÃO CONFORME)

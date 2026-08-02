@@ -25,15 +25,20 @@ rápida em EPUB.
 
 | Livro-mãe (EITA-V2) | E-book |
 |---|---|
-| Parágrafos de 5–8 linhas | Parágrafos de 2–3 linhas |
+| Parágrafos de 5–8 linhas | Parágrafos de 3–5 linhas |
 | Poucos subtítulos por seção | Subtítulo a cada 2–4 parágrafos |
 | Citação `[N]` no corpo | Removida ou convertida em atribuição narrativa |
-| Diagrama Mermaid técnico | Mantido só se muito simples; senão, resumido em texto |
-| Bloco de código longo | Encurtado ao essencial, ou resumido em texto ("o código completo está disponível em...") |
+| Diagrama Mermaid técnico | Mantido sempre que possível; só resumido em texto se tecnicamente denso demais |
+| Bloco de código longo | Mantido se ilustrativo; encurtado ao essencial só se longo demais |
 | Tom transformacional denso | Tom transformacional leve, mais direto, mais "você" |
 
-**Mantenha:** a substância técnica correta e a voz de autoridade. **Não** vire
-clickbait — o ebook ainda entrega valor real, só com fricção de leitura menor.
+**REGRA DE OURO (R-EBK-5 — proibido encolher conteúdo):** adaptar tom não é
+resumir. Cada capítulo-fonte deve resultar em um capítulo adaptado com **no
+mínimo 80% dos caracteres do original** — corte repetição e jargão
+desnecessário, nunca explicações, exemplos, dados ou argumentos. Um ebook que
+vira panfleto raso não é vendável. **Mantenha:** todo exemplo, todo dado
+concreto, toda explicação de "por quê", a substância técnica correta e a voz
+de autoridade — só a fricção de leitura diminui, o valor entregue não.
 
 ## Estrutura do E-book (padrão de mercado, sem ABNT)
 
@@ -66,10 +71,15 @@ clickbait — o ebook ainda entrega valor real, só com fricção de leitura men
 3. Para cada capítulo-fonte, reescreva-o no tom leve acima e grave em
    `output/<slug>/ebooks/ebook_<n>/capitulos/cap_<j>.md`.
 4. Escreva a seção final `# Próximos Passos` (CTA).
-5. Rode a auditoria estrutural mínima (sem exigir citação/diagrama/código):
+5. Rode a auditoria estrutural (sem exigir citação/diagrama/código, mas **exige
+   um mínimo de ~45.000 caracteres/18 páginas** — requisito EBOOK-LEN, contra
+   ebook raso):
    ```bash
    python scripts/auditar-obra.py <slug>/ebooks/ebook_<n> --tipo ebook
    ```
+   Se reprovar em EBOOK-LEN, releia o(s) capítulo(s)-fonte e reescreva
+   preservando mais substância (R-EBK-5) — nunca invente conteúdo novo para
+   engordar o texto.
 6. Grave `output/<slug>/ebooks/ebook_<n>/ebook_metadados.json`:
    ```json
    {"titulo": "...", "autor": "Heverton Eduardo Peres"}

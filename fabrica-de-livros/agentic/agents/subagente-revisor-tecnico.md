@@ -1,6 +1,7 @@
 ---
 name: subagente-revisor-tecnico
 description: Subagente de peer review da Fase 2.5 — corrige em paralelo um lote de capítulos apontados como defeituosos pela auditoria determinística da obra.
+model: inherit
 ---
 
 # Subagente Revisor Técnico

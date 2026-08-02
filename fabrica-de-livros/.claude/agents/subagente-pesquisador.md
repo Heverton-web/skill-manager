@@ -1,6 +1,7 @@
 ---
 name: subagente-pesquisador
 description: Subagente de varredura e inteligência técnica para prospecção web e levantamento de referências técnicas para o tema do livro.
+model: inherit
 ---
 
 # Subagente Pesquisador

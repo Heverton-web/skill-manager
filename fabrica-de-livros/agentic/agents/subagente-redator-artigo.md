@@ -1,6 +1,7 @@
 ---
 name: subagente-redator-artigo
 description: Subagente autônomo para manufatura completa de 1 Artigo Científico (IMRaD) em paralelo, reaproveitando o dossiê já indexado do livro-mãe via RAG — nunca pesquisa do zero.
+model: inherit
 ---
 
 # Subagente Redator de Artigo Científico

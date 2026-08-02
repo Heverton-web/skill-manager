@@ -48,17 +48,32 @@ cada um internamente em lotes de 4:
    python scripts/pool-capitulos.py <slug> --manifesto ebooks/estrutura_ebooks.json --status
    ```
 
-## Passo 3 — Relatório Consolidado Final
+## Passo 3 — Distribuição (última etapa da esteira, sempre)
 
-8. Exiba, de forma telegráfica (REGRA 2), um relatório único cobrindo tudo o que
+8. Depois que a obra principal e todos os derivados solicitados estiverem
+   prontos (Passos 1-2), empacote tudo para distribuição — esta é a etapa
+   final obrigatória da fábrica, nunca um passo manual fora do fluxo:
+   ```bash
+   python scripts/empacotar-distribuicao.py <slug>
+   ```
+   Copia `livro_final.pdf` (+ capa/thumbnail), cada `artigos/artigo_<i>.pdf` e
+   cada `ebooks/ebook_<i>.epub` (+ capa/thumbnail) para
+   `output/<slug>/distribuicao/`, com `README.md` e `LICENSE` gerados. Funciona
+   com qualquer combinação (só livro, livro+artigos, livro+ebooks, tudo) — nunca
+   bloqueia por um derivado que não foi solicitado no esboço.
+
+## Passo 4 — Relatório Consolidado Final
+
+9. Exiba, de forma telegráfica (REGRA 2), um relatório único cobrindo tudo o que
    foi gerado nesta execução:
 
 ```
 OBRA: <título> (<tipo_obra>, tamanho <P/M/G ou N/A>)
-  Principal : output/<slug>/livro_final.pdf — <veredito da auditoria>
-  Artigos   : <N> gerado(s) — output/<slug>/artigos/artigo_<i>/livro_final.pdf (cada um)
-  E-books   : <N> gerado(s) — output/<slug>/ebooks/ebook_<i>/ebook_<i>.epub (cada um)
-  Pendencias: <lista objetiva, ou "nenhuma">
+  Principal    : output/<slug>/livro_final.pdf — <veredito da auditoria>
+  Artigos      : <N> gerado(s) — output/<slug>/artigos/artigo_<i>/livro_final.pdf (cada um)
+  E-books      : <N> gerado(s) — output/<slug>/ebooks/ebook_<i>/ebook_<i>.epub (cada um)
+  Distribuicao : output/<slug>/distribuicao/ (README.md, LICENSE, PDFs, EPUBs, capas, thumbnails)
+  Pendencias   : <lista objetiva, ou "nenhuma">
 ```
 
 ## Notas de Economia de Tokens

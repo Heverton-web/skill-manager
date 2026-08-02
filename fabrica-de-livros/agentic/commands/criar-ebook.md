@@ -25,17 +25,17 @@ quantidade de ebooks).
 
 ## Passo 2 — Adaptação em Paralelo (lotes de 4)
 4. Para cada `ebook_<n>`, instancie `subagente-adaptador-ebook` — todos os ebooks
-   do lote em paralelo (redator-ebook adapta tom → merge → EPUB), sem qualquer
-   subagente de pesquisa.
+   do lote em paralelo (redator-ebook adapta tom → capa+thumbnail → auditoria
+   EBOOK-LEN → EPUB), sem qualquer subagente de pesquisa.
 
 ## Passo 3 — Auditoria e Geração
-5. Cada subagente já audita (`--tipo ebook`) e gera o EPUB
+5. Cada subagente já gera capa+thumbnail (`scripts/gerar-capa-ebooks.py`), audita
+   (`--tipo ebook`, inclui piso EBOOK-LEN de ~45.000 caracteres) e gera o EPUB
    (`scripts/gerar-epub.py`) como parte do seu próprio procedimento — o
-   Orquestrador só confere que todos os `ebook_<n>/` têm um `.epub` gerado ao
-   final do lote.
+   Orquestrador só confere que todos os `ebook_<n>/` têm `.epub`, `capa.png` e
+   `thumbnail.png` gerados ao final do lote.
 
 ## Passo 4 — Relatório de Entrega
-6. Exiba (REGRA 2): quantidade de ebooks gerados, título e caminho do `.epub` de
-   cada um, e se algum ficou pendente de capa gráfica (R-EBK-2 — não bloqueia a
-   entrega, apenas reportado). Atualize
-   `output/<slug>/ebooks/estrutura_ebooks.json` com os caminhos finais.
+6. Exiba (REGRA 2): quantidade de ebooks gerados, título, caracteres e caminho
+   do `.epub`/`capa.png`/`thumbnail.png` de cada um, e o veredito EBOOK-LEN.
+   Atualize `output/<slug>/ebooks/estrutura_ebooks.json` com os caminhos finais.
