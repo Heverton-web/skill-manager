@@ -1,0 +1,8 @@
+---
+name: headroom
+description: Compressão reversível de logs, JSONs e payloads de ferramentas > 7 linhas.
+---
+
+# headroom — Proxy e Compressão de Logs/Payloads
+- Compressão automática de logs e JSONs > 7 linhas.
+- Suporte a recuperação via `headroom_retrieve`.

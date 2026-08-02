@@ -1,0 +1,8 @@
+---
+name: lean-ctx
+description: Seleção cirúrgica e minificação de contexto antes de enviar para LLMs.
+---
+
+# lean-ctx — Context Engine Severo
+- Injeção estrita e minificada de contexto.
+- Uso de grep antes de view_file.

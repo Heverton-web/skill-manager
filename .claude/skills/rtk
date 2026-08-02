@@ -1,0 +1,7 @@
+---
+name: rtk
+description: Redundancy Reduction Toolkit — Truncagem e minificação de comandos CLI.
+---
+
+# rtk — Proxy de Comandos CLI
+- Truncagem de logs e saídas redundantes do terminal.
