@@ -5,6 +5,14 @@
 2. **Compressão com Headroom & RTK:** Todo log, payload JSON ou output de comando com mais de 7 linhas DEVE ser comprimido via `headroom` (manter 3 primeiras e 4 últimas linhas) e filtrado via `rtk`.
 3. **Seleção Cirúrgica (LeanCTX):** Injetar no contexto APENAS o estritamente necessário. Sempre utilizar `grep_search` antes de ler arquivos e limitar a leitura por linha (`StartLine`/`EndLine`).
 4. **Delegação Cavecrew:** Utilizar a skill `cavecrew` para delegar subagentes comprimidos em buscas ou edições extensas.
+5. **LIBERAÇÃO PANDOC + TYPST:** A execução do pipeline **Pandoc + Typst** (`compilar-para-pdf.py`, `pandoc.exe`, `typst.exe`) é 100% liberada e isenta de cortes de contexto para geração fiel de PDFs ABNT.
+6. **PADRÃO DE CAPAS DA EDITORA AGÊNTICA (O'REILLY / RHEINWERK / PACKT):** Capas DEVEM ser 2D planas (flat 2D front cover page), sem lombadas 3D ou faixas laterais. Fundo matte escuro (`#0d1117`/`#0f172a`), ilustração vetorial 2D temática e adaptada ao conteúdo, título em caixa alta, chancela "EDITORA AGÊNTICA" e NOME DO AUTOR ("Heverton Eduardo Peres") OBRIGATÓRIO na capa.
+7. **FALLBACK DE COMPILAÇÃO:** Se o terminal estiver bloqueado pelo sandbox, exiba imediatamente todos os comandos PowerShell prontos para o usuário executar localmente.
+8. **NADA BARRADO SEM CONFIRMAÇÃO:** NENHUMA execução, comando ou ação deve ser barrada sem confirmação prévia e autorização explícita do USUÁRIO.
+
+
+
+
 
 # RTK (Rust Token Killer) - Token-Optimized Commands
 

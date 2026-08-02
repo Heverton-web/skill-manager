@@ -29,6 +29,11 @@ abaixo de forma determinística.
 2. **Compressão com Headroom & RTK:** Todo log, payload JSON ou output de comando com mais de 7 linhas DEVE ser comprimido via `headroom` (manter 3 primeiras e 4 últimas linhas) e filtrado via `rtk`.
 3. **Seleção Cirúrgica (LeanCTX):** Injetar no contexto APENAS o estritamente necessário. Sempre utilizar `grep_search` antes de ler arquivos e limitar a leitura por linha (`StartLine`/`EndLine`).
 4. **Delegação Cavecrew:** Utilizar a skill `cavecrew` para delegar subagentes comprimidos em buscas ou edições extensas.
+5. **LIBERAÇÃO E EXECUÇÃO DE PANDOC + TYPST (EXCEÇÃO DE COMPILAÇÃO):** É 100% LIBERADA E OBRIGATÓRIA a execução dos binários e scripts do **Pandoc + Typst** (`compilar-para-pdf.py`, `pandoc.exe`, `typst.exe`) para a compilação nativa de PDFs ABNT (Livros, TCCs, Artigos, E-books). A stack de economia de tokens NÃO DEVE interferir, minificar ou bloquear o pipeline de compilação gráfica Pandoc+Typst.
+6. **FALLBACK DE TERMINAL BLOQUEADO (CUSPIR COMANDOS):** Se a execução do terminal for bloqueada pelo sandbox da IDE (ex: erro de ACL `NUL`), o agente DEVE exibir imediatamente no chat TODOS os comandos PowerShell de compilação e distribuição formatados e prontos para o usuário copiar e rodar no seu terminal local.
+7. **REGRA ABSOLUTA DE SOBERANIA DO USUÁRIO (NADA BARRADO):** NENHUMA ação, comando de terminal, script ou pipeline de execução pode ser barrado, bloqueado, omitido ou cancelado sem a autorização prévia e confirmação explícita do USUÁRIO. Se surgir qualquer falha de ambiente ou dúvida, pergunte/solicite ao usuário antes de alterar o fluxo.
+
+
 
 ## 1. Identidade e Diretrizes Globais (RULES / Código Penal)
 
@@ -39,6 +44,15 @@ abaixo de forma determinística.
   capítulo/manuscrito devem conter apenas Markdown limpo — sem "Aqui está o capítulo...".
 - **REGRA 3 (Autonomia Total Agêntica):** após o operador definir o TEMA na mensagem/pergunta inicial, toda a esteira da fábrica (agentes, subagentes e MCPs) funcionará 100% autônoma, sem paradas ou interações no chat. O squad realiza auto-validações internas de qualidade antes de avançar cada etapa.
 - **REGRA 4 (Auto-Correção Interna):** desvios estruturais ou falhas de formatação detectados por um agente/skill/subagente devem ser corrigidos internamente pelo squad antes da compilação final.
+- **REGRA 5 (Identidade Visual da Editora Agêntica — Padrão 2D Plano O'Reilly/Rheinwerk/Packt):** As capas DEVEM ser geradas exclusivamente como arte gráfica 2D plana retangular da página frontal (flat 2D front cover page), sendo estritamente PROIBIDO a inclusão de mockups 3D, bordas de lombada simuladas, faixas laterais de encadernação, sombras de efeito livro ou estética amadora de "IA 3D neon". O padrão oficial exige:
+  a) **Fundo Matte Sóbrio:** Grafite escuro `#0d1117` ou Navy corporativo `#0f172a`.
+  b) **Ilustração Vetorial 2D Temática:** Arte vetorial minimalista conceitual e criativa adaptada especificamente ao tema tratado (ex: grafos de nós para IA/AIDD, barramentos de dados para backend, barramentos de circuitos para hardware).
+  c) **Tipografia & Autoria Obrigatória:** Título em caixa alta com tipografia forte, subtítulo descritivo elegante e o NOME DO AUTOR ("Heverton Eduardo Peres") explicitamente destacado na capa.
+  d) **Chancela da Editora:** Selo e chancela oficial "EDITORA AGÊNTICA" no rodapé.
+
+
+
+
 - **REGRA 5 (Universalidade de Modelo/Harness):** nenhuma skill, subagente ou script
   desta fábrica pode fixar um modelo LLM específico (ex.: Opus) como dependência
   obrigatória do fluxo. Todos os `.claude/agents/*.md` declaram `model: inherit` no
