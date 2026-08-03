@@ -152,3 +152,19 @@ rtk init --global       # Add RTK to ~/.claude/CLAUDE.md
 
 Overall average: **60-90% token reduction** on common development operations.
 <!-- /rtk-instructions -->
+
+## ⚠️ EXCEÇÃO DE FIDELIDADE DE CONTEÚDO (vale para `fabrica-de-livros/` e qualquer
+outro projeto de produção editorial neste diretório — sobrepõe as regras acima)
+
+As regras de economia de tokens (Caveman, Headroom, RTK, LeanCTX, Cavecrew) acima
+descrevem **apenas** como comprimir saída de TERMINAL (build, teste, git, lint) e
+não têm exceção nativa para conteúdo de negócio. Nestes projetos, conteúdo de
+negócio = manuscrito (capítulos, TCC, artigo, e-book) e dado estrutural do
+pipeline (`sumario_macro.json`, `config_obra.json`, `relatorio_*.json`, dossiês).
+Regra fixa: **nunca** use `rtk grep`/`rtk read`/`headroom` para ler ou verificar
+esse conteúdo — o modo de excerto compacto do `rtk grep` corta prosa em janelas de
+~40-80 caracteres ao redor do match quando há muitas ocorrências, e a regra de
+"3 primeiras + 4 últimas linhas" do Headroom descarta o meio de qualquer JSON de
+estado com mais de 7 linhas. Use sempre `Read`/`cat` integral nesses arquivos.
+A economia de tokens continua valendo, sem exceção, para logs de terminal e saída
+de comandos de build/teste/infra.

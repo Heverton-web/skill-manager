@@ -209,7 +209,28 @@ def gerar_ebooks(slug, qtd):
         titulo = grupo["titulo_parte"] or f"E-book {i}"
         slug_ebook = f"{slug_mae_simples}--eb-{i:02d}-{slugificar(titulo)}"
         dir_ebook = dir_ebooks_topo / slug_ebook
-        dir_ebook.mkdir(parents=True, exist_ok=True)
+        for sub in ("capitulos", "revisao"):
+            (dir_ebook / sub).mkdir(parents=True, exist_ok=True)
+
+        sumario_ebook = {
+            "titulo_obra": titulo,
+            "tipo_obra": "ebook",
+            "slug_livro_mae": slug_mae_simples,
+            "capitulos_fonte_livro_mae": capitulos_fonte,
+        }
+        (dir_ebook / "sumario_macro.json").write_text(
+            json.dumps(sumario_ebook, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        config_ebook = {
+            "tema": titulo, "tipo_obra": "ebook",
+            "livro_mae": slug_mae_simples,
+            "min_referencias_por_capitulo": 0,
+            "tamanho_obra": None, "gerar_artigos": False, "qtd_artigos": 0,
+            "gerar_ebooks": False, "qtd_ebooks": 0,
+        }
+        (dir_ebook / "config_obra.json").write_text(
+            json.dumps(config_ebook, ensure_ascii=False, indent=2), encoding="utf-8")
+
         itens_ebooks.append({
             "indice": i, "titulo": titulo,
             "slug": slug_ebook,

@@ -4,7 +4,7 @@ Upgrade 1 (motor determinístico) — Auditoria da Obra / Fase 2.5.
 
 Auditor objetivo que roda ANTES da compilacao final e alimenta a skill
 `revisor-tecnico` com evidencia dura em vez de impressao subjetiva. Verifica os
-requisitos contratuais automatizaveis (R1-R4 e R9-R14; R5-R8 dependem de
+requisitos contratuais automatizaveis (R1-R4 e R9-R15; R5-R8 dependem de
 julgamento e sao checados pelo pesquisador/compilador/revisor) e detecta os tres
 defeitos que o revisor humano
 mais procura:
@@ -31,6 +31,7 @@ Relatorio: output/<slug>/revisao/relatorio_auditoria.json
 """
 
 import argparse
+import itertools
 import json
 import re
 import statistics
@@ -64,9 +65,27 @@ RE_MERMAID = re.compile(r"^[ \t]*```[ \t]*mermaid", re.MULTILINE | re.IGNORECASE
 RE_CITACAO = re.compile(r"\[\d{1,3}\]")
 RE_CITACAO_EMPILHADA = re.compile(r"(?:\[\d{1,3}\][ \t]*){2,}")
 RE_HR = re.compile(r"^[ \t]*(-{3,}|\*{3,}|_{3,})[ \t]*$", re.MULTILINE)
-RE_PENDENCIA = re.compile(
-    r"(\bTODO\b|\bFIXME\b|\bTBD\b|lorem ipsum|\[inserir|\[completar|"
-    r"placeholder|continua no próximo|a ser escrito|XXX)", re.IGNORECASE)
+# Marcadores de placeholder convencionalmente maiusculos (TODO/FIXME/TBD/XXX) sao
+# case-sensitive de proposito: com IGNORECASE, "\bTODO\b" tambem casa com a palavra
+# portuguesa comum "todo/Todo", gerando falso-positivo em praticamente todo capitulo.
+RE_PENDENCIA_MAIUSCULA = re.compile(r"(\bTODO\b|\bFIXME\b|\bTBD\b|\bXXX\b)")
+RE_PENDENCIA_GENERICA = re.compile(
+    r"(lorem ipsum|\[inserir|\[completar|placeholder|"
+    r"continua no próximo|a ser escrito)", re.IGNORECASE)
+
+
+class _PendenciaMatcher:
+    """Combina os dois regex de pendencia preservando a API de .finditer usada abaixo."""
+
+    @staticmethod
+    def finditer(texto):
+        return itertools.chain(
+            RE_PENDENCIA_MAIUSCULA.finditer(texto),
+            RE_PENDENCIA_GENERICA.finditer(texto),
+        )
+
+
+RE_PENDENCIA = _PendenciaMatcher()
 
 # Termos tecnicos candidatos: palavras com maiuscula interna, siglas, hifenizados
 RE_TERMO = re.compile(r"\b[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9]*(?:[-\.][A-Za-zÀ-ÿ0-9]+)*\b")
@@ -109,6 +128,18 @@ def shingles(paragrafo, n=6):
     if len(palavras) < n:
         return set()
     return {" ".join(palavras[i:i + n]) for i in range(len(palavras) - n + 1)}
+
+
+def ordem_referencias_correta(corpo_refs):
+    """Confere se as entradas [N] da secao 7 aparecem em ordem numerica ascendente.
+
+    Um redator que organiza a bibliografia por ordem alfabetica de autor (em vez
+    de por ordem de citacao) produz uma secao 7 tecnicamente rastreavel (R14
+    continua batendo [N] com a entrada certa) mas fora do padrao ABNT NBR 6023,
+    que exige lista numerada na ordem em que aparece no texto.
+    """
+    numeros = [int(c.strip("[]")) for c in RE_CITACAO.findall(corpo_refs)]
+    return numeros == sorted(numeros)
 
 
 def jaccard(a, b):
@@ -180,6 +211,7 @@ def auditar_capitulo(caminho, vocabulario=None):
     corpo_refs = secoes.get(7, {}).get("corpo", "")
     refs = RE_CITACAO.findall(corpo_refs)
     refs_unicas = sorted(set(refs), key=lambda x: int(x.strip("[]")))
+    refs_ordem_correta = ordem_referencias_correta(corpo_refs)
 
     # Citacoes inline: fora da secao 7
     corpo_texto = corpo_sem_codigo
@@ -254,6 +286,7 @@ def auditar_capitulo(caminho, vocabulario=None):
         "ultima_linha": ultima[-90:],
         "refs_orfas": orfas,
         "refs_nao_citadas": nao_citadas,
+        "refs_ordem_correta": refs_ordem_correta,
         "citacoes_empilhadas": citacoes_empilhadas,
         "vocabulario_fora_ilustra": vocabulario_fora_ilustra,
         "callback_presente": callback_presente,
@@ -266,27 +299,51 @@ def _sobrenome_norm(sobrenome):
     return sem_acento(sobrenome).lower().replace(";", "").strip()
 
 
+# Qualquer parenteses que contenha um ano de 4 digitos — cobre tanto o caso
+# simples "(SOBRENOME, 2024)" quanto o empilhado "(A, 2024; B, 2025; C, 2026)"
+# (varias fontes independentes sustentando a mesma frase, comum em NBR 10520).
+RE_PAREN_COM_ANO = re.compile(r"\(([^()]*\d{4}[a-z]?[^()]*)\)")
+_NOME = r"[A-ZÀ-Ý][A-ZÀ-Ýa-zà-ÿ\'\-]+(?:\s+[A-ZÀ-Ý][A-ZÀ-Ýa-zà-ÿ\'\-]+){0,3}"
+RE_SEGMENTO_ANO = re.compile(rf"^({_NOME}),\s*(\d{{4}}[a-z]?)$")
+RE_SEGMENTO_SO_NOME = re.compile(rf"^{_NOME}$")
+# Narrativa "Sobrenome (2024)" ou nome composto "Futurum Group (2026)".
+RE_CITACAO_NARRATIVA = re.compile(
+    rf"(?:[A-ZÀ-Ý][A-Za-zà-ÿ\'\-]+\s+){{0,3}}[A-ZÀ-Ý][A-Za-zà-ÿ\'\-]+\s*\(\d{{4}}[a-z]?\)")
+
+
 def extrair_citacoes_autor_data(texto):
     """Extrai (sobrenome_normalizado, ano) de citacoes NBR 10520 no corpo do texto.
 
     Heuristico (igual em espirito ao shingle/jaccard ja usado no auditor): cobre
-    os formatos mais comuns — parenteses "(SOBRENOME, 2024)"/"(A; B, 2024)" e
-    narrativa "Sobrenome (2024)" — mas pode gerar falsos positivos com parenteses
-    que por acaso tem Maiuscula+virgula+ano sem ser citacao real.
+    parenteses simples "(SOBRENOME, 2024)", parenteses com autores empilhados e
+    ano compartilhado "(A; B, 2024)", parenteses com autor+ano proprios cada um
+    empilhados "(A, 2024; B, 2025; C, 2026)" e narrativa "Sobrenome (2024)"/
+    "Nome Composto (2024)" — mas pode gerar falsos positivos com parenteses que
+    por acaso tem Maiuscula+virgula+ano sem ser citacao real. Nomes de autor
+    organizacional com mais de uma palavra (ex. "Futurum Group") sao
+    normalizados pela primeira palavra, para casar com a mesma convencao usada
+    em extrair_referencias_autor_data().
     """
     achados = set()
-    for m in PO.RE_CITACAO_AUTOR_DATA.finditer(texto):
-        bruto = m.group(0)
-        ano_m = re.search(r"\d{4}[a-z]?", bruto)
-        if not ano_m:
-            continue
-        ano = ano_m.group(0)
-        nomes = re.sub(r"[\(\)]", "", bruto)
-        nomes = re.sub(r",?\s*\d{4}[a-z]?\)?", "", nomes)
-        for nome in re.split(r";", nomes):
-            nome = re.sub(r"\(.*", "", nome).strip()
-            if nome:
-                achados.add((_sobrenome_norm(nome.split()[0] if " " in nome else nome), ano))
+
+    for m in RE_PAREN_COM_ANO.finditer(texto):
+        ano_compartilhado = None
+        for seg in reversed([s.strip() for s in m.group(1).split(";")]):
+            sm = RE_SEGMENTO_ANO.match(seg)
+            if sm:
+                nomes, ano_compartilhado = sm.group(1), sm.group(2)
+            elif ano_compartilhado and RE_SEGMENTO_SO_NOME.match(seg):
+                nomes, ano = seg, ano_compartilhado
+            else:
+                continue
+            achados.add((_sobrenome_norm(nomes.split()[0]), ano_compartilhado if sm else ano))
+
+    for m in RE_CITACAO_NARRATIVA.finditer(texto):
+        ano = re.search(r"\d{4}[a-z]?", m.group(0)).group(0)
+        nomes = re.sub(r"\s*\(\d{4}[a-z]?\)\s*$", "", m.group(0)).strip()
+        if nomes:
+            achados.add((_sobrenome_norm(nomes.split()[0]), ano))
+
     return achados
 
 
@@ -477,6 +534,9 @@ def montar_requisitos_livro(capitulos, caracteres_obra, min_capitulos, min_carac
         {"id": "R14", "nome": "Rastreabilidade [N] texto <-> referencias",
          "conforme": not falhas(lambda c: c["refs_orfas"]),
          "detalhe": "capitulos com citacao orfa: " + (", ".join(falhas(lambda c: c["refs_orfas"])) or "nenhum")},
+        {"id": "R15", "nome": "Referencias em ordem numerica ascendente na secao 7 (NBR 6023)",
+         "conforme": not falhas(lambda c: not c["refs_ordem_correta"]),
+         "detalhe": "capitulos fora de ordem: " + (", ".join(falhas(lambda c: not c["refs_ordem_correta"])) or "nenhum")},
     ]
 
 

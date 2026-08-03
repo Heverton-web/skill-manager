@@ -26,12 +26,16 @@ abaixo de forma determinística.
 ## 0. ⚡ DIRETRIZES DE ECONOMIA SEVERA DE TOKENS (PRIORIDADE MÁXIMA)
 
 1. **Estilo Caveman Ativo:** Pensamento em formato telegráfico (máx. 3-5 linhas). Comunicação sem preâmbulos, saudações ou palavras vazias. Preservar termos técnicos e idioma PT-BR.
-2. **Compressão com Headroom & RTK:** Todo log, payload JSON ou output de comando com mais de 7 linhas DEVE ser comprimido via `headroom` (manter 3 primeiras e 4 últimas linhas) e filtrado via `rtk`.
-3. **Seleção Cirúrgica (LeanCTX):** Injetar no contexto APENAS o estritamente necessário. Sempre utilizar `grep_search` antes de ler arquivos e limitar a leitura por linha (`StartLine`/`EndLine`).
-4. **Delegação Cavecrew:** Utilizar a skill `cavecrew` para delegar subagentes comprimidos em buscas ou edições extensas.
+2. **Compressão com Headroom & RTK:** Todo LOG DE TERMINAL, saída de build/teste ou payload de DEBUG efêmero com mais de 7 linhas DEVE ser comprimido via `headroom` (manter 3 primeiras e 4 últimas linhas) e filtrado via `rtk`.
+3. **Seleção Cirúrgica (LeanCTX):** Injetar no contexto APENAS o estritamente necessário. Sempre utilizar `grep_search` antes de ler ARQUIVOS DE CÓDIGO/CONFIGURAÇÃO e limitar a leitura por linha (`StartLine`/`EndLine`) nesses casos.
+4. **Delegação Cavecrew:** Utilizar a skill `cavecrew` para delegar subagentes comprimidos em buscas ou edições extensas de código/infra (nunca para redigir ou revisar prosa de capítulo/seção).
 5. **LIBERAÇÃO E EXECUÇÃO DE PANDOC + TYPST (EXCEÇÃO DE COMPILAÇÃO):** É 100% LIBERADA E OBRIGATÓRIA a execução dos binários e scripts do **Pandoc + Typst** (`compilar-para-pdf.py`, `pandoc.exe`, `typst.exe`) para a compilação nativa de PDFs ABNT (Livros, TCCs, Artigos, E-books). A stack de economia de tokens NÃO DEVE interferir, minificar ou bloquear o pipeline de compilação gráfica Pandoc+Typst.
 6. **FALLBACK DE TERMINAL BLOQUEADO (CUSPIR COMANDOS):** Se a execução do terminal for bloqueada pelo sandbox da IDE (ex: erro de ACL `NUL`), o agente DEVE exibir imediatamente no chat TODOS os comandos PowerShell de compilação e distribuição formatados e prontos para o usuário copiar e rodar no seu terminal local.
 7. **REGRA ABSOLUTA DE SOBERANIA DO USUÁRIO (NADA BARRADO):** NENHUMA ação, comando de terminal, script ou pipeline de execução pode ser barrado, bloqueado, omitido ou cancelado sem a autorização prévia e confirmação explícita do USUÁRIO. Se surgir qualquer falha de ambiente ou dúvida, pergunte/solicite ao usuário antes de alterar o fluxo.
+8. **EXCEÇÃO DE FIDELIDADE DE CONTEÚDO (PRIORIDADE MÁXIMA, sobrepõe os itens 2-4 acima):** as regras 2-4 de economia de tokens NUNCA se aplicam a conteúdo de obra nem a dado estrutural do pipeline. Estão **sempre isentos** de headroom/rtk/lean-ctx/cavecrew:
+   - qualquer arquivo em `output/**` (capítulos `.md`, `livro_final.md`, dossiês, `sumario_macro.json`, `config_obra.json`, `relatorio_auditoria.json`, `relatorio_codigo.json`, `relatorio_diagramas.json` e demais payloads de estado da esteira) — leia sempre por inteiro com `Read`/`cat`, nunca via `rtk grep`/`rtk read` (o modo de excerto compacto do `rtk grep` corta a prosa em janelas de ~40-80 caracteres ao redor do match quando há muitas ocorrências — inútil e enganoso para julgar terminologia, citações ou truncamento real);
+   - qualquer verificação feita por `scripts/auditar-obra.py`, `validar-codigo.py`, `renderizar-diagramas.py` ou pela skill `revisor-tecnico`/`subagente-revisor-tecnico` sobre o conteúdo da obra;
+   - a regra de "manter 3 primeiras + 4 últimas linhas" do item 2 é proibida sobre qualquer JSON que seja **estado/dado da obra** (mesmo que passe de 7 linhas) — só vale para log/saída de terminal efêmera.
 
 
 
