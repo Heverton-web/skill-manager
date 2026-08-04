@@ -262,8 +262,11 @@ def variaveis_visuais(slug, dir_livro, paginas=None, tipo=None):
             print(f"  [AVISO] Metadados de capa/CIP indisponiveis: {e}")
     # Capa em imagem (padrao visual da serie): sobrepoe a capa tipografica do template
     capa_img = dir_livro / "imagens" / "capa_livro.png"
-    if CAPA_GRAFICA and capa_img.exists():
-        args += ["-V", "capa_imagem=imagens/capa_livro.png"]
+    if CAPA_GRAFICA and capa_img.exists() and "-V" not in args and "capa_imagem=imagens/capa_livro.png" not in args:
+        # adiciona apenas se metadados_livro nao ja tiver adicionado capa_imagem
+        tem_capa_imagem = any(isinstance(a, str) and a.startswith("capa_imagem=") for a in args)
+        if not tem_capa_imagem:
+            args += ["-V", "capa_imagem=imagens/capa_livro.png"]
     if not CAPA_GRAFICA:
         args += ["-V", "sem_capa_grafica=1"]
     return args

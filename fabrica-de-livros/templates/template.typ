@@ -106,12 +106,12 @@
   v(0.6cm)
 }
 #show figure.caption: it => {
-  set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 10pt, fill: cor.secundaria, weight: "bold")
+  set text(font: ("Inter", "Liberation Sans", "Arial"), size: 10pt, fill: cor.secundaria, weight: "bold")
   it
 }
 
 // Regra geral de titulos: sempre fonte INTER e cores da paleta da capa
-#show heading: set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"))
+#show heading: set text(font: ("Inter", "Liberation Sans", "Arial"))
 
 // Estilo de titulos - nivel 1 (com suporte a Parte)
 #show heading.where(level: 1): it => {
@@ -119,14 +119,14 @@
   let isParte = type(it.body) == str and it.body.starts-with("Parte")
   pagebreak()
   if isParte {
-    set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 20pt, weight: "bold", fill: cor.primaria)
+    set text(font: ("Inter", "Liberation Sans", "Arial"), size: 20pt, weight: "bold", fill: cor.primaria)
     v(3cm)
     it
     v(0.3cm)
     line(length: 40%, stroke: 2.5pt + cor.destaque)
     v(2cm)
   } else {
-    set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 16pt, weight: "bold", fill: cor.primaria)
+    set text(font: ("Inter", "Liberation Sans", "Arial"), size: 16pt, weight: "bold", fill: cor.primaria)
     v(2cm)
     it
     v(0.2cm)
@@ -137,7 +137,7 @@
 
 // Estilo de titulos - nivel 2
 #show heading.where(level: 2): it => {
-  set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 14pt, weight: "bold", fill: cor.secundaria)
+  set text(font: ("Inter", "Liberation Sans", "Arial"), size: 14pt, weight: "bold", fill: cor.secundaria)
   set par(first-line-indent: 0cm)
   v(1cm)
   it
@@ -148,7 +148,7 @@
 
 // Estilo de titulos - nivel 3
 #show heading.where(level: 3): it => {
-  set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 12pt, weight: "bold", fill: cor.secundaria)
+  set text(font: ("Inter", "Liberation Sans", "Arial"), size: 12pt, weight: "bold", fill: cor.secundaria)
   set par(first-line-indent: 0cm)
   v(0.75cm)
   it
@@ -157,7 +157,7 @@
 
 // Estilo de titulos - nivel 4 em diante
 #show heading.where(level: 4): it => {
-  set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 11pt, weight: "bold", fill: cor.secundaria)
+  set text(font: ("Inter", "Liberation Sans", "Arial"), size: 11pt, weight: "bold", fill: cor.secundaria)
   set par(first-line-indent: 0cm)
   v(0.6cm)
   it
@@ -182,17 +182,17 @@
     #place(bottom + left, dy: -4.5cm, rect(width: 100%, height: 0.15cm, fill: cor.destaque))
 
     #place(top + left, dx: 2.5cm, dy: 6.5cm, block(width: 14.5cm)[
-      #text(font: ("Inter", "sans-serif"), size: 34pt, weight: "bold", fill: white)[$title$]
+      #text(font: ("Inter", "Liberation Sans", "Arial"), size: 34pt, weight: "bold", fill: white)[$title$]
       $if(subtitle)$
       #v(0.8cm)
       #line(length: 5cm, stroke: 3pt + cor.destaque)
       #v(0.6cm)
-      #text(font: ("Inter", "sans-serif"), size: 15pt, fill: cor.destaque)[$subtitle$]
+      #text(font: ("Inter", "Liberation Sans", "Arial"), size: 15pt, fill: cor.destaque)[$subtitle$]
       $endif$
     ])
 
     #place(bottom + left, dx: 2.5cm, dy: -1.6cm, block(width: 15cm)[
-      #text(font: ("Inter", "sans-serif"), size: 15pt, weight: "bold", fill: white)[$author$]
+      #text(font: ("Inter", "Liberation Sans", "Arial"), size: 15pt, weight: "bold", fill: white)[$author$]
       #v(0.2cm)
       #text(size: 10pt, fill: cor.clara)[#datetime.today().display("[year]")]
     ])
@@ -204,12 +204,12 @@
 #page(header: none, footer: none, numbering: none)[
   #set par(first-line-indent: 0cm, justify: false)
   #align(center)[
-    #text(font: ("Inter", "sans-serif"), size: 13pt, weight: "bold", fill: cor.secundaria)[$author$]
+    #text(font: ("Inter", "Liberation Sans", "Arial"), size: 13pt, weight: "bold", fill: cor.secundaria)[$author$]
     #v(3.5cm)
-    #text(font: ("Inter", "sans-serif"), size: 22pt, weight: "bold", fill: cor.primaria)[$title$]
+    #text(font: ("Inter", "Liberation Sans", "Arial"), size: 22pt, weight: "bold", fill: cor.primaria)[$title$]
     $if(subtitle)$
     #v(0.5cm)
-    #text(font: ("Inter", "sans-serif"), size: 14pt, fill: cor.secundaria)[$subtitle$]
+    #text(font: ("Inter", "Liberation Sans", "Arial"), size: 14pt, fill: cor.secundaria)[$subtitle$]
     $endif$
   ]
   #v(4cm)
