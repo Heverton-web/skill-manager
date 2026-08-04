@@ -25,21 +25,24 @@ dentro da pasta do livro-mãe — a referência cruzada é o campo `slug_livro_m
 
 1. Invoque a skill `redator-ebook` para adaptar cada capítulo-fonte e escrever o
    CTA final — grava em `output/<slug_ebook>/capitulos/cap_<j>.md`.
-2. Faça o merge simples (sem elementos pré-textuais de livro/TCC — ebook não tem
-   capa gráfica comercial nem ficha CIP): concatene os capítulos adaptados + CTA em
+2. **REGRA OBRIGATÓRIA:** Insira o capítulo fixo EITA (`templates/capitulo_eita.md`)
+   como primeiro capítulo do ebook, antes dos capítulos adaptados. Todo ebook DEVE
+   começar com esta explicação das 7 seções.
+3. Faça o merge simples (sem elementos pré-textuais de livro/TCC — ebook não tem
+   capa gráfica comercial nem ficha CIP): concatene capítulo EITA + capítulos adaptados + CTA em
    `output/<slug_ebook>/livro_final.md`.
-3. Grave `output/<slug_ebook>/ebook_metadados.json` com título, autor e (se fizer
+4. Grave `output/<slug_ebook>/ebook_metadados.json` com título, autor e (se fizer
    sentido para a obra) subtítulo/selo de série — nunca invente uma série/franquia
    que a obra não tem:
    ```json
    {"titulo": "...", "autor": "Heverton Eduardo Peres", "subtitulo": "...", "selo_serie": null}
    ```
-4. Gere a capa gráfica (1:1,6, 1600×2560px) e a thumbnail (300px) — passo
+5. Gere a capa gráfica (1:1,6, 1600×2560px) e a thumbnail (300px) — passo
    **obrigatório**, nunca manual, nunca pulado:
    ```bash
    python scripts/gerar-capa-ebooks.py <slug_livro_mae> --ebook <indice>
    ```
-5. Audite a estrutura mínima (inclui piso de ~45.000 caracteres/18 páginas
+6. Audite a estrutura mínima (inclui piso de ~45.000 caracteres/18 páginas
    contra ebook raso — requisito EBOOK-LEN), usando `<slug_ebook>` como slug
    (o ebook vive no topo de `output/`):
    ```bash
@@ -47,14 +50,14 @@ dentro da pasta do livro-mãe — a referência cruzada é o campo `slug_livro_m
    ```
    Se reprovar em EBOOK-LEN, volte à skill `redator-ebook` e reescreva
    preservando mais substância do capítulo-fonte antes de seguir.
-6. Gere o EPUB (a capa gerada no passo 4 é embutida automaticamente; o arquivo
+7. Gere o EPUB (a capa gerada no passo 5 é embutida automaticamente; o arquivo
    nasce nomeado `<slug_ebook>.epub` — o gerador usa o nome da própria pasta):
    ```bash
    python scripts/gerar-epub.py <slug_ebook>
    ```
-7. Atualize o manifesto do livro-mãe (`output/<slug_livro_mae>/derivados.json`,
+8. Atualize o manifesto do livro-mãe (`output/<slug_livro_mae>/derivados.json`,
    seção `ebooks.itens`) com o status `"concluido_autonomo"` e o caminho do `.epub`.
-8. Devolva ao Orquestrador um resumo telegráfico (índice, título, caracteres,
+9. Devolva ao Orquestrador um resumo telegráfico (índice, título, caracteres,
    veredito EBOOK-LEN, caminho do EPUB e da capa/thumbnail). Sem preâmbulo (REGRA 2).
 
 ## Limites

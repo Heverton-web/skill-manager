@@ -229,6 +229,9 @@ Siga o procedimento abaixo passo a passo:
 ### Nó 5 — O Compilador (merge)
 1. Leia `output/<livro>/sumario_macro.json` e, na ordem de Partes/Capítulos ali
    definida, concatene todos os `output/<livro>/capitulos/cap_<n>.md` em um fluxo contínuo.
+   **REGRA OBRIGATÓRIA:** Antes do primeiro capítulo, insira o capítulo fixo sobre a
+   metodologia EITA (`templates/capitulo_eita.md`). Todo livro e ebook DEVE começar
+   com esta explicação das 7 seções EITA.
 
 ### Nó 6 — Elementos Extrusos
 2. Gere um **Prefácio** em prosa densa a partir de `sumario_macro.json.introducao`.
@@ -247,7 +250,7 @@ Siga o procedimento abaixo passo a passo:
 
 ### Nó 9 — A Expedição
 7. Grave o artefato final em `output/<livro>/livro_final.md` com a ordem:
-    Prefácio → Sumário → Partes/Capítulos → Conclusão Geral → Referências Bibliográficas.
+    Capítulo EITA → Prefácio → Sumário → Partes/Capítulos → Conclusão Geral → Referências Bibliográficas.
 
 ### Nó 9.5 — Diagramas (Upgrade 2)
 7.1 Renderize os diagramas Mermaid em PNG antes da conversão:

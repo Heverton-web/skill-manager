@@ -207,6 +207,15 @@ def coletar(slug, autor=AUTOR_PADRAO, paginas=None, dir_livro=None):
     sobrenome, nome = partir_autor(autor)
     ano = str(sumario.get("ano") or __import__("datetime").date.today().year)
 
+    # Capa grafica: verifica se existe imagens/capa_livro.png ou imagens/capa.png
+    capa_imagem = ""
+    for nome_capa in ("capa_livro.png", "capa.png"):
+        caminho_capa = dir_livro / "imagens" / nome_capa
+        if caminho_capa.exists():
+            # Typst requer path relativo ao diretorio do livro (rejeita absolutos no Windows)
+            capa_imagem = f"imagens/{nome_capa}"
+            break
+
     return {
         "titulo": titulo,
         "subtitulo": subtitulo,
@@ -223,12 +232,14 @@ def coletar(slug, autor=AUTOR_PADRAO, paginas=None, dir_livro=None):
         "cip_local": LOCAL_PADRAO,
         "cip_editora": EDITORA_PADRAO,
         "sinopse": extrair_sinopse(dir_livro, sumario),
+        "capa_imagem": capa_imagem,
     }
 
 
 CHAVES_PANDOC = (
     "paleta", "cip_sobrenome", "cip_nome", "cip_cutter", "cip_ano", "cip_paginas",
     "cip_palavras", "cip_cdd", "cip_isbn", "cip_local", "cip_editora", "sinopse",
+    "capa_imagem",
 )
 
 # ── V4: metadados de TCC (folha de rosto/aprovacao, resumo/abstract) ──────────

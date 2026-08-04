@@ -80,25 +80,37 @@ O operador acabou de disparar este comando com o tema central da obra em `$ARGUM
 
 ## Passo 4 — Fase 3 (Compilação + PDF)
 14. Invoque `compilador-abnt` — merge + elementos pré/pós-textuais + ABNT → `livro_final.md`.
-15. Gere a capa gráfica A4 + thumbnail do livro-mãe (obrigatório, antes da
-     compilação — o template Typst embute `imagens/capa_livro.png` se existir):
-     ```bash
-     python scripts/gerar-capa-ebooks.py <slug> --livro-mae
+     **REGRA:** O compilador insere automaticamente o capítulo fixo EITA (`templates/capitulo_eita.md`)
+     antes do primeiro capítulo. Todo livro DEVE começar com esta explicação das 7 seções.
+15. Gere ilustrações 2D flat para os capítulos (gratuito, HTML/CSS + Playwright):
+    ```bash
+    python scripts/gerar-ilustracoes.py <slug>
+    ```
+    Opcional: ilustração específica: `--capitulo 5`
+16. Gere a capa gráfica A4 (obrigatório, antes da compilação — o template Typst
+     embute `imagens/capa_livro.png` se existir):
+     **PADRÃO EDITORA AGÊNTICA:** usar HTML/CSS + Playwright para capas de livros
+     (flat 2D, fundo #0d1117, terminal ilustrativo, código de exemplo).
+     O script `gerar-capa-ebooks.py --livro-mae` gera capa Pillow (para ebooks).
+     Para livros, crie HTML customizado e renderize com Playwright:
+     ```python
+     from playwright.sync_api import sync_playwright
+     # Gerar HTML com estilo flat 2D → renderizar para capa_livro.png
      ```
-16. Compile o PDF (renderiza os diagramas Mermaid em PNG, monta capa gráfica e ficha
+17. Compile o PDF (renderiza os diagramas Mermaid em PNG, monta capa gráfica e ficha
      catalográfica, e usa o caminho Pandoc → `.typ` → Typst):
      ```bash
      python compilar-para-pdf.py <slug> --paginas-exatas
      ```
      > Alternativa PowerShell: `powershell -ExecutionPolicy Bypass -File scripts/converter-md-pdf.ps1 -Slug <slug>`
-17. Se Pandoc+Typst falhar, tente o fallback CloudConvert:
+18. Se Pandoc+Typst falhar, tente o fallback CloudConvert:
      ```bash
      node .claude/mcp-servers/pdf-gen-server/compilar-livro.mjs <slug>
      ```
-18. VALIDE o PDF gerado (existe, tamanho > 0, contagem de páginas ≥ 70).
+19. VALIDE o PDF gerado (existe, tamanho > 0, contagem de páginas ≥ 70).
 
 ## Passo 5 — Distribuição (só quando `/criar-livro` roda sozinho, sem artigos/ebooks)
-19. Se este comando não foi disparado por `/produzir-obra-completa` (que
+20. Se este comando não foi disparado por `/produzir-obra-completa` (que
      empacota no seu próprio Passo 3 final, depois de artigos/ebooks), empacote
      a obra para distribuição agora:
      ```bash
@@ -108,7 +120,7 @@ O operador acabou de disparar este comando com o tema central da obra em `$ARGUM
      o que existir. Resultado em `output/<slug>/distribuicao/`.
 
 ## Passo 6 — Relatório de Entrega
-20. Exiba, de forma telegráfica (REGRA 2):
+21. Exiba, de forma telegráfica (REGRA 2):
      - caminhos de `livro_final.md`, `livro_final.pdf` e `distribuicao/`
      - total de capítulos, caracteres e páginas do PDF
      - diagramas renderizados e taxa de aprovação do CI de código

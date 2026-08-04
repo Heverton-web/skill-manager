@@ -35,6 +35,9 @@ TAMANHOS = {
     "P": {"partes": 1, "capitulos": 4, "paginas": 40, "caracteres": 100_000},
     "M": {"partes": 3, "capitulos": 9, "paginas": 90, "caracteres": 225_000},
     "G": {"partes": 5, "capitulos": 10, "paginas": 150, "caracteres": 375_000},
+    # Tier mega-obra: fora do fluxo padrao de /esbocar, criado sob demanda
+    # explicita do operador quando G (maior preset padrao) nao cobre o escopo.
+    "GG": {"partes": 10, "capitulos": 50, "paginas": 1000, "caracteres": 2_500_000},
 }
 TAMANHO_PADRAO = "M"
 
@@ -134,7 +137,7 @@ def validar_config(config):
     if tipo == "livro":
         tam = config.get("tamanho_obra")
         if tam not in TAMANHOS:
-            erros.append(f"tamanho_obra deve ser P, M ou G quando tipo_obra=livro, recebido: {tam!r}")
+            erros.append(f"tamanho_obra deve ser P, M, G ou GG quando tipo_obra=livro, recebido: {tam!r}")
     if config.get("gerar_artigos"):
         qtd = config.get("qtd_artigos")
         if not isinstance(qtd, int) or not (1 <= qtd <= 5):

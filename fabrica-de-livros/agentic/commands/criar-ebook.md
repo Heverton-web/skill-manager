@@ -27,6 +27,8 @@ quantidade de ebooks).
 4. Para cada `ebook_<n>`, instancie `subagente-adaptador-ebook` — todos os ebooks
    do lote em paralelo (redator-ebook adapta tom → capa+thumbnail → auditoria
    EBOOK-LEN → EPUB), sem qualquer subagente de pesquisa.
+   **REGRA:** Todo ebook DEVE começar com o capítulo fixo EITA (`templates/capitulo_eita.md`)
+   explicando as 7 seções do framework. O subagente deve incluí-lo ao adaptar o conteúdo.
 
 ## Passo 3 — Auditoria e Geração
 5. Cada subagente já gera capa+thumbnail (`scripts/gerar-capa-ebooks.py`), audita

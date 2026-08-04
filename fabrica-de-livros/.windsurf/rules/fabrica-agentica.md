@@ -39,6 +39,14 @@ abaixo de forma determinística.
   modelo fixo. Isso garante que a esteira produza o mesmo resultado estrutural
   independentemente do modelo (Sonnet/Opus/Haiku ou outro) ou do harness agêntico
   usado (ver seção 6, portabilidade multi-IDE).
+- **REGRA 6 (Capítulo EITA Obrigatório):** todo livro e ebook produzido pela Fábrica
+  DEVE começar com o capítulo fixo que explica a metodologia EITA e suas 7 seções
+  (`templates/capitulo_eita.md`). Este capítulo é inserido automaticamente pelo
+  compilador na Fase 3, antes do primeiro capítulo da obra. Não é opcional.
+- **REGRA 7 (Capa HTML para Livros):** capas de livros DEVEM ser geradas via
+  HTML/CSS + Playwright (flat 2D, fundo #0d1117, terminal ilustrativo com código
+  real, título em caixa alta). O script `gerar-capa-ebooks.py` (Pillow) é usado
+  APENAS para ebooks derivados. A capa do livro-mãe é salva em `imagens/capa_livro.png`.
 
 ## 1.5 Módulos por Tipo de Obra (V4)
 
@@ -91,6 +99,7 @@ Implementados em `.claude/agents/`:
 | `subagente-redator-artigo` | Manufatura autônoma de 1 Artigo Científico completo via RAG do dossiê-mãe (nunca pesquisa) |
 | `subagente-adaptador-ebook` | Adaptação de tom + geração de EPUB de 1 e-book derivado (nunca pesquisa nem gera conteúdo novo) |
 | `subagente-revisor-tecnico` | Correção paralela, em lotes, dos capítulos/seções reprovados na auditoria da Fase 2.5 |
+| `subagente-ilustrador` | Gera ilustrações 2D flat para capítulos (HTML/CSS + Playwright, gratuito, sem API) |
 
 ### Motor Determinístico da Esteira (scripts)
 
@@ -102,6 +111,7 @@ Os agentes leem o JSON produzido por eles e agem sobre a evidência.
 | `scripts/indexar-dossie.py` | 6 — RAG local | Indexa o dossiê em blocos (TF-IDF puro) e responde busca por relevância, evitando carregar o dossiê inteiro no contexto |
 | `scripts/pool-capitulos.py` | 4 — Concorrência | Planeja o despacho dos capítulos (ou artigos/ebooks, via `--manifesto`) em lotes, rastreia tentativas e calcula backoff exponencial |
 | `scripts/renderizar-diagramas.py` | 2 — Diagramas | Renderiza blocos ```mermaid em PNG (cache por hash) e valida a sintaxe dos diagramas |
+| `scripts/gerar-ilustracoes.py` | 1 — Ilustrações | Gera ilustrações 2D flat para capítulos via HTML/CSS + Playwright (gratuito, sem API) |
 | `scripts/validar-codigo.py` | 3 — CI de código | Valida a sintaxe de cada bloco de código (python, js, ts, bash, powershell, json, yaml, toml, xml) sem executar nada |
 | `scripts/auditar-obra.py` | 1 — Peer review | Audita os requisitos automatizáveis por tipo de obra (`--tipo livro\|tcc\|artigo\|ebook`), detecta sobreposição entre capítulos, grafia inconsistente e truncamento |
 | `scripts/metadados_livro.py` | 5 — Capa/CIP | Deriva paleta, ficha catalográfica (Cutter, ISBN, CDD, assuntos) e sinopse da contracapa (livro); resumo/abstract (TCC/artigo) |
@@ -178,8 +188,9 @@ da seção 1.5 (ver `SPEC_TCC.md`/`SPEC_ARTIGO.md`/`SPEC_EBOOK.md`).
 2. **Fase 1**: `pesquisador`/`subagente-pesquisador` varre fontes → `indexar-dossie.py --indexar` monta o índice RAG → `arquiteto` gera a planta baixa do sumário macro.
 3. **Fase 2** (Manufatura Tática Autônoma & Paralela **em lotes**): o Orquestrador consulta `pool-capitulos.py --plano --lote 4` e instancia `subagente-redator-capitulo` lote a lote (estrategista + redator-eita + diagrama Mermaid + CI de código + auto-validação). Falha de subagente é retentada com backoff exponencial (máx. 3 tentativas por capítulo).
 4. **Fase 2.5** (Peer Review): `auditar-obra.py` + `validar-codigo.py` + validação de diagramas produzem evidência; a skill `revisor-tecnico` (e, em lotes, `subagente-revisor-tecnico`) corrige sobreposição entre capítulos, terminologia inconsistente, truncamento, código quebrado e diagramas inválidos. Parecer em `output/<livro>/revisao/parecer_revisao.md`.
-5. **Fase 3**: `compilador-abnt` faz o merge final, inclui prefácio, conclusão, sumário dinâmico, referências e normas ABNT em `output/<livro>/livro_final.md`.
-6. **Fase 3, passo final — Exportação em PDF (Nó 10)**: `compilar-para-pdf.py <slug> --paginas-exatas` (ou `scripts/converter-md-pdf.ps1 -Slug <slug>`) renderiza os diagramas Mermaid em PNG, deriva capa gráfica e ficha catalográfica, e compila **Pandoc → `.typ` → Typst** para produzir `output/<livro>/livro_final.pdf` (margens ABNT, Times New Roman 12pt, sumário automático, paginação). CloudConvert fica como fallback opcional se configurado.
+5. **Fase 2.7** (Ilustrações): `gerar-ilustracoes.py <slug>` gera ilustrações 2D flat para os capítulos via HTML/CSS + Playwright (gratuito, sem API). Opcional: `--capitulo N` para capítulo específico.
+6. **Fase 3**: `compilador-abnt` faz o merge final, inclui prefácio, conclusão, sumário dinâmico, referências e normas ABNT em `output/<livro>/livro_final.md`.
+7. **Fase 3, passo final — Exportação em PDF (Nó 10)**: `compilar-para-pdf.py <slug> --paginas-exatas` (ou `scripts/converter-md-pdf.ps1 -Slug <slug>`) renderiza os diagramas Mermaid em PNG, deriva capa gráfica e ficha catalográfica, e compila **Pandoc → `.typ` → Typst** para produzir `output/<livro>/livro_final.pdf` (margens ABNT, Times New Roman 12pt, sumário automático, paginação). CloudConvert fica como fallback opcional se configurado.
 
 > **Nota técnica (V3):** não use `pandoc --pdf-engine=typst` em livros com figuras — o Pandoc
 > reescreve os caminhos das imagens em forma absoluta e o Typst os rejeita no Windows

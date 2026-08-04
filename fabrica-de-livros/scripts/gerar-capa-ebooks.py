@@ -36,6 +36,10 @@ PALETAS = [
     ("#101418", "#26313c", "#8fa8c0", "#f2f7fc"),  # 8 - grafite aço
 ]
 
+# Paleta padrao EDITORA AGENTICA: fundo matte escuro (#0d1117/#0f172a)
+# com destaque verde-terminal — sem faixas laterais, capa 2D flat.
+PALETA_EDITORA = ("#0d1117", "#0f172a", "#2ecc9a", "#f0f6ff")
+
 FONTES = {
     "bold": FONT_DIR / "arialbd.ttf",
     "regular": FONT_DIR / "arial.ttf",
@@ -94,6 +98,62 @@ def pintar_lombada_decorativa(draw, c_destaque, largura=LARGURA, altura=ALTURA):
             radius=7 * sy, fill=cor)
 
 
+def pintar_ilustracao_terminal(draw, cx, y0, c_destaque, sx=1.0, sy=1.0,
+                               rotulo="terminal"):
+    """Ilustracao vetorial 2D tematica: janela de terminal do harness (CLI).
+
+    Desenhada apenas com primitivas Pillow (retangulos, elipses, texto) —
+    flat 2D, sem sombras 3D nem gradientes complexos. O rotulo da barra
+    vem da propria obra (nunca texto hardcoded de outro livro).
+    """
+    larg = int(1010 * sx)
+    alt = int(560 * sy)
+    x0 = int(cx - larg / 2)
+    x1 = x0 + larg
+    y1 = int(y0 + alt)
+    cor_jan = (13, 18, 25, 255)
+    cor_bar = (23, 30, 42, 255)
+    f_ttl = fonte("regular", int(30 * sy))
+    f_prm = fonte("bold", int(34 * sy))
+    f_sta = fonte("regular", int(24 * sy))
+
+    # Janela do terminal
+    draw.rounded_rectangle([x0, y0, x1, y1], radius=int(26 * sy), fill=cor_jan,
+                           outline=interpolar(c_destaque, (255, 255, 255), 0.45),
+                           width=int(4 * sx))
+    # Barra de titulo com os tres pontos classicos
+    tb_h = int(72 * sy)
+    draw.rounded_rectangle([x0, y0, x1, y0 + tb_h], radius=int(26 * sy), fill=cor_bar)
+    draw.rectangle([x0, y0 + tb_h - int(26 * sy), x1, y0 + tb_h], fill=cor_bar)
+    for i, cor in enumerate([(255, 95, 86), (255, 189, 46), (39, 201, 63)]):
+        px = x0 + int((36 + i * 54) * sx)
+        py = y0 + int(tb_h / 2)
+        r = int(10 * sy)
+        draw.ellipse([px - r, py - r, px + r, py + r], fill=cor)
+    draw.text((x0 + int(220 * sx), y0 + int(20 * sy)),
+              f"{rotulo} — harness de codigo", font=f_ttl, fill=(190, 205, 224, 255))
+
+    # Linha de prompt
+    ly = y0 + tb_h + int(58 * sy)
+    draw.text((x0 + int(58 * sx), ly), f"> {rotulo} run \"refatore o modulo de auth\"",
+              font=f_prm, fill=c_destaque)
+    # Linhas de saida (barras de codigo)
+    for i, frac in enumerate([0.84, 0.64, 0.74, 0.48]):
+        by = ly + int((76 + i * 64) * sy)
+        bw = int((1010 - 116) * sx * frac)
+        draw.rounded_rectangle([x0 + int(58 * sx), by, x0 + int(58 * sx) + bw,
+                                by + int(24 * sy)], radius=int(12 * sy),
+                               fill=(40, 52, 70, 255))
+    # Barra de status inferior
+    syb = y1 - int(58 * sy)
+    draw.rounded_rectangle([x0 + int(58 * sx), syb, x1 - int(58 * sx), syb + int(30 * sy)],
+                           radius=int(15 * sy),
+                           fill=interpolar(c_destaque, (0, 0, 0), 0.65))
+    draw.text((x0 + int(70 * sx), syb + int(5 * sy)),
+              "tokens 1.2k  ·  modo build  ·  ~28s", font=f_sta,
+              fill=(170, 190, 215, 255))
+
+
 def quebrar_titulo(texto, fonte_t, max_largura):
     linhas = []
     for paragrafo in texto.split("\n"):
@@ -113,10 +173,14 @@ def quebrar_titulo(texto, fonte_t, max_largura):
 
 def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA,
                subtitulo=None, rodape=None, nome_arquivo="capa.png",
-               selo=None, camadas=None):
-    c_topo, c_base, c_destaque, c_texto = [
-        hex_para_rgb(x) for x in PALETAS[(indice - 1) % len(PALETAS)]
-    ]
+               selo=None, camadas=None, chancela=None, caixa_alta=False,
+               sem_lombada=False, ilustracao=False, paleta=None,
+               rotulo_ilustracao=None):
+    if paleta is None:
+        paleta = PALETAS[(indice - 1) % len(PALETAS)]
+    c_topo, c_base, c_destaque, c_texto = [hex_para_rgb(x) for x in paleta]
+    if caixa_alta:
+        titulo = titulo.upper()
     subtitulo = subtitulo or ""
     sx = largura / LARGURA
     sy = altura / ALTURA
@@ -126,7 +190,8 @@ def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA
 
     pintar_fundo_gradiente(draw, c_topo, c_base, largura, altura)
     pintar_orbes(imagem, c_destaque, largura=largura, altura=altura)
-    pintar_lombada_decorativa(draw, c_destaque, largura, altura)
+    if not sem_lombada:
+        pintar_lombada_decorativa(draw, c_destaque, largura, altura)
 
     # Moldura fina
     cor_moldura = interpolar(c_destaque, (255, 255, 255), 0.6)
@@ -137,8 +202,17 @@ def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA
     area_titulo_x = margem
     area_titulo_w = largura - 2 * margem
 
-    # Selo (topo) — opcional, so aparece se a obra pertencer a uma serie nomeada
+    # Chancela da editora (topo) — padrao EDITORA AGENTICA
     y_titulo_inicio = 300 * sy
+    if chancela:
+        f_chan = fonte("bold", int(46 * sy))
+        draw.text((margem, 150 * sy), chancela.upper(), font=f_chan,
+                  fill=interpolar(c_destaque, (255, 255, 255), 0.55))
+        draw.line([(margem, 244 * sy), (margem + 300 * sx, 244 * sy)],
+                  fill=c_destaque, width=8)
+        y_titulo_inicio = 360 * sy
+
+    # Selo (topo) — opcional, so aparece se a obra pertencer a uma serie nomeada
     if selo:
         f_selo = fonte("bold", int(44 * sy))
         draw.text((margem, 220 * sy), selo.upper(), font=f_selo,
@@ -178,6 +252,13 @@ def gerar_capa(indice, titulo, autor, slug_ebook, largura=LARGURA, altura=ALTURA
         f_camadas = fonte("bold", int(44 * sy))
         draw.text((area_titulo_x, y), camadas, font=f_camadas,
                   fill=interpolar(c_destaque, (255, 255, 255), 0.35))
+        y += 80 * sy
+
+    # Ilustracao vetorial 2D tematica (padrao EDITORA AGENTICA)
+    if ilustracao:
+        y_ilust = max(y + 60 * sy, altura * 0.52)
+        pintar_ilustracao_terminal(draw, largura / 2, y_ilust, c_destaque,
+                                   sx, sy, rotulo=rotulo_ilustracao or "terminal")
 
     # Rodape: autor
     f_autor = fonte("regular", int(56 * sy))
@@ -203,7 +284,9 @@ def gerar_thumbnail(caminho_capa, largura=300):
 
 
 def gerar_capa_livro_mae(slug_livro_mae):
-    """Capa A4 do livro-mae: composicao generica, titulo/subtitulo/serie da propria obra."""
+    """Capa A4 do livro-mae no padrao EDITORA AGENTICA: 2D flat, fundo matte
+    escuro, chancela, titulo em caixa alta, ilustracao tematica e autor
+    obrigatorio no rodape. Sem lombadas 3D nem faixas laterais."""
     dir_obra = DIR_OUTPUT / slug_livro_mae
     sumario = {}
     sum_path = dir_obra / "sumario_macro.json"
@@ -213,14 +296,25 @@ def gerar_capa_livro_mae(slug_livro_mae):
         except ValueError:
             sumario = {}
     titulo = sumario.get("titulo_obra") or slug_livro_mae
+    # Titulo curto (antes de ":") em caixa alta + subtitulo derivado da obra
+    titulo_curto = titulo
     subtitulo = sumario.get("subtitulo") or ""
+    if ":" in titulo:
+        titulo_curto, resto = titulo.split(":", 1)
+        subtitulo = (subtitulo or resto.strip())
     autor = "Heverton Eduardo Peres"
     caminho = gerar_capa(
-        1, titulo, autor, slug_livro_mae,
+        1, titulo_curto, autor, slug_livro_mae,
         largura=LARGURA_A4, altura=ALTURA_A4,
         subtitulo=subtitulo,
         rodape=autor,
         nome_arquivo="capa_livro.png",
+        chancela="EDITORA AGÊNTICA",
+        caixa_alta=True,
+        sem_lombada=True,
+        ilustracao=True,
+        paleta=PALETA_EDITORA,
+        rotulo_ilustracao=titulo_curto.lower(),
     )
     thumb = gerar_thumbnail(caminho)
     print(f"  [OK] livro-mae: capa A4 {caminho.relative_to(DIR_PROJETO)} "

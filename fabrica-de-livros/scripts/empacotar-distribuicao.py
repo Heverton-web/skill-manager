@@ -48,7 +48,7 @@ def carregar_derivados(slug):
     return json.loads(caminho.read_text(encoding="utf-8"))
 
 
-def montar_readme(slug, tema, tamanho, pdf_bytes, ebooks, artigos):
+def montar_readme(slug, tema, tamanho, pdf_bytes, ebooks, artigos, epub_bytes=None):
     linhas = []
     linhas.append(f"# {tema}")
     linhas.append("")
@@ -60,6 +60,8 @@ def montar_readme(slug, tema, tamanho, pdf_bytes, ebooks, artigos):
     linhas.append("| Arquivo | Descrição |")
     linhas.append("|---|---|")
     linhas.append(f"| `livro_final.pdf` | Obra completa em PDF (ABNT, {pdf_bytes} KB) |")
+    if epub_bytes:
+        linhas.append(f"| `livro_final.epub` | Obra completa em EPUB reflowable ({epub_bytes} KB) |")
     for a in artigos:
         i = a["indice"]
         nome = a["titulo"]
@@ -83,6 +85,9 @@ def montar_readme(slug, tema, tamanho, pdf_bytes, ebooks, artigos):
     linhas.append("")
     linhas.append("- **PDF**: abra `livro_final.pdf` em qualquer leitor (impressão, "
                   "anotação e distribuição).")
+    if epub_bytes:
+        linhas.append("- **EPUB**: abra `livro_final.epub` em qualquer leitor reflowable "
+                      "(Kindle, Kobo, Apple Books, Google Play Livros).")
     linhas.append("- **Artigos**: cada `artigos/artigo_*.pdf` é um recorte autônomo da obra "
                   "(2 capítulos do livro-mãe, formato ABNT) — ideal para leitura focada.")
     linhas.append("- **EPUBs**: cada `ebooks/ebook_*.epub` é reflowable — compatível com "
@@ -129,6 +134,16 @@ def empacotar(slug):
     # 1. PDF principal
     shutil.copy2(pdf_orig, dest / "livro_final.pdf")
     print(f"  [OK] livro_final.pdf ({pdf_orig.stat().st_size // 1024} KB)")
+
+    # 1.1. EPUB principal (livro-mae, se gerado por scripts/gerar-epub.py)
+    epub_bytes = None
+    epubs_mae = sorted(dir_obra.glob("*.epub"))
+    if epubs_mae:
+        # Prefere o EPUB com nome do slug (deterministico); senao, o mais recente
+        epub_orig = next((p for p in epubs_mae if p.stem == Path(slug).name), epubs_mae[-1])
+        shutil.copy2(epub_orig, dest / "livro_final.epub")
+        epub_bytes = epub_orig.stat().st_size // 1024
+        print(f"  [OK] livro_final.epub ({epub_bytes} KB)")
 
     for nome_origem, nome_destino in (("capa_livro.png", "capa.png"),
                                        ("thumbnail_livro.png", "thumbnail.png")):
@@ -184,7 +199,7 @@ def empacotar(slug):
     tema = config.get("tema") or derivados.get("slug_livro_mae", slug)
     readme = montar_readme(slug, tema, config.get("tamanho_obra", "G"),
                            pdf_orig.stat().st_size // 1024, ebooks_copiados,
-                           artigos_copiados)
+                           artigos_copiados, epub_bytes)
     (dest / "README.md").write_text(readme, encoding="utf-8")
     (dest / "LICENSE").write_text(LICENSE, encoding="utf-8")
     print("  [OK] README.md")
