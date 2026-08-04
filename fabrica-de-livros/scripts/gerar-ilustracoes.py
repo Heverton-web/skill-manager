@@ -372,7 +372,7 @@ def renderizar_png(html_content, caminho_png):
         Path(caminho_html).unlink(missing_ok=True)
 
 
-def gerar_ilustracoes_capitulo(slug, num_cap):
+def gerar_ilustracoes_capitulo(slug, num_cap, cor_acento=None):
     """Gera ilustração única para um capítulo."""
     dir_obra = DIR_OUTPUT / slug
     dir_ilust = dir_obra / "imagens" / "ilustracoes"
@@ -383,11 +383,15 @@ def gerar_ilustracoes_capitulo(slug, num_cap):
         print(f"  [AVISO] Cap {num_cap:02d} sem conceitos definidos")
         return 0
 
+    # Usar cor do accent se fornecida, senão usar a cor do capítulo
+    if cor_acento:
+        conceitos["cor_acento"] = cor_acento
+
     html = criar_html_ilustracao(num_cap, conceitos)
     png = dir_ilust / f"ilust_{num_cap:02d}_1.png"
     
     if renderizar_png(html, png):
-        print(f"  [OK] ilust_{num_cap:02d}_1.png ({conceitos['tema']})")
+        print(f"  [OK] ilust_{num_cap:02d}_1.png ({conceitos['tema']}, {conceitos['cor_acento']})")
         return 1
     return 0
 
@@ -396,6 +400,7 @@ def main():
     ap = argparse.ArgumentParser(description="Gera ilustracoes 2D flat unicas por capitulo")
     ap.add_argument("slug")
     ap.add_argument("--capitulo", type=int, default=None)
+    ap.add_argument("--cor", default=None, help="Cor de accent para todas as ilustracoes (ex: #58a6ff)")
     ap.add_argument("--validar", action="store_true")
     args = ap.parse_args()
 
@@ -419,7 +424,7 @@ def main():
     total = 0
     for n in caps:
         print(f"Capitulo {n:02d}...")
-        total += gerar_ilustracoes_capitulo(args.slug, n)
+        total += gerar_ilustracoes_capitulo(args.slug, n, args.cor)
 
     print(f"\nCONCLUIDO: {total} ilustracao(oes) unica(s)")
     return 0

@@ -55,11 +55,12 @@ abaixo de forma determinística.
   d) **Chancela:** `>_ EDITORA AGÊNTICA` (ícone + texto, topo esquerda)
   e) **Terminal:** à esquerda com comandos reais da ferramenta/tema
   f) **Código:** flutuante à direita, cor #484f58, com syntax highlight
-  g) **Título:** Inter 900 72px, cor #e6edf3, caixa alta
+  g) **Título:** Inter 900 72px, **COR DO ACCENT** (ex: #58a6ff, #2ecc9a, #a855f7)
   h) **Subtítulo:** Inter 300 18px, cor #8b949e
   i) **Autor:** Inter 600 18px, cor #e6edf3
   j) **Cargo:** Inter 600 11px, cor do accent
-  k) **Cores por Obra:** cada livro/ebook tem sua cor de accent (azul #58a6ff, verde #2ecc9a, roxo #a855f7, etc.)
+  k) **Cores por Obra:** cada livro/ebook tem sua cor de accent que define
+     TODOS os elementos visuais: barras, título, cargo, divider, ilustrações
   l) **Dimensões:** 1200x1600px (ebooks), 1600x2263px (livros A4)
   m) **Script:** `scripts/gerar-capa-ebook-padrao.py` (HTML/CSS + Playwright)
   n) **Salvar:** `imagens/capa.png` (PNG)

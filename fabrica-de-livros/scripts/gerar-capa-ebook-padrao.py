@@ -127,12 +127,12 @@ def gerar_capa_ebook(
   .output {{ color: #7ee787; padding-left: 16px; }}
   .cursor {{ display: inline-block; width: 8px; height: 14px; background: {cor_acento}; vertical-align: text-bottom; }}
   
-  /* Título: Inter 900 72px */
+  /* Título: Inter 900 72px - COR DO ACCENT */
   .title {{ 
     font-family: 'Inter', sans-serif;
     font-size: 72px; 
     font-weight: 900; 
-    color: #e6edf3; 
+    color: {cor_acento}; 
     line-height: 1.05;
     letter-spacing: -1px;
     margin-bottom: 12px;

@@ -51,12 +51,18 @@ abaixo de forma determinística.
   - **Chancela:** `>_ EDITORA AGÊNTICA` (ícone + texto)
   - **Terminal:** à esquerda com comandos reais da ferramenta
   - **Código:** flutuante à direita, cor #484f58, com syntax highlight
-  - **Título:** Inter 900 72px, cor #e6edf3
-  - **Autor:** Inter 600 18px
+  - **Título:** Inter 900 72px, **COR DO ACCENT** (ex: #58a6ff, #2ecc9a, #a855f7)
+  - **Subtítulo:** Inter 300 18px, cor #8b949e
+  - **Autor:** Inter 600 18px, cor #e6edf3
   - **Cargo:** Inter 600 11px, cor do accent
-  - **Cores por obra:** cada livro/ebook tem sua cor de accent (azul, verde, roxo, etc.)
+  - **Cores por obra:** cada livro/ebook tem sua cor de accent que define
+    TUDO: barra topo/rodapé, título, cargo, divider, ilustrações
   - **Script:** `scripts/gerar-capa-ebook-padrao.py` (HTML/CSS + Playwright)
   - **Salvar:** `imagens/capa.png` (PNG 1200x1600px para ebooks, 1600x2263px para livros)
+- **REGRA 8 (Cores Unificadas):** a cor de accent de cada obra define visualmente
+  TODOS os elementos: capa (barras, título, cargo, divider), ilustrações dos
+  capítulos e badges. Use `--cor` no `gerar-ilustracoes.py` para manter
+  consistência. Exemplo: ebook verde usa #2ecc9a em tudo.
 
 ## 1.5 Módulos por Tipo de Obra (V4)
 
