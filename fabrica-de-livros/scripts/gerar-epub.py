@@ -96,9 +96,44 @@ def gerar(slug, gerar_pdf_tambem=False):
         return 1
 
     if gerar_pdf_tambem:
-        pdf_comando = [PANDOC, str(md_path), "-o", str(dir_ebook / f"{nome_arquivo}.pdf"),
-                       "--toc", "--metadata", f"title={titulo}", "--resource-path", str(dir_ebook)]
-        subprocess.run(pdf_comando, capture_output=True, text=True, timeout=180)
+        pdf_path = dir_ebook / f"{nome_arquivo}.pdf"
+        # Usar Pandoc -> .typ -> Typst para PDF com template ABNT
+        typ_path = dir_ebook / "_ebook_compilado.typ"
+        template_typ = DIR_PROJETO / "templates" / "template.typ"
+        
+        # Gerar .typ
+        typst_cmd = [
+            PANDOC, str(md_path), "-o", str(typ_path),
+            "--to=typst",
+            f"--template={template_typ}",
+            "--wrap=preserve",
+            "--resource-path", str(dir_ebook),
+            "-V", f"title={titulo}",
+            "-V", f"author={autor}",
+            "-V", "sem_capa_grafica=1",  # Ebook não tem capa gráfica Typst
+        ]
+        subprocess.run(typst_cmd, capture_output=True, text=True, timeout=180)
+        
+        # Compilar com Typst
+        if typ_path.exists():
+            typst_compile = ["typst", "compile", "--root", str(dir_ebook), str(typ_path), str(pdf_path)]
+            resultado_typst = subprocess.run(typst_compile, capture_output=True, text=True, timeout=180)
+            
+            if pdf_path.exists() and pdf_path.stat().st_size > 0:
+                tamanho_kb = pdf_path.stat().st_size / 1024
+                print(f"[OK] PDF gerado: {pdf_path.name} ({tamanho_kb:.1f} KB)")
+            else:
+                # Fallback: PDF simples via Pandoc
+                pdf_comando = [PANDOC, str(md_path), "-o", str(pdf_path),
+                               "--toc", "--metadata", f"title={titulo}", 
+                               "--metadata", f"author={autor}",
+                               "--resource-path", str(dir_ebook)]
+                subprocess.run(pdf_comando, capture_output=True, text=True, timeout=180)
+                if pdf_path.exists():
+                    print(f"[OK] PDF gerado (fallback): {pdf_path.name}")
+            
+            # Limpar .typ temporário
+            typ_path.unlink(missing_ok=True)
 
     return 0
 

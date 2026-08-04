@@ -50,15 +50,16 @@ dentro da pasta do livro-mãe — a referência cruzada é o campo `slug_livro_m
    ```
    Se reprovar em EBOOK-LEN, volte à skill `redator-ebook` e reescreva
    preservando mais substância do capítulo-fonte antes de seguir.
-7. Gere o EPUB (a capa gerada no passo 5 é embutida automaticamente; o arquivo
-   nasce nomeado `<slug_ebook>.epub` — o gerador usa o nome da própria pasta):
+7. Gere o EPUB + PDF (a capa gerada no passo 5 é embutida automaticamente no EPUB;
+   o PDF usa o template Typst ABNT):
    ```bash
-   python scripts/gerar-epub.py <slug_ebook>
+   python scripts/gerar-epub.py <slug_ebook> --pdf-tambem
    ```
 8. Atualize o manifesto do livro-mãe (`output/<slug_livro_mae>/derivados.json`,
-   seção `ebooks.itens`) com o status `"concluido_autonomo"` e o caminho do `.epub`.
+   seção `ebooks.itens`) com o status `"concluido_autonomo"` e os caminhos do
+   `.epub` e `.pdf`.
 9. Devolva ao Orquestrador um resumo telegráfico (índice, título, caracteres,
-   veredito EBOOK-LEN, caminho do EPUB e da capa/thumbnail). Sem preâmbulo (REGRA 2).
+   veredito EBOOK-LEN, caminhos do EPUB/PDF e da capa/thumbnail). Sem preâmbulo (REGRA 2).
 
 ## Limites
 - Nunca invoque `subagente-pesquisador` — todo o conteúdo já existe no livro-mãe.

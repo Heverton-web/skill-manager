@@ -167,7 +167,7 @@ def empacotar(slug):
             falhas.append(f"{a['diretorio']}/livro_final.pdf")
             print(f"  [AVISO] artigos/artigo_{i}.pdf ausente — pacote incompleto!")
 
-    # 2. EPUBs + capas (+ thumbnails, se geradas por scripts/gerar-capa-ebooks.py)
+    # 2. EPUBs + PDFs + capas (+ thumbnails, se geradas por scripts/gerar-capa-ebooks.py)
     ebooks_copiados = []
     for e in ebooks_previstos:
         i = e["indice"]
@@ -181,6 +181,14 @@ def empacotar(slug):
         else:
             falhas.append(f"{e['diretorio']}/*.epub")
             print(f"  [AVISO] ebooks/ebook_{i}.epub ausente — pacote incompleto!")
+        # Copiar PDF do ebook se existir
+        pdfs_encontrados = list(dir_eb.glob("*.pdf"))
+        pdf_ebook = pdfs_encontrados[0] if pdfs_encontrados else None
+        if pdf_ebook and pdf_ebook.exists():
+            shutil.copy2(pdf_ebook, dest_ebooks / f"ebook_{i}.pdf")
+            print(f"  [OK] ebooks/ebook_{i}.pdf ({pdf_ebook.stat().st_size // 1024} KB)")
+        else:
+            print(f"  [AVISO] ebooks/ebook_{i}.pdf ausente (opcional)")
         capa = dir_eb / "imagens" / "capa.png"
         if capa.exists():
             shutil.copy2(capa, dest_capas / f"capa_ebook_{i}.png")

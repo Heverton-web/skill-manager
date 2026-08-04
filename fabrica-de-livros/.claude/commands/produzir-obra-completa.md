@@ -57,7 +57,7 @@ cada um internamente em lotes de 4:
    python scripts/empacotar-distribuicao.py <slug>
    ```
    Copia `livro_final.pdf` (+ capa/thumbnail), cada `artigos/artigo_<i>.pdf` e
-   cada `ebooks/ebook_<i>.epub` (+ capa/thumbnail) para
+   cada `ebooks/ebook_<i>.epub` + `ebooks/ebook_<i>.pdf` (+ capa/thumbnail) para
    `output/<slug>/distribuicao/`, com `README.md` e `LICENSE` gerados. Funciona
    com qualquer combinação (só livro, livro+artigos, livro+ebooks, tudo) — nunca
    bloqueia por um derivado que não foi solicitado no esboço.
@@ -71,7 +71,7 @@ cada um internamente em lotes de 4:
 OBRA: <título> (<tipo_obra>, tamanho <P/M/G ou N/A>)
   Principal    : output/<slug>/livro_final.pdf — <veredito da auditoria>
   Artigos      : <N> gerado(s) — output/<slug>/artigos/artigo_<i>/livro_final.pdf (cada um)
-  E-books      : <N> gerado(s) — output/<slug>/ebooks/ebook_<i>/ebook_<i>.epub (cada um)
+  E-books      : <N> gerado(s) — output/<slug>/ebooks/ebook_<i>/ebook_<i>.epub + .pdf (cada um)
   Distribuicao : output/<slug>/distribuicao/ (README.md, LICENSE, PDFs, EPUBs, capas, thumbnails)
   Pendencias   : <lista objetiva, ou "nenhuma">
 ```
