@@ -66,24 +66,35 @@
 // Definicao do horizontal rule (Pandoc gera #horizontalrule como texto)
 #let horizontalrule = {
   v(1em)
-  line(length: 100%, stroke: 0.5pt + gray)
+  line(length: 100%, stroke: 1pt + cor.destaque)
   v(1em)
 }
 
-// Estilo de blocos de codigo
+// Estilo de blocos de codigo (com borda na cor da paleta da capa)
 #show raw.where(block: true): block.with(
   width: 100%,
-  fill: luma(240),
+  fill: cor.clara,
+  stroke: 0.5pt + cor.secundaria,
   inset: 8pt,
   radius: 4pt,
 )
 
 // Estilo de codigo inline
 #show raw.where(block: false): box.with(
-  fill: luma(240),
+  fill: cor.clara,
   inset: (x: 3pt, y: 0pt),
   outset: (y: 3pt),
   radius: 2pt,
+)
+
+// Estilo de citacoes (blockquote) com borda lateral na cor da paleta da capa
+#show quote: it => block(
+  width: 100%,
+  fill: cor.clara,
+  inset: (left: 12pt, right: 8pt, top: 8pt, bottom: 8pt),
+  stroke: (left: 3pt + cor.destaque),
+  radius: (right: 4pt),
+  it,
 )
 
 // Figuras (diagramas Mermaid renderizados) — nunca extrapolam a mancha grafica
@@ -95,9 +106,12 @@
   v(0.6cm)
 }
 #show figure.caption: it => {
-  set text(size: 10pt, fill: luma(70))
+  set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 10pt, fill: cor.secundaria, weight: "bold")
   it
 }
+
+// Regra geral de titulos: sempre fonte INTER e cores da paleta da capa
+#show heading: set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"))
 
 // Estilo de titulos - nivel 1 (com suporte a Parte)
 #show heading.where(level: 1): it => {
@@ -105,38 +119,49 @@
   let isParte = type(it.body) == str and it.body.starts-with("Parte")
   pagebreak()
   if isParte {
-    set text(size: 20pt, weight: "bold", fill: cor.primaria)
+    set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 20pt, weight: "bold", fill: cor.primaria)
     v(3cm)
     it
     v(0.3cm)
-    line(length: 40%, stroke: 2pt + cor.destaque)
+    line(length: 40%, stroke: 2.5pt + cor.destaque)
     v(2cm)
   } else {
-    set text(size: 16pt, weight: "bold", fill: cor.primaria)
+    set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 16pt, weight: "bold", fill: cor.primaria)
     v(2cm)
     it
     v(0.2cm)
-    line(length: 25%, stroke: 1.5pt + cor.destaque)
+    line(length: 30%, stroke: 2pt + cor.destaque)
     v(1cm)
   }
 }
 
 // Estilo de titulos - nivel 2
 #show heading.where(level: 2): it => {
-  set text(size: 14pt, weight: "bold", fill: cor.secundaria)
+  set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 14pt, weight: "bold", fill: cor.secundaria)
   set par(first-line-indent: 0cm)
   v(1cm)
   it
-  v(0.5cm)
+  v(0.2cm)
+  line(length: 15%, stroke: 1.5pt + cor.destaque)
+  v(0.4cm)
 }
 
 // Estilo de titulos - nivel 3
 #show heading.where(level: 3): it => {
-  set text(size: 12pt, weight: "bold")
+  set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 12pt, weight: "bold", fill: cor.secundaria)
   set par(first-line-indent: 0cm)
   v(0.75cm)
   it
-  v(0.5cm)
+  v(0.4cm)
+}
+
+// Estilo de titulos - nivel 4 em diante
+#show heading.where(level: 4): it => {
+  set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"), size: 11pt, weight: "bold", fill: cor.secundaria)
+  set par(first-line-indent: 0cm)
+  v(0.6cm)
+  it
+  v(0.3cm)
 }
 
 #let capa-grafica-ativa = "$sem_capa_grafica$" != "1"
@@ -157,17 +182,17 @@
     #place(bottom + left, dy: -4.5cm, rect(width: 100%, height: 0.15cm, fill: cor.destaque))
 
     #place(top + left, dx: 2.5cm, dy: 6.5cm, block(width: 14.5cm)[
-      #text(size: 34pt, weight: "bold", fill: white)[$title$]
+      #text(font: ("Inter", "sans-serif"), size: 34pt, weight: "bold", fill: white)[$title$]
       $if(subtitle)$
       #v(0.8cm)
       #line(length: 5cm, stroke: 3pt + cor.destaque)
       #v(0.6cm)
-      #text(size: 15pt, fill: cor.destaque)[$subtitle$]
+      #text(font: ("Inter", "sans-serif"), size: 15pt, fill: cor.destaque)[$subtitle$]
       $endif$
     ])
 
     #place(bottom + left, dx: 2.5cm, dy: -1.6cm, block(width: 15cm)[
-      #text(size: 15pt, weight: "bold", fill: white)[$author$]
+      #text(font: ("Inter", "sans-serif"), size: 15pt, weight: "bold", fill: white)[$author$]
       #v(0.2cm)
       #text(size: 10pt, fill: cor.clara)[#datetime.today().display("[year]")]
     ])
@@ -179,12 +204,12 @@
 #page(header: none, footer: none, numbering: none)[
   #set par(first-line-indent: 0cm, justify: false)
   #align(center)[
-    #text(size: 13pt, weight: "bold")[$author$]
+    #text(font: ("Inter", "sans-serif"), size: 13pt, weight: "bold", fill: cor.secundaria)[$author$]
     #v(3.5cm)
-    #text(size: 20pt, weight: "bold")[$title$]
+    #text(font: ("Inter", "sans-serif"), size: 22pt, weight: "bold", fill: cor.primaria)[$title$]
     $if(subtitle)$
     #v(0.5cm)
-    #text(size: 13pt)[$subtitle$]
+    #text(font: ("Inter", "sans-serif"), size: 14pt, fill: cor.secundaria)[$subtitle$]
     $endif$
   ]
   #v(4cm)

@@ -1,7 +1,18 @@
-// Template ABNT para TCC/Monografia - Fabrica Agentica de Publicacoes (V4)
-// NBR 14724 (estrutura), NBR 6027 (sumario), NBR 6028 (resumo)
-// Compativel com Pandoc + Typst — NAO use --number-sections (os cabecalhos ja
-// trazem numeracao progressiva NBR 6024 escrita pelo redator-academico).
+// ── Paleta cromatica da obra ──────────────────────────────────────
+#let paletas = (
+  indigo:    (primaria: rgb("#1b2559"), secundaria: rgb("#3d55a5"), destaque: rgb("#f0b429"), clara: rgb("#eef1fa")),
+  grafite:   (primaria: rgb("#22262b"), secundaria: rgb("#4a5259"), destaque: rgb("#59c1bd"), clara: rgb("#eef0f1")),
+  vinho:     (primaria: rgb("#5b1420"), secundaria: rgb("#8c2b3c"), destaque: rgb("#e0a458"), clara: rgb("#f8eef0")),
+  floresta:  (primaria: rgb("#123324"), secundaria: rgb("#2c6e49"), destaque: rgb("#d8f3a3"), clara: rgb("#eef5ef")),
+  ambar:     (primaria: rgb("#432818"), secundaria: rgb("#99582a"), destaque: rgb("#ffe6a7"), clara: rgb("#f8f1e7")),
+  oceano:    (primaria: rgb("#03254c"), secundaria: rgb("#1167b1"), destaque: rgb("#7fd6f7"), clara: rgb("#e9f3fa")),
+)
+
+#let chave-paleta = {
+  let p = "$paleta$"
+  if p == "" or not p in paletas { "indigo" } else { p }
+}
+#let cor = paletas.at(chave-paleta)
 
 #set document(
   title: "$title$",
@@ -14,7 +25,7 @@
   margin: (top: 3cm, bottom: 2cm, left: 3cm, right: 2cm),
   header: context {
     if counter(page).get().first() > 1 {
-      set text(size: 9pt, fill: gray)
+      set text(size: 9pt, fill: cor.secundaria)
       align(center, "$title$")
     }
   },
@@ -39,40 +50,53 @@
 
 #let horizontalrule = {
   v(1em)
-  line(length: 100%, stroke: 0.5pt + gray)
+  line(length: 100%, stroke: 1pt + cor.destaque)
   v(1em)
 }
 
 #show raw.where(block: true): block.with(
-  width: 100%, fill: luma(240), inset: 8pt, radius: 4pt,
+  width: 100%, fill: cor.clara, stroke: 0.5pt + cor.secundaria, inset: 8pt, radius: 4pt,
 )
 #show raw.where(block: false): box.with(
-  fill: luma(240), inset: (x: 3pt, y: 0pt), outset: (y: 3pt), radius: 2pt,
+  fill: cor.clara, inset: (x: 3pt, y: 0pt), outset: (y: 3pt), radius: 2pt,
+)
+
+#show quote: it => block(
+  width: 100%,
+  fill: cor.clara,
+  inset: (left: 12pt, right: 8pt, top: 8pt, bottom: 8pt),
+  stroke: (left: 3pt + cor.destaque),
+  radius: (right: 4pt),
+  it,
 )
 
 #set image(width: 88%, fit: "contain")
 #show figure: it => { set par(first-line-indent: 0cm); v(0.6em); align(center, it); v(0.6em) }
-#show figure.caption: it => { set text(size: 10pt, fill: luma(70)); it }
+#show figure.caption: it => { set text(font: ("Inter", "sans-serif"), size: 10pt, fill: cor.secundaria, weight: "bold"); it }
 
-// Titulos: SEM pagebreak automatico de "Parte" (TCC nao usa Partes coloridas) —
-// nivel 1 = secao principal numerada (Introducao, Referencial Teorico N, ...)
+// Regra geral de titulos: sempre fonte INTER e cores da paleta da capa
+#show heading: set text(font: ("Inter", "Liberation Sans", "Arial", "sans-serif"))
+
+// Titulos: nivel 1 = secao principal numerada (Introducao, Referencial Teorico N, ...)
 #show heading.where(level: 1): it => {
   set par(first-line-indent: 0cm)
-  set text(size: 14pt, weight: "bold")
+  set text(font: ("Inter", "sans-serif"), size: 14pt, weight: "bold", fill: cor.primaria)
   pagebreak()
   v(1cm)
   upper(it)
-  v(1cm)
+  v(0.3cm)
+  line(length: 25%, stroke: 1.5pt + cor.destaque)
+  v(0.8cm)
 }
 #show heading.where(level: 2): it => {
-  set text(size: 12pt, weight: "bold")
+  set text(font: ("Inter", "sans-serif"), size: 12pt, weight: "bold", fill: cor.secundaria)
   set par(first-line-indent: 0cm)
   v(0.75cm)
   it
   v(0.4cm)
 }
 #show heading.where(level: 3): it => {
-  set text(size: 12pt, weight: "regular", style: "italic")
+  set text(font: ("Inter", "sans-serif"), size: 12pt, weight: "bold", fill: cor.secundaria)
   set par(first-line-indent: 0cm)
   v(0.6cm)
   it

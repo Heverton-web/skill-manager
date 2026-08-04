@@ -9,6 +9,8 @@
 6. **PADRÃO DE CAPAS DA EDITORA AGÊNTICA (O'REILLY / RHEINWERK / PACKT):** Capas DEVEM ser 2D planas (flat 2D front cover page), sem lombadas 3D ou faixas laterais. Fundo matte escuro (`#0d1117`/`#0f172a`), ilustração vetorial 2D temática e adaptada ao conteúdo, título em caixa alta, chancela "EDITORA AGÊNTICA" e NOME DO AUTOR ("Heverton Eduardo Peres") OBRIGATÓRIO na capa.
 7. **FALLBACK DE COMPILAÇÃO:** Se o terminal estiver bloqueado pelo sandbox, exiba imediatamente todos os comandos PowerShell prontos para o usuário executar localmente.
 8. **NADA BARRADO SEM CONFIRMAÇÃO:** NENHUMA execução, comando ou ação deve ser barrada sem confirmação prévia e autorização explícita do USUÁRIO.
+9. **REGRA INVIOLÁVEL DE BUSCA VIA GRAFO:** Antes de executar qualquer TOOL de leitura, busca ou semelhante, utilize obrigatoriamente os GRAFO do projeto (`.code-review-graph`, grafe de dependências ou MCP de grafo) para a busca de elementos.
+10. **REGRA INVIOLÁVEL DE AUTO-COMMIT E AUTO-PUSH:** Sempre realizar auto-commit (`git commit`) e auto-push (`git push`) das alterações para que o GRAFO do projeto esteja sempre atualizado.
 
 
 

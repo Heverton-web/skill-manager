@@ -36,6 +36,8 @@ abaixo de forma determinística.
    - qualquer arquivo em `output/**` (capítulos `.md`, `livro_final.md`, dossiês, `sumario_macro.json`, `config_obra.json`, `relatorio_auditoria.json`, `relatorio_codigo.json`, `relatorio_diagramas.json` e demais payloads de estado da esteira) — leia sempre por inteiro com `Read`/`cat`, nunca via `rtk grep`/`rtk read` (o modo de excerto compacto do `rtk grep` corta a prosa em janelas de ~40-80 caracteres ao redor do match quando há muitas ocorrências — inútil e enganoso para julgar terminologia, citações ou truncamento real);
    - qualquer verificação feita por `scripts/auditar-obra.py`, `validar-codigo.py`, `renderizar-diagramas.py` ou pela skill `revisor-tecnico`/`subagente-revisor-tecnico` sobre o conteúdo da obra;
    - a regra de "manter 3 primeiras + 4 últimas linhas" do item 2 é proibida sobre qualquer JSON que seja **estado/dado da obra** (mesmo que passe de 7 linhas) — só vale para log/saída de terminal efêmera.
+9. **REGRA INVIOLÁVEL DE BUSCA VIA GRAFO:** Antes de executar qualquer TOOL de leitura, busca ou semelhante, utilize obrigatoriamente os GRAFO do projeto (`.code-review-graph`, grafo de dependências ou MCP de grafo) para a busca de elementos.
+10. **REGRA INVIOLÁVEL DE AUTO-COMMIT E AUTO-PUSH:** Sempre realizar auto-commit (`git commit`) e auto-push (`git push`) das alterações realizadas para garantir que o GRAFO do projeto esteja sempre atualizado.
 
 
 
