@@ -31,13 +31,13 @@ quantidade de ebooks).
    explicando as 7 seções do framework. O subagente deve incluí-lo ao adaptar o conteúdo.
 
 ## Passo 3 — Auditoria e Geração
-5. Cada subagente já gera capa+thumbnail (`scripts/gerar-capa-ebooks.py`), audita
-   (`--tipo ebook`, inclui piso EBOOK-LEN de ~45.000 caracteres) e gera EPUB + PDF
+5. Cada subagente gera capa no padrão Editora Agêntica (`scripts/gerar-capa-ebook-padrao.py`),
+   audita (`--tipo ebook`, inclui piso EBOOK-LEN de ~45.000 caracteres) e gera EPUB + PDF
    (`scripts/gerar-epub.py --pdf-tambem`) como parte do seu próprio procedimento — o
-   Orquestrador só confere que todos os `ebook_<n>/` têm `.epub`, `.pdf`, `capa.png`
-   e `thumbnail.png` gerados ao final do lote.
+   Orquestrador só confere que todos os `ebook_<n>/` têm `.epub`, `.pdf` e `capa.png`
+   gerados ao final do lote.
 
 ## Passo 4 — Relatório de Entrega
 6. Exiba (REGRA 2): quantidade de ebooks gerados, título, caracteres e caminho
-   do `.epub`/`.pdf`/`capa.png`/`thumbnail.png` de cada um, e o veredito EBOOK-LEN.
+   do `.epub`/`.pdf`/`capa.png` de cada um, e o veredito EBOOK-LEN.
    Atualize `output/<slug>/ebooks/estrutura_ebooks.json` com os caminhos finais.

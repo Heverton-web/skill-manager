@@ -48,11 +48,21 @@ abaixo de forma determinística.
   capítulo/manuscrito devem conter apenas Markdown limpo — sem "Aqui está o capítulo...".
 - **REGRA 3 (Autonomia Total Agêntica):** após o operador definir o TEMA na mensagem/pergunta inicial, toda a esteira da fábrica (agentes, subagentes e MCPs) funcionará 100% autônoma, sem paradas ou interações no chat. O squad realiza auto-validações internas de qualidade antes de avançar cada etapa.
 - **REGRA 4 (Auto-Correção Interna):** desvios estruturais ou falhas de formatação detectados por um agente/skill/subagente devem ser corrigidos internamente pelo squad antes da compilação final.
-- **REGRA 5 (Identidade Visual da Editora Agêntica — Padrão 2D Plano O'Reilly/Rheinwerk/Packt):** As capas DEVEM ser geradas exclusivamente como arte gráfica 2D plana retangular da página frontal (flat 2D front cover page), sendo estritamente PROIBIDO a inclusão de mockups 3D, bordas de lombada simuladas, faixas laterais de encadernação, sombras de efeito livro ou estética amadora de "IA 3D neon". O padrão oficial exige:
-  a) **Fundo Matte Sóbrio:** Grafite escuro `#0d1117` ou Navy corporativo `#0f172a`.
-  b) **Ilustração Vetorial 2D Temática:** Arte vetorial minimalista conceitual e criativa adaptada especificamente ao tema tratado (ex: grafos de nós para IA/AIDD, barramentos de dados para backend, barramentos de circuitos para hardware).
-  c) **Tipografia & Autoria Obrigatória:** Título em caixa alta com tipografia forte, subtítulo descritivo elegante e o NOME DO AUTOR ("Heverton Eduardo Peres") explicitamente destacado na capa.
-  d) **Chancela da Editora:** Selo e chancela oficial "EDITORA AGÊNTICA" no rodapé.
+- **REGRA 5 (Identidade Visual da Editora Agêntica — Padrão 2D Plano):** As capas DEVEM ser geradas exclusivamente como arte gráfica 2D plana retangular da página frontal (flat 2D front cover page), sendo estritamente PROIBIDO a inclusão de mockups 3D, bordas de lombada simuladas, faixas laterais de encadernação, sombras de efeito livro ou estética amadora de "IA 3D neon". O padrão oficial exige:
+  a) **Fundo Matte Sóbrio:** #0d1117 (matte escuro)
+  b) **Barras de Accent:** topo (8px) + rodapé (6px) na cor de accent da obra
+  c) **Padding Lateral:** 80px mínimo
+  d) **Chancela:** `>_ EDITORA AGÊNTICA` (ícone + texto, topo esquerda)
+  e) **Terminal:** à esquerda com comandos reais da ferramenta/tema
+  f) **Código:** flutuante à direita, cor #484f58, com syntax highlight
+  g) **Título:** Inter 900 72px, cor #e6edf3, caixa alta
+  h) **Subtítulo:** Inter 300 18px, cor #8b949e
+  i) **Autor:** Inter 600 18px, cor #e6edf3
+  j) **Cargo:** Inter 600 11px, cor do accent
+  k) **Cores por Obra:** cada livro/ebook tem sua cor de accent (azul #58a6ff, verde #2ecc9a, roxo #a855f7, etc.)
+  l) **Dimensões:** 1200x1600px (ebooks), 1600x2263px (livros A4)
+  m) **Script:** `scripts/gerar-capa-ebook-padrao.py` (HTML/CSS + Playwright)
+  n) **Salvar:** `imagens/capa.png` (PNG)
 
 
 

@@ -10,7 +10,7 @@ novo**: reescreve o tom de capítulos já compilados do livro-mãe.
 | # | Requisito | Critério | Verificação |
 |---|---|---|---|
 | R-EBK-1 | Formato EPUB reflowable | Gerado via Pandoc | `gerar-epub.py` |
-| R-EBK-2 | Capa 1:1,6 | `imagens/capa.png` (ex. 1600×2560px) | `gerar-epub.py` (aviso se ausente, não bloqueia) |
+| R-EBK-2 | Capa padrão Editora Agêntica | `imagens/capa.png` (1200×1600px, flat 2D, terminal + código) | `gerar-capa-ebook-padrao.py` |
 | R-EBK-3 | Sumário clicável | TOC nativo do EPUB (`--toc`) | `gerar-epub.py` |
 | R-EBK-4 | CTA final | Seção "Próximos Passos" presente | `redator-ebook` (procedimento) |
 | R-EBK-5 | Reaproveitamento do livro-mãe | Conteúdo adaptado, não pesquisado de novo | `subagente-adaptador-ebook` (nunca chama `subagente-pesquisador`) |

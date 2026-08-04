@@ -110,8 +110,21 @@ def gerar(slug, gerar_pdf_tambem=False):
             "--resource-path", str(dir_ebook),
             "-V", f"title={titulo}",
             "-V", f"author={autor}",
-            "-V", "sem_capa_grafica=1",  # Ebook não tem capa gráfica Typst
         ]
+        
+        # Incluir capa se existir
+        capa_para_pdf = achar_capa(dir_ebook)
+        if capa_para_pdf:
+            # Copiar capa para imagens/capa_livro.png para o template encontrar
+            capa_dest = dir_ebook / "imagens" / "capa_livro.png"
+            capa_dest.parent.mkdir(parents=True, exist_ok=True)
+            import shutil
+            shutil.copy2(capa_para_pdf, capa_dest)
+            # Passar caminho relativo para o template
+            typst_cmd += ["-V", "capa_imagem=imagens/capa_livro.png"]
+        else:
+            typst_cmd += ["-V", "sem_capa_grafica=1"]
+        
         subprocess.run(typst_cmd, capture_output=True, text=True, timeout=180)
         
         # Compilar com Typst

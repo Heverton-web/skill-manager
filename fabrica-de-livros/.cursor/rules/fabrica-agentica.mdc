@@ -43,10 +43,20 @@ abaixo de forma determinística.
   DEVE começar com o capítulo fixo que explica a metodologia EITA e suas 7 seções
   (`templates/capitulo_eita.md`). Este capítulo é inserido automaticamente pelo
   compilador na Fase 3, antes do primeiro capítulo da obra. Não é opcional.
-- **REGRA 7 (Capa HTML para Livros):** capas de livros DEVEM ser geradas via
-  HTML/CSS + Playwright (flat 2D, fundo #0d1117, terminal ilustrativo com código
-  real, título em caixa alta). O script `gerar-capa-ebooks.py` (Pillow) é usado
-  APENAS para ebooks derivados. A capa do livro-mãe é salva em `imagens/capa_livro.png`.
+- **REGRA 7 (Capa Padrão Editora Agêntica):** toda capa (livro ou ebook) DEVE
+  seguir o padrão flat 2D definido neste projeto:
+  - **Fundo:** #0d1117 (matte escuro)
+  - **Barras:** topo (8px) + rodapé (6px) na cor de accent
+  - **Padding lateral:** 80px mínimo
+  - **Chancela:** `>_ EDITORA AGÊNTICA` (ícone + texto)
+  - **Terminal:** à esquerda com comandos reais da ferramenta
+  - **Código:** flutuante à direita, cor #484f58, com syntax highlight
+  - **Título:** Inter 900 72px, cor #e6edf3
+  - **Autor:** Inter 600 18px
+  - **Cargo:** Inter 600 11px, cor do accent
+  - **Cores por obra:** cada livro/ebook tem sua cor de accent (azul, verde, roxo, etc.)
+  - **Script:** `scripts/gerar-capa-ebook-padrao.py` (HTML/CSS + Playwright)
+  - **Salvar:** `imagens/capa.png` (PNG 1200x1600px para ebooks, 1600x2263px para livros)
 
 ## 1.5 Módulos por Tipo de Obra (V4)
 
