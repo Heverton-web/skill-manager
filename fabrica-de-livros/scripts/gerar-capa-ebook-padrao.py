@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-Gera capa de ebook no padrão Editora Agêntica: flat 2D, sem orbs, código flutuante.
+Gera capa de ebook no padrão Editora Agêntica: flat 2D, sem orbs, sem mockup de terminal.
 Mesmo estilo do livro Oh My Pi.
 
 Padrão:
 - Fundo #0d1117
 - Barra colorida topo (8px) + rodapé (6px)
 - Padding lateral: 80px
-- Terminal à esquerda, código flutuante à direita
+- Título e autor à esquerda, número da edição e ano à direita
 - Título Inter 900 72px
 - Autor Inter 600 18px
 - Cargo Inter 600 11px (cor do accent)
@@ -26,9 +26,7 @@ def gerar_capa_ebook(
     titulo,
     subtitulo,
     cor_acento,
-    terminal_cmd,
-    terminal_output,
-    code_snippet,
+    edicao,
     dir_saida,
 ):
     """Gera capa no padrão exato: flat 2D, código flutuante à direita, terminal à esquerda."""
@@ -103,30 +101,6 @@ def gerar_capa_ebook(
     min-width: 0;
   }}
   
-  .terminal {{
-    background: #161b22;
-    border-radius: 12px;
-    border: 1px solid #30363d;
-    overflow: hidden;
-    margin-bottom: 30px;
-  }}
-  .terminal-header {{
-    background: #21262d;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }}
-  .terminal-dot {{ width: 10px; height: 10px; border-radius: 50%; }}
-  .terminal-dot.red {{ background: #ff5f57; }}
-  .terminal-dot.yellow {{ background: #febc2e; }}
-  .terminal-dot.green {{ background: #28c840; }}
-  .terminal-title {{ color: #8b949e; font-size: 12px; font-family: 'JetBrains Mono', monospace; margin-left: 8px; }}
-  .terminal-body {{ padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; line-height: 1.7; }}
-  .terminal-line {{ margin-bottom: 4px; color: #e6edf3; }}
-  .output {{ color: #7ee787; padding-left: 16px; }}
-  .cursor {{ display: inline-block; width: 8px; height: 14px; background: {cor_acento}; vertical-align: text-bottom; }}
-  
   /* Título: Inter 900 72px - COR DO ACCENT */
   .title {{ 
     font-family: 'Inter', sans-serif;
@@ -158,17 +132,14 @@ def gerar_capa_ebook(
     font-weight: 600; 
   }}
   
-  .code-float {{
+  .edicao {{
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    line-height: 1.9;
-    color: #484f58;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: {cor_acento};
+    text-align: right;
   }}
-  .code-float .kw {{ color: #ff7b72; }}
-  .code-float .str {{ color: #a5d6ff; }}
-  .code-float .cm {{ color: #484f58; }}
-  .code-float .fn {{ color: #d2a8ff; }}
-  .code-float .hl {{ color: {cor_acento}; }}
 </style>
 </head>
 <body>
@@ -182,29 +153,15 @@ def gerar_capa_ebook(
     
     <div class="main">
       <div class="left">
-        <div class="terminal">
-          <div class="terminal-header">
-            <div class="terminal-dot red"></div>
-            <div class="terminal-dot yellow"></div>
-            <div class="terminal-dot green"></div>
-            <span class="terminal-title">omp — coding agent</span>
-          </div>
-          <div class="terminal-body">
-            <div class="terminal-line">$ {terminal_cmd}</div>
-            {"".join(f'<div class="output">✓ {line}</div>' for line in terminal_output)}
-            <div class="terminal-line">$ <span class="cursor"></span></div>
-          </div>
-        </div>
-        
         <div class="title">{titulo}</div>
         <div class="subtitle">{subtitulo}</div>
         <div class="divider"></div>
         <div class="author-name">Heverton Eduardo Peres</div>
         <div class="author-role">Engenheiro de Software & Maker</div>
       </div>
-      
+
       <div class="right">
-        <div class="code-float">{code_snippet}</div>
+        <div class="edicao">{edicao}</div>
       </div>
     </div>
   </div>
@@ -238,16 +195,14 @@ if __name__ == "__main__":
     ap.add_argument("titulo")
     ap.add_argument("subtitulo")
     ap.add_argument("--cor", default="#58a6ff")
-    ap.add_argument("--cmd", default="code-review-graph build")
+    ap.add_argument("--edicao", default="1ª Edição · 2026")
     ap.add_argument("--output", required=True)
     args = ap.parse_args()
-    
+
     gerar_capa_ebook(
         titulo=args.titulo,
         subtitulo=args.subtitulo,
         cor_acento=args.cor,
-        terminal_cmd=args.cmd,
-        terminal_output=["Graph: 1.446 nodes, 7.974 edges", "Languages: Python, JS, Go, Rust"],
-        code_snippet="<span class='kw'>const</span> graph = <span class='kw'>new</span> <span class='fn'>CodeReviewGraph</span>();<br>await graph.<span class='fn'>build</span>();",
+        edicao=args.edicao,
         dir_saida=args.output,
     )

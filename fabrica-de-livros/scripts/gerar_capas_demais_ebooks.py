@@ -28,32 +28,13 @@ def gerar_thumbnail(caminho_capa, largura=300):
 
 
 CONFIGS_SERIE = {
-    "ai-driven-development": {
-        "cor": "#2ecc9a",
-        "cmd": 'aidd-agent build --spec "01-aidd"',
-        "out": ["Harness: 5 layers active", "MCPs: github, postgres, devtools", "Status: SPEC-DRIVEN READY"],
-        "code": '<span class="kw">import</span> { <span class="fn">Harness</span> } <span class="kw">from</span> <span class="str">"aidd-core"</span>;<br><span class="kw">const</span> agent = <span class="kw">new</span> <span class="fn">Harness</span>();<br><span class="hl">await agent.execute();</span>'
-    },
-    "marketing-na-era-digital": {
-        "cor": "#f0933b",
-        "cmd": 'marketing-agent analyze --funnel "digital-routes"',
-        "out": ["Funnel: Intent -> Conversion", "Metrics: LTV/CAC 4.2x", "Status: CAMPAIGN ACTIVE"],
-        "code": '<span class="kw">const</span> campaign = <span class="kw">new</span> <span class="fn">GrowthEngine</span>();<br><span class="hl">await campaign.optimize();</span>'
-    },
-    "sdlc-ai-first": {
-        "cor": "#37c3d6",
-        "cmd": 'sdlc-agent verify --intent "spec-driven"',
-        "out": ["Phase: Intent -> Spec -> Code", "Verification: Adversarial Test OK", "Release: READY FOR PROD"],
-        "code": '<span class="kw">const</span> sdlc = <span class="kw">new</span> <span class="fn">SDLCController</span>();<br><span class="hl">await sdlc.verifyPipeline();</span>'
-    }
+    "ai-driven-development": {"cor": "#2ecc9a"},
+    "marketing-na-era-digital": {"cor": "#f0933b"},
+    "sdlc-ai-first": {"cor": "#37c3d6"},
 }
 
-DEFAULT_CFG = {
-    "cor": "#b06df0",
-    "cmd": "agent-cli run --mode build",
-    "out": ["Agent: Active", "Execution: Autonomous"],
-    "code": '<span class="kw">const</span> agent = <span class="kw">new</span> <span class="fn">Agent</span>();<br><span class="hl">await agent.run();</span>'
-}
+DEFAULT_CFG = {"cor": "#b06df0"}
+EDICAO_PADRAO = "1ª Edição · 2026"
 
 
 def main():
@@ -93,9 +74,7 @@ def main():
             titulo=titulo.upper(),
             subtitulo=subtitulo,
             cor_acento=cfg["cor"],
-            terminal_cmd=cfg["cmd"],
-            terminal_output=cfg["out"],
-            code_snippet=cfg["code"],
+            edicao=meta.get("edicao") or EDICAO_PADRAO,
             dir_saida=eb_dir,
         )
         thumb = gerar_thumbnail(png_capa)

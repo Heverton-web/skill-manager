@@ -27,35 +27,13 @@ eb_dir = DIR_PROJETO / "output" / "ebooks" / "marketing-na-era-digital--eb-01-fu
 titulo = "MARKETING NA ERA DIGITAL"
 subtitulo = "Fundamentos & O Novo Território: Estratégia, Jornada e Canais"
 cor = "#f0933b"  # Laranja Marketing / Growth
-
-cmd = "marketing-suite analyze --domain digital-routes"
-output = [
-    "Funnel: Attract -> Engage -> Convert -> Retain",
-    "Traffic: 125k visitors | CTR: 4.8% | LTV/CAC: 4.2x",
-    "SEO & Organic Reach: 98/100 | ROI: +312%"
-]
-
-marketing_side = """<span class="kw">STRATEGY</span>: Digital Routes<br>
-<span class="str">DOMAINS</span>: 10 Pillars<br>
--------------------<br>
-<span class="hl">01. INTENT & SEARCH</span><br>
-<span class="cm">SEO, Content & Demand</span><br>
-<span class="hl">02. SOCIAL LANDSCAPE</span><br>
-<span class="cm">Community & Branding</span><br>
-<span class="hl">03. CONVERSION PORTS</span><br>
-<span class="str">Offers, CRO & Copy</span><br>
-<span class="hl">04. RETENTION & LTV</span><br>
-<span class="cm">Email & Customer Unit</span><br>
--------------------<br>
-<span class="fn">ROI Target</span>: <span class="str">+350%</span>"""
+edicao = "1ª Edição · 2026"
 
 png_capa = gerar_capa_ebook(
     titulo=titulo,
     subtitulo=subtitulo,
     cor_acento=cor,
-    terminal_cmd=cmd,
-    terminal_output=output,
-    code_snippet=marketing_side,
+    edicao=edicao,
     dir_saida=eb_dir,
 )
 thumb = gerar_thumbnail(png_capa)
