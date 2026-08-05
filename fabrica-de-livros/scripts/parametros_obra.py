@@ -33,7 +33,7 @@ TIPOS_VALIDOS = ("livro", "tcc", "artigo", "ebook")
 # Tabela de tamanhos de LIVRO (Fase 0, pergunta Q5). Caracteres ~2.500/pagina ABNT.
 TAMANHOS = {
     "P": {"partes": 1, "capitulos": 4, "paginas": 40, "caracteres": 100_000},
-    "M": {"partes": 3, "capitulos": 9, "paginas": 90, "caracteres": 225_000},
+    "M": {"partes": 3, "capitulos": 9, "paginas": 90, "caracteres": 180_000},
     "G": {"partes": 5, "capitulos": 10, "paginas": 150, "caracteres": 375_000},
     # Tier mega-obra: fora do fluxo padrao de /esbocar, criado sob demanda
     # explicita do operador quando G (maior preset padrao) nao cobre o escopo.
