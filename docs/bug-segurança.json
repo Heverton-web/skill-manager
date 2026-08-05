@@ -1,0 +1,100 @@
+{
+  "status": "complete",
+  "llm": {
+    "provider": "mimo",
+    "model": "mimo-v2.5-pro"
+  },
+  "message": "Review complete: 2 finding(s) across 2 selected item(s).",
+  "summary": {
+    "files_reviewed": 2,
+    "comments": 2,
+    "total_tokens": 69915,
+    "input_tokens": 61385,
+    "output_tokens": 8530,
+    "cache_read_tokens": 48000,
+    "elapsed": "1m41s"
+  },
+  "tool_calls": {
+    "total": 8,
+    "by_tool": {
+      "code_comment": 2,
+      "code_search": 2,
+      "file_find": 1,
+      "file_read": 3
+    }
+  },
+  "comments": [
+    {
+      "path": "fabrica-de-livros/scripts/parametros_obra.py",
+      "content": "The 'caracteres' value for size 'M' was reduced from 225,000 to 180,000, which breaks consistency with the documented rule on line 33: \"Caracteres ~2.500/pagina ABNT\". With 90 pages, the correct value should be 90 × 2,500 = 225,000 (the original value). The new value (180,000) implies ~2,000 chars/page, contradicting the stated ABNT standard. Please either keep the original value or update the documentation comment to reflect the new calculation.",
+      "existing_code": "    \"M\": {\"partes\": 3, \"capitulos\": 9, \"paginas\": 90, \"caracteres\": 180_000},",
+      "start_line": 36,
+      "end_line": 36,
+      "category": "maintainability",
+      "severity": "medium"
+    },
+    {
+      "path": "docs/bug-segurança.json",
+      "content": "This JSON file is completely empty - it contains no JSON content at all. While the checklist asks to check for spelling errors in json-keys, there are no keys to check in an empty file. If this file is intended to be a placeholder, it should at least contain valid JSON (e.g., `{}` for an empty object or `[]` for an empty array). An empty file is not valid JSON and will cause parsing errors if consumed by JSON parsers.",
+      "suggestion_code": "{}",
+      "existing_code": "@@ -0,0 +1,0 @@",
+      "start_line": 0,
+      "end_line": 0,
+      "category": "maintainability",
+      "severity": "medium"
+    }
+  ],
+  "session_id": "1925e618-c27b-4879-ad8e-2ea176938f3a",
+  "manifest": {
+    "schema_version": "ocr.run-manifest/v1",
+    "run_id": "1925e618-c27b-4879-ad8e-2ea176938f3a",
+    "operation": "review",
+    "terminal_state": "complete",
+    "repository": {
+      "identity_sha256": "77adc67a0d890483f96e54dd9f4d1f108c1a426ee7cdbf08d280f8ef8025f3eb"
+    },
+    "input": {
+      "mode": "workspace",
+      "resolved_base": "c6ceae8f3126e38b331a8319c155e0fdfcee154b",
+      "source_artifact_sha256": "9f92caffd64f8c1a6c7eefe02412cfe736021f8d4ad2fbf9d0cd5874fe1454cf"
+    },
+    "execution": {
+      "ocr_version": "v1.8.8",
+      "provider": "mimo",
+      "model": "mimo-v2.5-pro",
+      "configured_concurrency": 8,
+      "rule_config_sha256": "522c67f777c45cca176379b80a0a691664825d8c8eae359c9e77cab49c91e92a",
+      "runtime_config_sha256": "aacb9868ffab72430bcc602d1ae5dc9a614701db0affc02b1c4f9d97fd088861"
+    },
+    "coverage": {
+      "selected": [
+        {
+          "item_id": "5b070cc89c41a35adccf299f06941529809b61cc251e4b9cdf194f5484f0cc72",
+          "path": "docs/bug-segurança.json",
+          "fingerprint": "92a97d91fa63e7062721277af88b4f9643fe9854467abc35ec23f34e9e4bed5b"
+        },
+        {
+          "item_id": "67165c72160e526ad999f2ca180116ed4f2f8cd9752eacac84339d331d30cdf7",
+          "path": "fabrica-de-livros/scripts/parametros_obra.py",
+          "fingerprint": "a26a78f266b9b2c04dc8fc0381ab2206dae421e61e767b3e706b9a75735e7564"
+        }
+      ],
+      "completed": [
+        {
+          "item_id": "5b070cc89c41a35adccf299f06941529809b61cc251e4b9cdf194f5484f0cc72",
+          "path": "docs/bug-segurança.json",
+          "fingerprint": "92a97d91fa63e7062721277af88b4f9643fe9854467abc35ec23f34e9e4bed5b"
+        },
+        {
+          "item_id": "67165c72160e526ad999f2ca180116ed4f2f8cd9752eacac84339d331d30cdf7",
+          "path": "fabrica-de-livros/scripts/parametros_obra.py",
+          "fingerprint": "a26a78f266b9b2c04dc8fc0381ab2206dae421e61e767b3e706b9a75735e7564"
+        }
+      ],
+      "reused": [],
+      "failed": [],
+      "waived": []
+    },
+    "elapsed_ms": 101264
+  }
+}
