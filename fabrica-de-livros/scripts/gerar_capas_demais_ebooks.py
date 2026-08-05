@@ -41,7 +41,8 @@ def main():
     dir_ebooks = DIR_PROJETO / "output" / "ebooks"
     ebook_dirs = sorted([d for d in dir_ebooks.iterdir() if d.is_dir()])
 
-    # REGRAS DO USUÁRIO: NÃO MEXER na série code-review-graph!
+    # code-review-graph tem cor/titulo/subtitulo por ebook (nao um unico accent de
+    # serie) e foi atualizado a parte — nao reprocessar aqui por cima.
     ebooks_alvo = [d for d in ebook_dirs if not d.name.startswith("code-review-graph")]
 
     print(f"Gerando capas no modelo PADRÃO (HTML/Playwright) para {len(ebooks_alvo)} e-books...")

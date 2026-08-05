@@ -20,9 +20,6 @@ DIR_LIVROS = DIR_PROJETO / "output" / "livros"
 
 PADRAO_EB = re.compile(r"^(?P<mae>.+)--eb-(?P<indice>\d+)-")
 
-# REGRAS DO USUÁRIO: NÃO MEXER na série code-review-graph!
-EXCLUIR_PREFIXOS = ("code-review-graph",)
-
 
 def gerar_thumbnail(caminho_capa, largura=300):
     nome_thumb = caminho_capa.stem.replace("capa", "thumbnail") + caminho_capa.suffix
@@ -39,8 +36,6 @@ def main():
     sincronizados = 0
 
     for eb_dir in ebook_dirs:
-        if eb_dir.name.startswith(EXCLUIR_PREFIXOS):
-            continue
         m = PADRAO_EB.match(eb_dir.name)
         if not m:
             continue
